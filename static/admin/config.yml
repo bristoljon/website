@@ -1,0 +1,111 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Uncomment while running `npm run cms` alongside `npm run develop` to edit
+# against the working tree instead of GitHub.
+# local_backend: true
+
+media_folder: static/img/uploads
+public_folder: /img/uploads
+
+publish_mode: editorial_workflow
+
+collections:
+  - name: blog
+    label: Blog
+    label_singular: Post
+    folder: content/blog
+    create: true
+    slug: "{{slug}}"
+    # Filename is the URL: content/blog/update-1.md -> /blog/update-1.
+    # Renaming a file changes a live URL, so rename with care.
+    preview_path: "blog/{{slug}}"
+    summary: "{{title}} — {{date | date('MMM YYYY')}}"
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: date, label: Date, widget: datetime, picker_utc: true, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { name: type, label: Kind, widget: select, options: ["Update", "Geek Blog"], default: "Update", required: false }
+      - { name: number, label: Number, widget: number, value_type: int, required: false }
+      - { name: excerpt, label: Summary, widget: text, required: false, hint: "Shown on the homepage and in search results." }
+      - { name: tags, label: Tags, widget: list, required: false, default: [] }
+      - { name: draft, label: Draft, widget: boolean, default: false }
+      - name: body
+        label: Body
+        widget: markdown
+        hint: >-
+          Raw HTML passes through. Wrap deeper passages in
+          <div class="tech"> or <div class="pain"> to put them behind the
+          detail toggles.
+      - name: comments
+        label: Archived comments
+        label_singular: Comment
+        widget: list
+        required: false
+        default: []
+        collapsed: true
+        summary: "{{fields.author}} — {{fields.date | date('MMM YYYY')}}"
+        hint: >-
+          Read-only history from the old comment table. Commenting is closed,
+          so nothing new arrives here — delete an entry to take it down.
+        fields:
+          - { name: id, label: Legacy ID, widget: string, required: false }
+          - { name: author, label: Author, widget: string, default: "Anonymous" }
+          - { name: date, label: Date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false }
+          - { name: body, label: Comment, widget: text }
+
+  - name: projects
+    label: Projects
+    label_singular: Project
+    folder: content/projects
+    create: true
+    slug: "{{slug}}"
+    preview_path: "project/{{slug}}"
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: date, label: Date, widget: datetime, picker_utc: true, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+      - { name: excerpt, label: Summary, widget: text, required: false }
+      - { name: status, label: Status, widget: select, options: ["Active", "Paused", "Archived", "Idea"], default: "Archived", required: false }
+      - { name: image, label: Image, widget: image, required: false }
+      - { name: tags, label: Tags, widget: list, required: false, default: [] }
+      - name: links
+        label: Links
+        widget: list
+        required: false
+        default: []
+        summary: "{{fields.label}}"
+        fields:
+          - { name: label, label: Label, widget: string }
+          - { name: url, label: URL, widget: string }
+      - { name: draft, label: Draft, widget: boolean, default: true }
+      - { name: body, label: Body, widget: markdown }
+      - name: comments
+        label: Archived comments
+        label_singular: Comment
+        widget: list
+        required: false
+        default: []
+        collapsed: true
+        summary: "{{fields.author}} — {{fields.date | date('MMM YYYY')}}"
+        fields:
+          - { name: id, label: Legacy ID, widget: string, required: false }
+          - { name: author, label: Author, widget: string, default: "Anonymous" }
+          - { name: date, label: Date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false }
+          - { name: body, label: Comment, widget: text }
+
+  - name: pages
+    label: Pages
+    files:
+      - name: home
+        label: Homepage
+        file: content/pages/home.md
+        preview_path: ""
+        fields:
+          - { name: title, label: Hero heading, widget: string }
+          - { name: excerpt, label: Hero strapline, widget: string, required: false }
+          - { name: image, label: Hero image, widget: image, required: false }
+          - { name: imageCredit, label: Hero image credit, widget: string, required: false }
+          - { name: aboutHeading, label: About heading, widget: string, default: "About Me" }
+          - { name: body, label: About text, widget: markdown }

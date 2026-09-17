@@ -1,0 +1,35 @@
+{
+  "name": "bristoljon-uk",
+  "version": "2.0.0",
+  "private": true,
+  "description": "bristoljon.uk — Gatsby + Decap CMS + Netlify",
+  "license": "CC-BY-SA-4.0",
+  "scripts": {
+    "develop": "gatsby develop",
+    "start": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+    "cms": "decap-server",
+    "migrate:sql": "node scripts/migrate-mysql.js",
+    "import:dump": "node scripts/import-sql-dump.js",
+    "migrate:scrape": "node scripts/scrape-legacy.js"
+  },
+  "dependencies": {
+    "gatsby": "^5.13.0",
+    "gatsby-plugin-netlify": "^5.1.0",
+    "gatsby-plugin-sitemap": "^6.13.0",
+    "gatsby-source-filesystem": "^5.13.0",
+    "gatsby-transformer-remark": "^6.13.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "decap-server": "^3.1.0",
+    "mysql2": "^3.9.0",
+    "turndown": "^7.1.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,12 @@
+node_modules/
+.cache/
+public/
+.netlify/
+.env
+.env.*
+!.env.example
+.DS_Store
+
+# Database dumps. The legacy export carries unsalted MD5 password hashes and
+# commenters' email addresses — import from it locally, never commit it.
+*.sql

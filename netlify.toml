@@ -1,0 +1,106 @@
+[build]
+  command = "npm run build"
+  publish = "public"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NPM_FLAGS = "--legacy-peer-deps"
+
+[[plugins]]
+  package = "@netlify/plugin-gatsby"
+
+# The old docroot had each mini-app at the top level *and* under /projects/.
+# Canonical home is now /projects/<name>/; the bare paths redirect in.
+[[redirects]]
+  from = "/dozenal"
+  to = "/projects/dozenal/"
+  status = 301
+
+[[redirects]]
+  from = "/drinkscalc"
+  to = "/projects/drinkscalc/"
+  status = 301
+
+[[redirects]]
+  from = "/suncalc"
+  to = "/projects/suncalc/"
+  status = 301
+
+[[redirects]]
+  from = "/shader"
+  to = "/projects/shader/"
+  status = 301
+
+[[redirects]]
+  from = "/taptimer"
+  to = "/projects/taptimer/"
+  status = 301
+
+[[redirects]]
+  from = "/touchtimer/*"
+  to = "/projects/taptimer/"
+  status = 301
+
+[[redirects]]
+  from = "/onetimepad"
+  to = "/projects/onetimepad/"
+  status = 301
+
+[[redirects]]
+  from = "/3d2"
+  to = "/projects/3d2/"
+  status = 301
+
+# Anything that leaked the pre-.htaccess URLs.
+[[redirects]]
+  from = "/blog/index.php"
+  to = "/blog"
+  status = 301
+
+[[redirects]]
+  from = "/project/index.php"
+  to = "/"
+  status = 301
+
+# The two PHP-only pages. There is no runtime to serve them on a static host:
+# /spoof sent mail through PHP's mail(), /stylechanger swapped stylesheets
+# server-side. Point them at the blog posts that describe them instead of
+# leaving dead links, or delete these two rules to let them 404.
+[[redirects]]
+  from = "/spoof"
+  to = "/blog/update-1"
+  status = 301
+
+[[redirects]]
+  from = "/projects/spoof/*"
+  to = "/blog/update-1"
+  status = 301
+
+[[redirects]]
+  from = "/stylechanger"
+  to = "/blog/update-1"
+  status = 301
+
+[[redirects]]
+  from = "/projects/stylechanger/*"
+  to = "/blog/update-1"
+  status = 301
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# The 3D viewer works by nesting the site in iframes, so it needs its own
+# frame policy rather than the site-wide SAMEORIGIN.
+[[headers]]
+  for = "/projects/3d2/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
