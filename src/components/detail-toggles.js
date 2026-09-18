@@ -1,44 +1,51 @@
 import * as React from "react"
 
 /**
- * Your "experimental feature" from Update 3, kept intact: the post body carries
- * <div class="tech"> and <div class="pain"> blocks and these buttons show or
- * hide them. Same mechanism as the original, just driven by React state on the
- * wrapper instead of jQuery on the elements.
+ * Your "experimental feature" from Update 3, kept as it was: the post body
+ * carries .tech and .pain spans, and these buttons decide which are visible.
  *
- * Non-technical is always visible — it's the baseline, not a third filter.
+ * The original in blog/index.php was a three-state Bootstrap .btn-group, not
+ * two independent switches — Non-technical hid both classes, Technical showed
+ * .tech only, and "Bring the pain!" showed both. It loaded with "Bring the
+ * pain!" active, so a first-time reader saw everything. Same states here, just
+ * React holding which one is active instead of jQuery toggling .active.
  */
+const LEVELS = ["nontech", "tech", "pain"]
+
 export const useDetailLevel = () => {
-  const [showTech, setShowTech] = React.useState(false)
-  const [showPain, setShowPain] = React.useState(false)
+  const [level, setLevel] = React.useState("pain")
 
   const bodyClass = [
-    showTech ? "show-tech" : "hide-tech",
-    showPain ? "show-pain" : "hide-pain",
+    level === "nontech" ? "hide-tech" : "show-tech",
+    level === "pain" ? "show-pain" : "hide-pain",
   ].join(" ")
 
-  return { showTech, setShowTech, showPain, setShowPain, bodyClass }
+  return { level, setLevel, bodyClass }
 }
 
-const DetailToggles = ({ showTech, setShowTech, showPain, setShowPain }) => (
-  <div className="detail-toggles" role="group" aria-label="Detail level">
-    <span className="detail-label">Detail</span>
-    <button
-      type="button"
-      className={showTech ? "is-on" : ""}
-      aria-pressed={showTech}
-      onClick={() => setShowTech(!showTech)}
-    >
-      Technical
-    </button>
-    <button
-      type="button"
-      className={showPain ? "is-on" : ""}
-      aria-pressed={showPain}
-      onClick={() => setShowPain(!showPain)}
-    >
-      Bring the pain!
-    </button>
+const LABELS = {
+  nontech: "Non-technical",
+  tech: "Technical",
+  pain: "Bring the pain!",
+}
+
+const DetailToggles = ({ level, setLevel }) => (
+  <div
+    className="btn-group detail-toggles"
+    role="group"
+    aria-label="Detail level"
+  >
+    {LEVELS.map(key => (
+      <button
+        key={key}
+        type="button"
+        className={`btn btn-default ${level === key ? "active" : ""}`}
+        aria-pressed={level === key}
+        onClick={() => setLevel(key)}
+      >
+        {LABELS[key]}
+      </button>
+    ))}
   </div>
 )
 

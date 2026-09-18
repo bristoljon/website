@@ -40,6 +40,7 @@ const Nav = () => {
   `)
 
   const [open, setOpen] = React.useState(null)
+  const [collapsed, setCollapsed] = React.useState(true)
   const toggle = key => setOpen(open === key ? null : key)
 
   // The standalone mini-apps. These are plain files in /static, carried over
@@ -54,68 +55,101 @@ const Nav = () => {
     { label: "Dozenal Calculator", href: "/dozenal/" },
   ]
 
+  // Bootstrap 3's dropdowns and the collapsed navbar are jQuery plugins. The
+  // markup and classes below are the originals, but React drives .open and
+  // .in directly so the site needs no jQuery.
+  const dropdown = (key, label, items) => (
+    <li className={`dropdown ${open === key ? "open" : ""}`}>
+      <a
+        href="#"
+        className="dropdown-toggle"
+        role="button"
+        aria-haspopup="true"
+        aria-expanded={open === key}
+        onClick={e => {
+          e.preventDefault()
+          toggle(key)
+        }}
+      >
+        {label} <span className="caret" />
+      </a>
+      <ul className="dropdown-menu inverse-dropdown">{items}</ul>
+    </li>
+  )
+
   return (
-    <nav className="nav">
-      <div className="nav-inner">
-        <Link to="/" className="nav-brand">
-          bristoljon<span>.uk</span>
-        </Link>
+    <nav className="navbar navbar-inverse navbar-fixed-top">
+      <div className="container">
+        <div className="navbar-header">
+          <button
+            type="button"
+            className={`navbar-toggle ${collapsed ? "collapsed" : ""}`}
+            aria-expanded={!collapsed}
+            aria-controls="navbar"
+            onClick={() => setCollapsed(!collapsed)}
+          >
+            <span className="sr-only">Toggle navigation</span>
+            <span className="icon-bar" />
+            <span className="icon-bar" />
+            <span className="icon-bar" />
+          </button>
+          <Link className="navbar-brand" to="/">
+            Home
+          </Link>
+        </div>
 
-        <button
-          className="nav-burger"
-          aria-expanded={open === "mobile"}
-          aria-label="Toggle navigation"
-          onClick={() => toggle("mobile")}
+        <div
+          id="navbar"
+          className={`navbar-collapse collapse ${collapsed ? "" : "in"}`}
         >
-          <span />
-          <span />
-          <span />
-        </button>
-
-        <ul className={`nav-menu ${open === "mobile" ? "is-open" : ""}`}>
-          <li className="has-sub">
-            <button onClick={() => toggle("projects")} aria-expanded={open === "projects"}>
-              Projects
-            </button>
-            <ul className={open === "projects" ? "sub is-open" : "sub"}>
-              {data.projects.nodes.map(p => (
+          <ul className="nav navbar-nav">
+            {dropdown(
+              "projects",
+              "Projects",
+              data.projects.nodes.map(p => (
                 <li key={p.fields.path}>
                   <Link to={p.fields.path}>{p.frontmatter.title}</Link>
                 </li>
-              ))}
-            </ul>
-          </li>
+              ))
+            )}
 
-          <li className="has-sub">
-            <button onClick={() => toggle("blog")} aria-expanded={open === "blog"}>
-              Blog
-            </button>
-            <ul className={open === "blog" ? "sub is-open" : "sub"}>
-              {data.posts.nodes.map(p => (
+            {dropdown(
+              "blog",
+              "Blog",
+              data.posts.nodes.map(p => (
                 <li key={p.fields.path}>
                   <Link to={p.fields.path}>{p.frontmatter.title}</Link>
                 </li>
-              ))}
-            </ul>
-          </li>
+              ))
+            )}
 
-          <li className="has-sub">
-            <button onClick={() => toggle("misc")} aria-expanded={open === "misc"}>
-              Misc
-            </button>
-            <ul className={open === "misc" ? "sub is-open" : "sub"}>
-              {misc.map(m => (
+            {dropdown(
+              "misc",
+              "Misc",
+              misc.map(m => (
                 <li key={m.href}>
                   <a href={m.href}>{m.label}</a>
                 </li>
-              ))}
-            </ul>
-          </li>
+              ))
+            )}
 
-          <li><Link to="/#recent">Recent</Link></li>
-          <li><Link to="/#about">About</Link></li>
-          <li><Link to="/#contact">Contact</Link></li>
-        </ul>
+            <li>
+              <Link to="/blog">All posts</Link>
+            </li>
+          </ul>
+
+          <ul className="nav navbar-nav navbar-right">
+            <li>
+              <Link to="/#recent">Recent</Link>
+            </li>
+            <li>
+              <Link to="/#about">About</Link>
+            </li>
+            <li>
+              <Link to="/#contact">Contact</Link>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
   )

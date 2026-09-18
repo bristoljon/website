@@ -28,61 +28,71 @@ const BlogIndex = ({ data, location }) => {
 
   return (
     <Layout>
-      <header className="page-head">
-        <h1>Blog</h1>
-        <p>Part journal, part blog, part collaboration station.</p>
-      </header>
+      <div id="home" className="row jumbo jumbo-blog">
+        <div className="container">
+          <div className="col-md-8 col-md-offset-2 splash">
+            <div className="row">
+              <div className="col-md-12 title">
+                <h1>Blog</h1>
+                <h3>Part journal, part blog, part collaboration station.</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      {allTags.length > 0 && (
-        <ul className="tags tag-filter">
-          <li>
-            <Link to="/blog" className={!activeTag ? "is-active" : ""}>
-              All
-            </Link>
-          </li>
-          {allTags.map(t => (
-            <li key={t}>
-              <Link
-                to={`/blog?tag=${encodeURIComponent(t)}`}
-                className={activeTag === t ? "is-active" : ""}
-              >
-                {t}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+      <div id="content" className="row">
+        <div className="container">
+          <div className="col-md-8 col-md-offset-2">
+            {allTags.length > 0 && (
+              <div className="panel panel-primary tag-filter">
+                <div className="panel-heading">Tags</div>
+                <div className="panel-body" id="tagcloud">
+                  <Link
+                    to="/blog"
+                    className={`label ${
+                      !activeTag ? "label-primary" : "label-default"
+                    }`}
+                  >
+                    All
+                  </Link>{" "}
+                  {allTags.map(t => (
+                    <React.Fragment key={t}>
+                      <Link
+                        to={`/blog?tag=${encodeURIComponent(t)}`}
+                        className={`label ${
+                          activeTag === t ? "label-primary" : "label-default"
+                        }`}
+                      >
+                        {t}
+                      </Link>{" "}
+                    </React.Fragment>
+                  ))}
+                </div>
+              </div>
+            )}
 
-      <ul className="post-list">
-        {visible.map(post => (
-          <li key={post.id}>
-            <article>
-              <h2>
-                <Link to={post.fields.path}>{post.frontmatter.title}</Link>
-              </h2>
-              <p className="post-meta">
-                <time dateTime={post.frontmatter.isoDate}>
-                  {post.frontmatter.date}
-                </time>
-                {post.frontmatter.comments &&
-                  post.frontmatter.comments.length > 0 && (
-                    <span>
-                      {post.frontmatter.comments.length}{" "}
-                      {post.frontmatter.comments.length === 1
-                        ? "comment"
-                        : "comments"}
+            <div className="post-list">
+              {visible.map(post => (
+                <div className="panel panel-primary" key={post.id}>
+                  <div className="panel-heading">
+                    <Link to={post.fields.path}>{post.frontmatter.title}</Link>
+                    <span className="pull-right">
+                      <time dateTime={post.frontmatter.isoDate}>
+                        {post.frontmatter.date}
+                      </time>
                     </span>
-                  )}
-              </p>
-              <p>{post.frontmatter.excerpt || post.excerpt}</p>
-            </article>
-          </li>
-        ))}
-      </ul>
-
-      {visible.length === 0 && (
-        <p className="empty">Nothing tagged “{activeTag}” yet.</p>
-      )}
+                  </div>
+                  <div className="panel-body">
+                    <p>{post.frontmatter.excerpt || post.excerpt}</p>
+                    <Link to={post.fields.path}>Read more &rarr;</Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </Layout>
   )
 }

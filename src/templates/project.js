@@ -12,49 +12,91 @@ const Project = ({ data }) => {
 
   return (
     <Layout>
-      <article className="post project">
-        <header className="post-head">
-          <p className="post-kicker">Project</p>
-          <h1>{fm.title}</h1>
-          <p className="project-meta">
-            {fm.status && <span className={`status status-${fm.status.toLowerCase().replace(/\s+/g, "-")}`}>{fm.status}</span>}
-            {fm.date && (
-              <time dateTime={fm.isoDate} className="post-date">
-                {fm.date}
-              </time>
+      {/* project/index.php: .row.jumbo > .col-md-8.col-md-offset-2.splash */}
+      <div id="home" className="row jumbo jumbo-project">
+        <div className="container">
+          <div className="col-md-8 col-md-offset-2 splash">
+            <div className="row">
+              <div className="col-md-12 title">
+                <h1>{fm.title}</h1>
+              </div>
+            </div>
+
+            <div className="row meta">
+              <div className="col-xs-4">
+                <p>Created:</p>
+                <h4>
+                  <time dateTime={fm.isoDate}>{fm.date}</time>
+                </h4>
+              </div>
+              <div className="col-xs-4">
+                <p>Status:</p>
+                <h4>{fm.status || "Archived"}</h4>
+              </div>
+              <div className="col-xs-4">
+                <p>Comments:</p>
+                <h4>{(fm.comments || []).length}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="content" className="row">
+        <div className="container">
+          <div className="col-md-3">
+            <div className="panel panel-primary">
+              <div className="panel-heading">Info</div>
+              <div className="panel-body">
+                {fm.links && fm.links.length > 0 ? (
+                  <ul className="list-unstyled">
+                    {fm.links.map(l => (
+                      <li key={l.url}>
+                        <a href={l.url}>{l.label}</a>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No live version.</p>
+                )}
+              </div>
+            </div>
+
+            {fm.tags && fm.tags.length > 0 && (
+              <div className="panel panel-primary">
+                <div className="panel-heading">Tags</div>
+                <div className="panel-body" id="tagcloud">
+                  {fm.tags.map(t => (
+                    <React.Fragment key={t}>
+                      <Link
+                        to={`/blog?tag=${encodeURIComponent(t)}`}
+                        className="label label-default"
+                      >
+                        {t}
+                      </Link>{" "}
+                    </React.Fragment>
+                  ))}
+                </div>
+              </div>
             )}
-          </p>
+          </div>
 
-          {fm.links && fm.links.length > 0 && (
-            <ul className="project-links">
-              {fm.links.map(l => (
-                <li key={l.url}>
-                  <a href={l.url}>{l.label}</a>
-                </li>
-              ))}
-            </ul>
-          )}
+          <div className="col-md-9">
+            <div className="panel panel-primary">
+              <div className="panel-heading">Project</div>
+              <div className="panel-body">
+                <DetailToggles {...detail} />
+                <div
+                  className={`post-body ${detail.bodyClass}`}
+                  dangerouslySetInnerHTML={{ __html: project.html }}
+                />
+              </div>
+            </div>
 
-          {fm.tags && fm.tags.length > 0 && (
-            <ul className="tags">
-              {fm.tags.map(t => (
-                <li key={t}>
-                  <Link to={`/blog?tag=${encodeURIComponent(t)}`}>{t}</Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </header>
-
-        <DetailToggles {...detail} />
-
-        <div
-          className={`post-body ${detail.bodyClass}`}
-          dangerouslySetInnerHTML={{ __html: project.html }}
-        />
-
-        <Comments comments={fm.comments} />
-      </article>
+            <Comments comments={fm.comments} />
+          </div>
+        </div>
+      </div>
     </Layout>
   )
 }

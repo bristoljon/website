@@ -3,7 +3,7 @@ import { useStaticQuery, graphql } from "gatsby"
 import Nav from "./nav"
 import "../styles/global.css"
 
-const Layout = ({ children, wide }) => {
+const Layout = ({ children, wide, home }) => {
   const { site } = useStaticQuery(graphql`
     {
       site {
@@ -18,24 +18,37 @@ const Layout = ({ children, wide }) => {
   const { social, author } = site.siteMetadata
 
   return (
-    <>
+    <div className={home ? "page-home" : "page"}>
       <Nav />
       <main className={wide ? "main main-wide" : "main"}>{children}</main>
 
-      <footer className="footer" id="contact">
-        <div className="footer-inner">
-          <section className="footer-block">
+      {/* html/contact.html, with the PHP/AJAX mailer swapped for Netlify Forms. */}
+      <div id="contact" className="row contact">
+        <a name="contact" aria-hidden="true" />
+        <div className="container">
+          <div className="col-md-6 col-md-offset-3">
             <h2>Connect on..</h2>
-            <ul className="social">
-              <li><a href={social.github}>GitHub</a></li>
-              <li><a href={social.linkedin}>LinkedIn</a></li>
-              <li><a href={social.twitter}>Twitter</a></li>
-              <li><a href={social.facebook}>Facebook</a></li>
-            </ul>
-          </section>
+            <div id="socialmedia">
+              <a className="pull-left" href={social.facebook}>
+                <i className="fa fa-facebook-official fa-6" />
+                <span className="sr-only">Facebook</span>
+              </a>
+              <a href={social.twitter}>
+                <i className="fa fa-twitter fa-6" />
+                <span className="sr-only">Twitter</span>
+              </a>
+              <a href={social.github}>
+                <i className="fa fa-github fa-6" />
+                <span className="sr-only">GitHub</span>
+              </a>
+              <a className="pull-right" href={social.linkedin}>
+                <i className="fa fa-linkedin-square fa-6" />
+                <span className="sr-only">LinkedIn</span>
+              </a>
+            </div>
 
-          <section className="footer-block">
             <h2>Or send me a nice old-fashioned..</h2>
+
             {/*
               Netlify Forms replaces the old PHP mailer. The hidden form-name
               input is what Netlify's build-time parser keys on; without it the
@@ -47,7 +60,6 @@ const Layout = ({ children, wide }) => {
               method="POST"
               data-netlify="true"
               netlify-honeypot="bot-field"
-              className="contact-form"
             >
               <input type="hidden" name="form-name" value="contact" />
               <p className="hp">
@@ -55,28 +67,62 @@ const Layout = ({ children, wide }) => {
                   Leave this empty <input name="bot-field" />
                 </label>
               </p>
-              <label htmlFor="cf-name">Name</label>
-              <input id="cf-name" name="name" type="text" required />
 
-              <label htmlFor="cf-email">Email</label>
-              <input id="cf-email" name="email" type="email" required />
+              <div className="form-group">
+                <div className="input-group">
+                  <span className="input-group-addon">Name </span>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    className="form-control"
+                    required
+                  />
+                </div>
 
-              <label htmlFor="cf-subject">Subject</label>
-              <input id="cf-subject" name="subject" type="text" />
+                <div className="input-group">
+                  <span className="input-group-addon">Email </span>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    className="form-control"
+                    required
+                  />
+                </div>
 
-              <label htmlFor="cf-message">Message</label>
-              <textarea id="cf-message" name="message" rows="5" required />
+                <div className="input-group">
+                  <span className="input-group-addon">Subject </span>
+                  <input
+                    id="subject"
+                    name="subject"
+                    type="text"
+                    className="form-control"
+                  />
+                </div>
 
-              <button type="submit">Send message</button>
+                <div className="input-group">
+                  <textarea
+                    placeholder="Message"
+                    id="textarea"
+                    name="message"
+                    className="form-control"
+                    required
+                  />
+                </div>
+
+                <button type="submit" className="btn btn-success btn-lg">
+                  Send
+                </button>
+              </div>
             </form>
-          </section>
+          </div>
         </div>
+      </div>
 
-        <p className="licence">
-          <a
-            rel="license"
-            href="http://creativecommons.org/licenses/by-sa/4.0/"
-          >
+      <div id="footer">
+        <p>
+          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
             <img
               alt="Creative Commons Licence"
               src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png"
@@ -84,16 +130,15 @@ const Layout = ({ children, wide }) => {
               height="31"
             />
           </a>
-          <span>
-            Work by {author}, licensed under a{" "}
-            <a href="http://creativecommons.org/licenses/by-sa/4.0/">
-              Creative Commons Attribution-ShareAlike 4.0 International Licence
-            </a>
-            .
-          </span>
+          <br />
+          Work by {author}, licensed under a{" "}
+          <a href="http://creativecommons.org/licenses/by-sa/4.0/">
+            Creative Commons Attribution-ShareAlike 4.0 International Licence
+          </a>
+          .
         </p>
-      </footer>
-    </>
+      </div>
+    </div>
   )
 }
 

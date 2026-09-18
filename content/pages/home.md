@@ -1,7 +1,7 @@
 ---
 title: bristoljon.uk
 excerpt: Part journal, part blog, part collaboration station.
-image: /img/hero.jpg
+image: /img/susp-min.jpg
 imageCredit: Photo by @sage_solar on Flickr
 aboutHeading: About Me
 ---

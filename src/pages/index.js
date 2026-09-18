@@ -9,56 +9,76 @@ const IndexPage = ({ data }) => {
   const recent = data.recent.nodes
 
   return (
-    <Layout wide>
-      <header
-        className="hero"
+    <Layout wide home>
+      {/* index.php: .row.jumbo > .container > .col-md-4.col-md-offset-4.splash */}
+      <div
+        id="home"
+        className="row jumbo jumbo-home"
         style={
           hero.image ? { backgroundImage: `url(${hero.image})` } : undefined
         }
       >
-        <div className="hero-inner">
-          <h1>{hero.title || "bristoljon.uk"}</h1>
-          {hero.excerpt && <p className="hero-strap">{hero.excerpt}</p>}
+        <div className="container">
+          <div className="col-md-4 col-md-offset-4 splash">
+            <h1>{hero.title || "BRISTOLJON.UK"}</h1>
+          </div>
+          {hero.imageCredit && <p id="photocred">{hero.imageCredit}</p>}
         </div>
-        {hero.imageCredit && (
-          <p className="hero-credit">{hero.imageCredit}</p>
-        )}
-      </header>
+      </div>
 
       {/*
-        Replaces the Angular {{ update.title }} widget. Same feed, but it's
-        built at deploy time from the markdown rather than fetched from the
-        JSON endpoint, so it renders with the page and is indexable.
+        Replaces the Angular {{ update.title }} widget that polled
+        /php/updates.php. Same panel markup and the same star/pencil icons,
+        but built at deploy time from the markdown, so it renders with the
+        page and is indexable.
       */}
-      <section className="recent" id="recent">
-        <h2>Recent</h2>
-        <ul className="recent-list">
-          {recent.map(node => (
-            <li key={node.id}>
-              <Link to={node.fields.path}>
-                <span className="recent-type">
-                  {node.fields.collection === "blog"
-                    ? node.frontmatter.type || "Update"
-                    : "Project"}
-                </span>
-                <h3>{node.frontmatter.title}</h3>
-                <time dateTime={node.frontmatter.isoDate}>
-                  {node.frontmatter.date}
-                </time>
-                <p>{node.frontmatter.excerpt || node.excerpt}</p>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <div id="recent" className="row recent">
+        <div className="container" id="recents">
+          {recent.map(node => {
+            const isBlog = node.fields.collection === "blog"
+            const kind = isBlog
+              ? `New ${node.frontmatter.type || "Update"} Post`
+              : "Project"
+            return (
+              <div className="panel panel-primary update" key={node.id}>
+                <div className="panel-body">
+                  {/* The old feed read "{type} : {project}" because an update
+                      row carried both an update headline and its parent
+                      project's name. Markdown has one title, so the kicker is
+                      just the kind and the headline sits in the h4 below. */}
+                  <i className={isBlog ? "fa fa-pencil" : "fa fa-star"} />{" "}
+                  {kind}
+                  <div className="pull-right">
+                    <time dateTime={node.frontmatter.isoDate}>
+                      {node.frontmatter.date}
+                    </time>
+                  </div>
+                  <h4>
+                    <Link to={node.fields.path}>{node.frontmatter.title}</Link>
+                  </h4>
+                  <p>{node.frontmatter.excerpt || node.excerpt}</p>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
 
-      <section className="about" id="about">
-        <h2>{home?.frontmatter?.aboutHeading || "About Me"}</h2>
-        <div
-          className="prose"
-          dangerouslySetInnerHTML={{ __html: home?.html || "" }}
-        />
-      </section>
+      {/*
+        The old page hard-coded two About panels side by side. The copy now
+        lives in content/pages/home.md as one body, so it renders as a single
+        panel in the left-hand column rather than inventing a split point.
+      */}
+      <div id="about" className="row about">
+        <div className="container">
+          <div className="col-md-4 col-md-offset-1 panel panel-primary">
+            <div className="panel-body">
+              <h4>{home?.frontmatter?.aboutHeading || "About Me"}</h4>
+              <div dangerouslySetInnerHTML={{ __html: home?.html || "" }} />
+            </div>
+          </div>
+        </div>
+      </div>
     </Layout>
   )
 }
