@@ -79,6 +79,23 @@ collections:
         fields:
           - { name: label, label: Label, widget: string }
           - { name: url, label: URL, widget: string }
+      - name: updates
+        label: Updates
+        label_singular: Update
+        widget: list
+        required: false
+        default: []
+        add_to_top: true
+        collapsed: true
+        summary: "{{fields.date | date('D MMM YYYY')}} — {{fields.title}}"
+        hint: >-
+          Short dated notes on progress. Each one shows in a timeline on the
+          project page and in the homepage's recent feed.
+        fields:
+          - { name: date, label: Date, widget: datetime, picker_utc: true, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
+          - { name: title, label: Title, widget: string }
+          - { name: body, label: Body, widget: markdown, minimal: true, buttons: [bold, italic, link, code, bulleted-list], editor_components: [] }
+          - { name: approxDate, label: Date is approximate, widget: boolean, default: false, required: false, hint: "Shows as 'c. Month Year'." }
       - { name: draft, label: Draft, widget: boolean, default: true }
       - { name: body, label: Body, widget: markdown }
       - name: comments
@@ -109,3 +126,55 @@ collections:
           - { name: imageCredit, label: Hero image credit, widget: string, required: false }
           - { name: aboutHeading, label: About heading, widget: string, default: "About Me" }
           - { name: body, label: About text, widget: markdown }
+
+      - name: cv
+        label: CV
+        file: content/pages/cv.md
+        preview_path: "cv"
+        fields:
+          - { name: title, label: Page title, widget: hidden, default: "CV" }
+          - { name: name, label: Name, widget: string }
+          - { name: headline, label: Headline, widget: string, required: false }
+          - { name: location, label: Location, widget: string, required: false }
+          - { name: email, label: Email, widget: string, required: false }
+          - { name: phone, label: Phone, widget: string, required: false, hint: "Shown publicly on the site and in the PDF. Leave blank to hide." }
+          - { name: address, label: Address, widget: string, required: false, hint: "Shown publicly on the site and in the PDF. Leave blank to hide." }
+          - { name: website, label: Website, widget: string, required: false }
+          - { name: github, label: GitHub URL, widget: string, required: false }
+          - { name: linkedin, label: LinkedIn URL, widget: string, required: false }
+          - { name: profile, label: Profile, widget: text }
+          - { name: skills, label: Tech, widget: list, required: false, default: [] }
+          - name: work
+            label: Work
+            label_singular: Job
+            widget: list
+            summary: "{{fields.company}}{{fields.aside}} — {{fields.dates}}"
+            hint: "Newest first. For a gap between jobs, fill in only 'Aside'."
+            fields:
+              - { name: company, label: Company, widget: string, required: false }
+              - { name: title, label: Role, widget: string, required: false }
+              - { name: location, label: Location, widget: string, required: false }
+              - { name: dates, label: Dates, widget: string, required: false, hint: "Free text, e.g. May ’24 – present" }
+              - { name: url, label: Link, widget: string, required: false }
+              - { name: summary, label: Summary, widget: text, required: false }
+              - { name: highlights, label: Highlights, widget: list, required: false, default: [] }
+              - { name: aside, label: Aside, widget: string, required: false, hint: "Use on its own for an italic line such as a career break." }
+          - name: education
+            label: Education
+            widget: list
+            summary: "{{fields.qualification}}"
+            fields:
+              - { name: qualification, label: Qualification, widget: string }
+              - { name: school, label: School, widget: string }
+              - { name: year, label: Year, widget: string }
+          - name: sideProjects
+            label: Projects
+            label_singular: Project
+            widget: list
+            summary: "{{fields.name}}"
+            fields:
+              - { name: name, label: Name, widget: string }
+              - { name: status, label: Status, widget: string, required: false }
+              - { name: description, label: Description, widget: text }
+          - { name: sideProjectsNote, label: Projects footnote, widget: string, required: false }
+          - { name: body, label: Body, widget: hidden, required: false }

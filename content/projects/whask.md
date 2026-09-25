@@ -12,6 +12,10 @@ tags:
 links: []
 draft: false
 comments: []
+updates:
+  - date: 2015-11-28
+    title: "Too slow.."
+    body: "Turns out someone beat me to it, [here](http://www.amazon.com/Stainless-Steel-Push-Whisk-Mixer/dp/B00CIZXYS0) - they just named it wrong."
 ---
 
 The idea for this came about after I was asked to whip some cream for a key lime pie. I found the conventional whisk action didn't feel right and caused strain, ultimately resulting in someone else having to take over. I thought there must be a better way..

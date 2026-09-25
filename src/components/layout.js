@@ -3,7 +3,7 @@ import { useStaticQuery, graphql } from "gatsby"
 import Nav from "./nav"
 import "../styles/global.css"
 
-const Layout = ({ children, wide, home }) => {
+const Layout = ({ children, home }) => {
   const { site } = useStaticQuery(graphql`
     {
       site {
@@ -17,37 +17,47 @@ const Layout = ({ children, wide, home }) => {
 
   const { social, author } = site.siteMetadata
 
+  const socials = [
+    { label: "Facebook", href: social.facebook, tone: "sky" },
+    { label: "Twitter", href: social.twitter, tone: "mint" },
+    { label: "GitHub", href: social.github, tone: "sun" },
+    { label: "LinkedIn", href: social.linkedin, tone: "pink" },
+  ]
+
   return (
-    <div className={home ? "page-home" : "page"}>
+    <div className={home ? "site page-home" : "site page"} id="top">
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
       <Nav />
-      <main className={wide ? "main main-wide" : "main"}>{children}</main>
+      <main id="main">{children}</main>
 
       {/* html/contact.html, with the PHP/AJAX mailer swapped for Netlify Forms. */}
-      <div id="contact" className="row contact">
-        <a name="contact" aria-hidden="true" />
-        <div className="container">
-          <div className="col-md-6 col-md-offset-3">
-            <h2>Connect on..</h2>
-            <div id="socialmedia">
-              <a className="pull-left" href={social.facebook}>
-                <i className="fa fa-facebook-official fa-6" />
-                <span className="sr-only">Facebook</span>
-              </a>
-              <a href={social.twitter}>
-                <i className="fa fa-twitter fa-6" />
-                <span className="sr-only">Twitter</span>
-              </a>
-              <a href={social.github}>
-                <i className="fa fa-github fa-6" />
-                <span className="sr-only">GitHub</span>
-              </a>
-              <a className="pull-right" href={social.linkedin}>
-                <i className="fa fa-linkedin-square fa-6" />
-                <span className="sr-only">LinkedIn</span>
-              </a>
-            </div>
+      <section
+        id="contact"
+        className="band contact"
+        aria-labelledby="contact-heading"
+      >
+        <div className="wrap contact-grid">
+          <div className="contact-intro">
+            <p className="kicker">Contact</p>
+            <h2 id="contact-heading" className="display">
+              Connect on..
+            </h2>
+            <ul className="social">
+              {socials.map(s => (
+                <li key={s.label}>
+                  <a className={`btn tone-${s.tone}`} href={s.href}>
+                    {s.label}
+                    <span aria-hidden="true"> ↗</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-            <h2>Or send me a nice old-fashioned..</h2>
+          <div className="card form-card">
+            <h2 className="form-title">Or send me a nice old-fashioned..</h2>
 
             {/*
               Netlify Forms replaces the old PHP mailer. The hidden form-name
@@ -68,76 +78,67 @@ const Layout = ({ children, wide, home }) => {
                 </label>
               </p>
 
-              <div className="form-group">
-                <div className="input-group">
-                  <span className="input-group-addon">Name </span>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    className="form-control"
-                    required
-                  />
-                </div>
-
-                <div className="input-group">
-                  <span className="input-group-addon">Email </span>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    className="form-control"
-                    required
-                  />
-                </div>
-
-                <div className="input-group">
-                  <span className="input-group-addon">Subject </span>
-                  <input
-                    id="subject"
-                    name="subject"
-                    type="text"
-                    className="form-control"
-                  />
-                </div>
-
-                <div className="input-group">
-                  <textarea
-                    placeholder="Message"
-                    id="textarea"
-                    name="message"
-                    className="form-control"
-                    required
-                  />
-                </div>
-
-                <button type="submit" className="btn btn-success btn-lg">
-                  Send
-                </button>
+              <div className="field-row">
+                <label className="field" htmlFor="name">
+                  <span>Name</span>
+                  <input id="name" name="name" type="text" required />
+                </label>
+                <label className="field" htmlFor="email">
+                  <span>Email</span>
+                  <input id="email" name="email" type="email" required />
+                </label>
               </div>
+
+              <label className="field" htmlFor="subject">
+                <span>Subject</span>
+                <input id="subject" name="subject" type="text" />
+              </label>
+
+              <label className="field" htmlFor="message">
+                <span>Message</span>
+                <textarea id="message" name="message" required />
+              </label>
+
+              <button type="submit" className="btn tone-pink btn-big">
+                Send
+                <span aria-hidden="true"> ✉</span>
+              </button>
             </form>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div id="footer">
-        <p>
-          <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
-            <img
-              alt="Creative Commons Licence"
-              src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png"
-              width="88"
-              height="31"
-            />
+      <footer className="footer">
+        <div className="wrap footer-inner">
+          <p className="footer-mark" aria-hidden="true">
+            bristoljon<span>.uk</span>
+          </p>
+          <p className="license">
+            <a
+              rel="license"
+              href="http://creativecommons.org/licenses/by-sa/4.0/"
+            >
+              <img
+                alt="Creative Commons Licence"
+                src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png"
+                width="88"
+                height="31"
+              />
+            </a>
+            <span>
+              Work by {author}, licensed under a{" "}
+              <a href="http://creativecommons.org/licenses/by-sa/4.0/">
+                Creative Commons Attribution-ShareAlike 4.0 International
+                Licence
+              </a>
+              .
+            </span>
+          </p>
+          <a className="btn tone-sun btn-small" href="#top">
+            Back to top <span aria-hidden="true">↑</span>
           </a>
-          <br />
-          Work by {author}, licensed under a{" "}
-          <a href="http://creativecommons.org/licenses/by-sa/4.0/">
-            Creative Commons Attribution-ShareAlike 4.0 International Licence
-          </a>
-          .
-        </p>
-      </div>
+        </div>
+      </footer>
     </div>
   )
 }

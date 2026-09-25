@@ -2,6 +2,8 @@ import * as React from "react"
 import { graphql, Link } from "gatsby"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
+import PageHero from "../components/page-hero"
+import TagList from "../components/tag-list"
 import Comments from "../components/comments"
 import DetailToggles, { useDetailLevel } from "../components/detail-toggles"
 
@@ -9,84 +11,67 @@ const BlogPost = ({ data, pageContext }) => {
   const post = data.markdownRemark
   const fm = post.frontmatter
   const detail = useDetailLevel()
+  // Posts are sorted newest-first, so `previous` is newer and `next` older.
   const { previous, next } = pageContext
+  const count = (fm.comments || []).length
 
   return (
     <Layout>
-      {/* blog/index.php: .row.jumbo > .splash, title over the panorama. */}
-      <div id="home" className="row jumbo jumbo-blog">
-        <div className="container">
-          <div className="col-md-8 col-md-offset-2 splash">
-            <div className="row">
-              <div className="col-md-12 title">
-                <h1>{fm.title}</h1>
-                <h3>
-                  {fm.type || "Update"}
-                  {fm.number != null && ` ${fm.number}`} &middot;{" "}
-                  <time dateTime={fm.isoDate}>{fm.date}</time>
-                </h3>
-              </div>
+      <PageHero
+        kicker={`${fm.type || "Update"}${fm.number != null ? ` ${fm.number}` : ""}`}
+        title={fm.title}
+        tone="sun"
+        image="/img/pano-min.jpg"
+      >
+        <ul className="hero-meta">
+          <li>
+            <time dateTime={fm.isoDate}>{fm.date}</time>
+          </li>
+          {count > 0 && (
+            <li>
+              {count} {count === 1 ? "comment" : "comments"}
+            </li>
+          )}
+        </ul>
+      </PageHero>
+
+      <section className="section">
+        <div className="wrap narrow stack">
+          <article className="card article">
+            <DetailToggles {...detail} />
+            <div
+              className={`post-body prose ${detail.bodyClass}`}
+              dangerouslySetInnerHTML={{ __html: post.html }}
+            />
+          </article>
+
+          {fm.tags && fm.tags.length > 0 && (
+            <div className="card tag-card">
+              <h2 className="card-label">Tags</h2>
+              <TagList tags={fm.tags} />
             </div>
-          </div>
-        </div>
-      </div>
+          )}
 
-      <div id="content" className="row">
-        <div className="container">
-          <div className="col-md-8 col-md-offset-2">
-            <div className="panel panel-primary">
-              <div className="panel-heading">
-                {fm.type || "Update"}
-                {fm.number != null && ` ${fm.number}`}
-              </div>
-              <div className="panel-body">
-                <DetailToggles {...detail} />
-                <div
-                  className={`post-body ${detail.bodyClass}`}
-                  dangerouslySetInnerHTML={{ __html: post.html }}
-                />
-              </div>
-            </div>
+          <Comments comments={fm.comments} />
 
-            {fm.tags && fm.tags.length > 0 && (
-              <div className="panel panel-primary">
-                <div className="panel-heading">Tags</div>
-                <div className="panel-body" id="tagcloud">
-                  {fm.tags.map(t => (
-                    <React.Fragment key={t}>
-                      <Link
-                        to={`/blog?tag=${encodeURIComponent(t)}`}
-                        className="label label-default"
-                      >
-                        {t}
-                      </Link>{" "}
-                    </React.Fragment>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <Comments comments={fm.comments} />
-
-            <ul className="pager">
+          {(previous || next) && (
+            <nav className="pager" aria-label="More posts">
               {previous && (
-                <li className="previous">
-                  <Link to={previous.path} rel="prev">
-                    &larr; {previous.title}
-                  </Link>
-                </li>
+                <Link className="pager-link pager-prev" to={previous.path} rel="prev">
+                  <span className="pager-dir">← Newer</span>
+                  <span className="pager-title">{previous.title}</span>
+                </Link>
               )}
               {next && (
-                <li className="next">
-                  <Link to={next.path} rel="next">
-                    {next.title} &rarr;
-                  </Link>
-                </li>
+                <Link className="pager-link pager-next" to={next.path} rel="next">
+                  <span className="pager-dir">Older →</span>
+                  <span className="pager-title">{next.title}</span>
+                </Link>
               )}
-            </ul>
-          </div>
+            </nav>
+          )}
         </div>
-      </div>
+      </section>
     </Layout>
   )
 }

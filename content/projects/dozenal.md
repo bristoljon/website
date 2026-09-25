@@ -138,6 +138,18 @@ comments:
     author: "Jon"
     date: "2025-07-27"
     body: "Changing the L and X characters doesn't work on latest version I think.. Old one does but it's even worse at maths 😆"
+updates:
+  - date: 2021-12-08
+    title: "Finally working on v2 now 🎉"
+    body: "I finally dusted off the Dozenal Calculator code as it seems to be getting quite a bit of traffic.. Have basically rewritten it using React and bignumber.js which should provide much better accuracy especially with fractions. Check it out [here](https://dozenal.netlify.app/)"
+  - date: 2015-08-06
+    approxDate: true
+    title: "Bug Found"
+    body: "1/5 (dozenal) = 0;2 - Pretty sure this is related to the accuracy issue I mentioned before. When converting from doz to dec or vice versa, the output only shows as many decimal or dozenal places as the input. Should be pretty easy fix but won't be till after next week."
+  - date: 2015-08-01
+    approxDate: true
+    title: "Colours"
+    body: "Changed colour for dozenal mode so that ';' key is consistent as well. Still don't really like the whole colour scheme but it'll do for now."
 ---
 
 **UPDATE**I've finally started work on v2 of this calculator [here](https://dozenal.netlify.app/). Please submit any issues or suggestions to the github repo [here](https://github.com/bristoljon/dozenal-calculator/issues). I've not implemented any validation of input or supported keyboard input yet but the conversion of fractions seems to be much better at least.

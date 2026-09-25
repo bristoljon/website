@@ -25,6 +25,19 @@ comments:
     author: "Jon"
     date: "2025-07-27"
     body: "Sorry, closed commenting until I can remember how to write PHP code and disable anon posting :-D"
+updates:
+  - date: 2016-04-21
+    title: "Babelified to ES5 - Now works on Safari and older browsers"
+    body: "Added some tooling to transpile the source into ES5 so that it works on desktop and mobile safari. Although desktop solve methods are really slow, seems to be to do with the regenerator runtime. Also had to remove my use of proxies as it turns out there is no ES5 equivalent."
+  - date: 2016-04-07
+    title: "Solves Blank Grid"
+    body: "Refactored the tree search algorithm so that it now solves an empty grid. Previously it just simulated blanks that had 2 options now it runs recursively over all options of all blanks until it solves or determines that the puzzle is unsolvable. Pretty sweet."
+  - date: 2016-03-29
+    title: "Added visual feedback"
+    body: "Major upgrade: Added visualisation with adjustable speed setting (using generator functions and setInterval). Also improved mobile experience although still buggy on chrome. Added screenshots to the project page."
+  - date: 2016-03-15
+    title: "Sudoku Solver"
+    body: "Making the most of my time off by making a sudoku solver. Plan is to dumb it down and use it as a difficulty rater by comparing the effectiveness of different techniques. For now it just solves puzzles.."
 ---
 
 Finally got round to starting this project. The idea is to emulate the various different approaches people take to solve the puzzle and then try all of them to determine the average time each takes to solve it (if at all). Seems that everyone has a different approach to the problem. Longer term I wonder whether it might be able to parse a solving algorithm from a free text description of an individuals method.

@@ -2,35 +2,25 @@ import * as React from "react"
 import { Link } from "gatsby"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
+import PageHero from "../components/page-hero"
 
 const NotFound = () => (
   <Layout>
-    <div id="home" className="row jumbo jumbo-blog">
-      <div className="container">
-        <div className="col-md-8 col-md-offset-2 splash">
-          <div className="row">
-            <div className="col-md-12 title">
-              <h1>Nothing here</h1>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <PageHero kicker="Error 404" title="Nothing here" tone="pink" />
 
-    <div id="content" className="row">
-      <div className="container">
-        <div className="col-md-8 col-md-offset-2">
-          <div className="panel panel-primary">
-            <div className="panel-body">
-              <p>
-                That page has moved or never existed. Try the{" "}
-                <Link to="/blog">blog</Link> or head <Link to="/">home</Link>.
-              </p>
-            </div>
-          </div>
+    <section className="section">
+      <div className="wrap narrow">
+        <div className="card not-found">
+          <p className="not-found-num" aria-hidden="true">
+            4<span>0</span>4
+          </p>
+          <p>
+            That page has moved or never existed. Try the{" "}
+            <Link to="/blog">blog</Link> or head <Link to="/">home</Link>.
+          </p>
         </div>
       </div>
-    </div>
+    </section>
   </Layout>
 )
 

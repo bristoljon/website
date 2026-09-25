@@ -13,6 +13,13 @@ tags:
 links: []
 draft: false
 comments: []
+updates:
+  - date: 2015-08-21
+    title: "Added iPhone Screenshots"
+    body: "Added a few screen shots from the iOS prototype I made."
+  - date: 2015-08-20
+    title: "iMedic - Paramedic App"
+    body: "Tidies up and added links to web apps in 'tools' section."
 ---
 
 I first started working on iMedic when I was finishing my paramedic training a few years ago. At the time there was only one app that contained the JRCALC clinical guidelines (that every paramedic is supposed to carry). This app was a slow and ugly, html based mostrosity but it provided the guidelines in a digital format and people were paying the (at one point) £14.99 asking price. So I thought I could do better and started learning objective-C/iPhone development.

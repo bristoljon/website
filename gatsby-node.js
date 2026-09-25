@@ -1,4 +1,16 @@
 const path = require("path")
+const remark = require("remark")
+const toHast = require("mdast-util-to-hast")
+const toHtml = require("hast-util-to-html")
+
+// Update bodies are short markdown strings in frontmatter, which
+// gatsby-transformer-remark doesn't touch. Raw HTML passes through, as it
+// does in post bodies.
+const markdownToHtml = md => {
+  if (!md) return ""
+  const hast = toHast(remark().parse(md), { allowDangerousHtml: true })
+  return toHtml(hast, { allowDangerousHtml: true })
+}
 
 /**
  * Explicit types. Without these, Gatsby infers frontmatter shape from whatever
@@ -32,13 +44,65 @@ exports.createSchemaCustomization = ({ actions }) => {
       status: String
       tags: [String]
       links: [Link]
+      updates: [ProjectUpdate]
       comments: [Comment]
       draft: Boolean
+      name: String
+      headline: String
+      location: String
+      email: String
+      phone: String
+      address: String
+      website: String
+      github: String
+      linkedin: String
+      profile: String
+      skills: [String]
+      work: [CvJob]
+      education: [CvEducation]
+      sideProjects: [CvProject]
+      sideProjectsNote: String
+    }
+
+    # The CV, content/pages/cv.md. A work entry with only "aside" set is
+    # the italic line between jobs, e.g. a career break.
+    type CvJob {
+      company: String
+      title: String
+      location: String
+      dates: String
+      url: String
+      summary: String
+      highlights: [String]
+      aside: String
+    }
+
+    type CvEducation {
+      qualification: String
+      school: String
+      year: String
+    }
+
+    type CvProject {
+      name: String
+      status: String
+      description: String
     }
 
     type Link {
       label: String
       url: String
+    }
+
+    # A dated note on a project. Shown in a timeline on the project page and
+    # merged into the homepage's recent feed. approxDate marks a date that is
+    # only known to the month (a few from 2015 lost their exact timestamp).
+    type ProjectUpdate {
+      date: Date @dateformat
+      approxDate: Boolean
+      title: String
+      body: String
+      html: String
     }
 
     type Comment {
@@ -48,6 +112,14 @@ exports.createSchemaCustomization = ({ actions }) => {
       body: String
     }
   `)
+}
+
+exports.createResolvers = ({ createResolvers }) => {
+  createResolvers({
+    ProjectUpdate: {
+      html: { resolve: source => markdownToHtml(source.body) },
+    },
+  })
 }
 
 /**

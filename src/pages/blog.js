@@ -2,6 +2,10 @@ import * as React from "react"
 import { graphql, Link } from "gatsby"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
+import PageHero from "../components/page-hero"
+import TagList from "../components/tag-list"
+
+const TONES = ["sun", "sky", "pink", "mint"]
 
 /**
  * The old tags panel did an AJAX call to a PHP script that JOINed through the
@@ -28,71 +32,67 @@ const BlogIndex = ({ data, location }) => {
 
   return (
     <Layout>
-      <div id="home" className="row jumbo jumbo-blog">
-        <div className="container">
-          <div className="col-md-8 col-md-offset-2 splash">
-            <div className="row">
-              <div className="col-md-12 title">
-                <h1>Blog</h1>
-                <h3>Part journal, part blog, part collaboration station.</h3>
-              </div>
+      <PageHero kicker="All posts" title="Blog" tone="sun" image="/img/pano-min.jpg">
+        <p className="page-lede">
+          Part journal, part blog, part collaboration station.
+        </p>
+      </PageHero>
+
+      <section className="section">
+        <div className="wrap narrow">
+          {allTags.length > 0 && (
+            <div className="card tag-filter">
+              <h2 className="card-label">Filter by tag</h2>
+              <TagList tags={allTags} active={activeTag} showAll />
             </div>
-          </div>
-        </div>
-      </div>
+          )}
 
-      <div id="content" className="row">
-        <div className="container">
-          <div className="col-md-8 col-md-offset-2">
-            {allTags.length > 0 && (
-              <div className="panel panel-primary tag-filter">
-                <div className="panel-heading">Tags</div>
-                <div className="panel-body" id="tagcloud">
-                  <Link
-                    to="/blog"
-                    className={`label ${
-                      !activeTag ? "label-primary" : "label-default"
-                    }`}
-                  >
-                    All
-                  </Link>{" "}
-                  {allTags.map(t => (
-                    <React.Fragment key={t}>
-                      <Link
-                        to={`/blog?tag=${encodeURIComponent(t)}`}
-                        className={`label ${
-                          activeTag === t ? "label-primary" : "label-default"
-                        }`}
-                      >
-                        {t}
-                      </Link>{" "}
-                    </React.Fragment>
-                  ))}
-                </div>
-              </div>
-            )}
+          {activeTag && (
+            <p className="filter-note">
+              Showing {visible.length} {visible.length === 1 ? "post" : "posts"}{" "}
+              tagged <strong>{activeTag}</strong>.{" "}
+              <Link to="/blog">Show everything</Link>
+            </p>
+          )}
 
-            <div className="post-list">
-              {visible.map(post => (
-                <div className="panel panel-primary" key={post.id}>
-                  <div className="panel-heading">
-                    <Link to={post.fields.path}>{post.frontmatter.title}</Link>
-                    <span className="pull-right">
-                      <time dateTime={post.frontmatter.isoDate}>
-                        {post.frontmatter.date}
-                      </time>
+          <ol className="post-list">
+            {visible.map((post, i) => {
+              const fm = post.frontmatter
+              const count = (fm.comments || []).length
+              return (
+                <li
+                  className={`card post-card tone-${TONES[i % TONES.length]}`}
+                  key={post.id}
+                >
+                  <span className="post-num" aria-hidden="true">
+                    {fm.number != null ? fm.number : "✦"}
+                  </span>
+                  <div className="post-card-body">
+                    <div className="feed-meta">
+                      <span className="chip">{fm.type || "Update"}</span>
+                      <time dateTime={fm.isoDate}>{fm.date}</time>
+                      {count > 0 && (
+                        <span className="meta-extra">
+                          {count} {count === 1 ? "comment" : "comments"}
+                        </span>
+                      )}
+                    </div>
+                    <h2 className="post-card-title">
+                      <Link className="stretched" to={post.fields.path}>
+                        {fm.title}
+                      </Link>
+                    </h2>
+                    <p>{fm.excerpt || post.excerpt}</p>
+                    <span className="read-more" aria-hidden="true">
+                      Read more →
                     </span>
                   </div>
-                  <div className="panel-body">
-                    <p>{post.frontmatter.excerpt || post.excerpt}</p>
-                    <Link to={post.fields.path}>Read more &rarr;</Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+                </li>
+              )
+            })}
+          </ol>
         </div>
-      </div>
+      </section>
     </Layout>
   )
 }
@@ -121,6 +121,8 @@ export const query = graphql`
         frontmatter {
           title
           excerpt
+          type
+          number
           tags
           date(formatString: "D MMMM YYYY")
           isoDate: date

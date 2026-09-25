@@ -32,6 +32,39 @@ URLs are unchanged. `content/blog/update-1.md` builds `/blog/update-1`,
 is the URL** — renaming a file breaks a live link and every inbound link in the
 old posts.
 
+## CV
+
+`/cv` is built from `content/pages/cv.md`, editable in the CMS under
+Pages > CV. Jobs are listed newest first; an entry with only `aside` set
+renders as the italic line between jobs, such as a career break.
+
+"Download PDF" opens the browser's print dialog. The print styles at the end of
+`src/styles/global.css` hide the site chrome and lay the CV out on A4, so
+"Save as PDF" produces the document. Phone and address are blank on purpose,
+because anything filled in there is public.
+
+## Project updates
+
+Each project can carry an `updates` list in its frontmatter: a date, a title
+and a short markdown body. In the CMS it's the "Updates" list on a project,
+with new entries added at the top.
+
+```yaml
+updates:
+  - date: 2021-12-08
+    title: "Finally working on v2 now 🎉"
+    body: "Rewritten in React. Check it out [here](https://dozenal.netlify.app/)"
+```
+
+Updates show as a timeline on the project page, set the project's "Updated"
+date, and are mixed into the homepage's recent feed with blog posts and new
+projects. Feed cards link straight to the update on the project page.
+
+The existing entries came from the old site's `/php/updates.php` feed and
+project pages. Three from 2015 had lost their exact timestamp, so they carry
+`approxDate: true` and display as "c. August 2015". The old "Time is Money"
+launch note was marked hidden there, so it wasn't brought across.
+
 ## Comments
 
 Commenting is off: there is no endpoint to post to and no users table to

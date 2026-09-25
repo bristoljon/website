@@ -2,7 +2,7 @@ import * as React from "react"
 
 /**
  * Your "experimental feature" from Update 3, kept as it was: the post body
- * carries .tech and .pain spans, and these buttons decide which are visible.
+ * carries .tech and .pain blocks, and these buttons decide which are visible.
  *
  * The original in blog/index.php was a three-state Bootstrap .btn-group, not
  * two independent switches — Non-technical hid both classes, Technical showed
@@ -30,22 +30,23 @@ const LABELS = {
 }
 
 const DetailToggles = ({ level, setLevel }) => (
-  <div
-    className="btn-group detail-toggles"
-    role="group"
-    aria-label="Detail level"
-  >
-    {LEVELS.map(key => (
-      <button
-        key={key}
-        type="button"
-        className={`btn btn-default ${level === key ? "active" : ""}`}
-        aria-pressed={level === key}
-        onClick={() => setLevel(key)}
-      >
-        {LABELS[key]}
-      </button>
-    ))}
+  <div className="detail-bar">
+    <span className="detail-label" id="detail-label">
+      Detail level
+    </span>
+    <div className="segmented" role="group" aria-labelledby="detail-label">
+      {LEVELS.map(key => (
+        <button
+          key={key}
+          type="button"
+          className={`seg seg-${key}`}
+          aria-pressed={level === key}
+          onClick={() => setLevel(key)}
+        >
+          {LABELS[key]}
+        </button>
+      ))}
+    </div>
   </div>
 )
 

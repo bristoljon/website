@@ -1,26 +1,31 @@
 const React = require("react")
 
 /**
- * The original site loaded its CSS from <head> in html/head.html: Google's
- * Yanone Kaffeesatz (the splash typeface), Font Awesome 4.3 (the social icons
- * and the star/pencil markers on the updates feed), then Bootstrap 3.
+ * Fonts for the redesign: Bricolage Grotesque does the loud display type and
+ * the body copy, Space Mono does the little labels, dates and tags.
  *
- * Bootstrap is referenced at /css/styles.min.css rather than imported through
- * webpack because the carried-over mini-apps — onetimepad and units — link to
- * that same absolute path. Importing it would bundle a second copy.
+ * Bootstrap and Font Awesome are no longer loaded on the Gatsby pages — the
+ * site styles itself from src/styles/global.css. /css/styles.min.css stays in
+ * /static because the carried-over mini-apps (onetimepad, units, sudoku, 3d2)
+ * link to it directly.
  */
 exports.onRenderBody = ({ setHeadComponents }) => {
   setHeadComponents([
     <link
-      key="font-yanone"
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz&display=swap"
+      key="preconnect-fonts"
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
     />,
     <link
-      key="font-awesome"
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+      key="preconnect-gstatic"
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossOrigin="anonymous"
     />,
-    <link key="bootstrap" rel="stylesheet" href="/css/styles.min.css" />,
+    <link
+      key="fonts"
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Space+Mono:wght@400;700&display=swap"
+    />,
   ])
 }
