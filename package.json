@@ -16,6 +16,7 @@
     "migrate:scrape": "node scripts/scrape-legacy.js"
   },
   "dependencies": {
+    "@netlify/blobs": "^10.7.13",
     "gatsby": "^5.13.0",
     "gatsby-plugin-netlify": "^5.1.0",
     "gatsby-plugin-sitemap": "^6.13.0",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "decap-server": "^3.1.0",
+    "gray-matter": "^4.0.3",
     "mysql2": "^3.9.0",
     "turndown": "^7.1.2"
   },

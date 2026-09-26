@@ -1,0 +1,214 @@
+<!doctype html>
+<!--
+  Comment moderation: the latest comments across the site, each with a
+  Delete button. Talks to /api/comments with the COMMENTS_ADMIN_KEY set in
+  Netlify, which it remembers in this browser. Plain HTML so it stays clear
+  of Decap, which owns /admin/. See README > "Comments".
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Comments · bristoljon.uk admin</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <style>
+    :root {
+      --bg: #f5f5f1;
+      --surface: #fffffd;
+      --ink: #16181b;
+      --muted: #5b6168;
+      --rule: #d8d8d0;
+      --danger: #ab1f5c;
+      --accent: #f7c600;
+      color-scheme: light dark;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0e1012;
+        --surface: #15181b;
+        --ink: #e6e4de;
+        --muted: #9aa1a9;
+        --rule: #2a2f35;
+        --danger: #ff6aa9;
+        --accent: #ffd23f;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem 16px 4rem;
+      background: var(--bg);
+      color: var(--ink);
+      font: 16px/1.5 "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    main { max-width: 760px; margin: 0 auto; }
+    h1 { margin: 0 0 1rem; font-size: 1.5rem; }
+    .mono, label, button, .meta, #status { font-family: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
+    form { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: end; margin-bottom: 1rem; }
+    label { display: grid; gap: 0.25rem; flex: 1 1 18rem; font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    input {
+      padding: 0.55rem 0.7rem;
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      font: inherit;
+      font-size: 0.95rem;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    button {
+      padding: 0.55rem 0.9rem;
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--ink);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    button.primary { background: var(--accent); color: #111214; border-color: var(--accent); }
+    button.delete { border-color: var(--danger); color: var(--danger); }
+    button:disabled { opacity: 0.5; cursor: progress; }
+    #status { min-height: 1.5em; color: var(--muted); font-size: 0.85rem; }
+    #status.error { color: var(--danger); }
+    ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
+    li {
+      padding: 0.9rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+    }
+    .meta { display: flex; flex-wrap: wrap; gap: 0.25rem 0.75rem; align-items: baseline; font-size: 0.8rem; color: var(--muted); }
+    .meta strong { color: var(--ink); }
+    .meta a { color: inherit; }
+    .meta button { margin-left: auto; }
+    .body { margin: 0.5rem 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Comments</h1>
+
+    <form id="auth">
+      <label>
+        Admin key
+        <input id="key" type="password" autocomplete="current-password" required />
+      </label>
+      <button class="primary" type="submit">Load</button>
+      <button id="forget" type="button">Forget key</button>
+    </form>
+
+    <p id="status" role="status" aria-live="polite"></p>
+    <ol id="list"></ol>
+  </main>
+
+  <script>
+    const STORAGE = "comments-admin-key"
+    const $ = id => document.getElementById(id)
+    const keyInput = $("key")
+    const list = $("list")
+
+    const store = {
+      get: () => { try { return localStorage.getItem(STORAGE) || "" } catch (e) { return "" } },
+      set: v => { try { localStorage.setItem(STORAGE, v) } catch (e) {} },
+      clear: () => { try { localStorage.removeItem(STORAGE) } catch (e) {} },
+    }
+
+    const status = (text, error) => {
+      $("status").textContent = text
+      $("status").className = error ? "error" : ""
+    }
+
+    const api = (query, options = {}) =>
+      fetch(`/api/comments${query}`, {
+        ...options,
+        headers: {
+          authorization: `Bearer ${keyInput.value}`,
+          "content-type": "application/json",
+          ...(options.headers || {}),
+        },
+      })
+
+    const render = comments => {
+      list.replaceChildren(
+        ...comments.map(c => {
+          const li = document.createElement("li")
+          const meta = document.createElement("div")
+          meta.className = "meta"
+
+          const who = document.createElement("strong")
+          who.textContent = c.owner ? `${c.author} (author)` : c.author
+          const page = document.createElement("a")
+          page.href = c.path
+          page.textContent = c.path
+          const when = document.createElement("time")
+          when.dateTime = c.date
+          when.textContent = new Date(c.date).toLocaleString("en-GB", {
+            dateStyle: "medium",
+            timeStyle: "short",
+          })
+          const del = document.createElement("button")
+          del.className = "delete"
+          del.type = "button"
+          del.textContent = "Delete"
+          del.addEventListener("click", () => remove(c, li, del))
+          meta.append(who, page, when, del)
+
+          const body = document.createElement("p")
+          body.className = "body"
+          body.textContent = c.body
+
+          li.append(meta, body)
+          return li
+        })
+      )
+    }
+
+    const load = async () => {
+      status("Loading…")
+      const res = await api("?recent=1")
+      if (res.status === 401) {
+        list.replaceChildren()
+        return status("That key didn't work.", true)
+      }
+      if (!res.ok) return status(`Couldn't load comments (HTTP ${res.status}).`, true)
+      store.set(keyInput.value)
+      const { comments } = await res.json()
+      render(comments)
+      status(comments.length ? `${comments.length} most recent, newest first.` : "No comments yet.")
+    }
+
+    const remove = async (c, li, button) => {
+      const preview = c.body.length > 80 ? `${c.body.slice(0, 80)}…` : c.body
+      if (!confirm(`Delete this comment by ${c.author}?\n\n"${preview}"`)) return
+      button.disabled = true
+      const res = await api("", {
+        method: "DELETE",
+        body: JSON.stringify({ path: c.path, id: c.id }),
+      })
+      if (res.ok || res.status === 404) {
+        li.remove()
+        status(res.ok ? "Deleted." : "Already gone.")
+      } else {
+        button.disabled = false
+        status(`Delete failed (HTTP ${res.status}).`, true)
+      }
+    }
+
+    $("auth").addEventListener("submit", e => {
+      e.preventDefault()
+      load().catch(() => status("Couldn't reach /api/comments.", true))
+    })
+    $("forget").addEventListener("click", () => {
+      store.clear()
+      keyInput.value = ""
+      list.replaceChildren()
+      status("Key forgotten.")
+    })
+
+    keyInput.value = store.get()
+    if (keyInput.value) load().catch(() => status("Couldn't reach /api/comments.", true))
+  </script>
+</body>
+</html>

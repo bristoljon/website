@@ -13,15 +13,6 @@ tags:
   - "Stereoscopic"
 links: []
 draft: true
-comments:
-  - id: "2"
-    author: "Jon"
-    date: "2015-07-29"
-    body: "Hello there you"
-  - id: "9"
-    author: "Jamie"
-    date: "2015-07-30"
-    body: "Yes Bro... There are some awesome ideas in here. Need to add the A to B racing and straight line racing"
 ---
 
 The idea is to create a platform or portal for organising large-scale, multi-player, location-based games. Users would have a profile and gain experience points and rep points for participating in and winning games. Most games would be best suited to urban environments and high population density areas hence the name. The point is to connect strangers and have fun but it could potentially be tastefully commercialised through geo-targeted ads for local businesses.

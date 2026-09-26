@@ -1935,11 +1935,96 @@ a.tag:hover {
   font-weight: 600;
 }
 
-.comments-closed {
-  margin: 1.5rem 0 0;
+.comment-count {
+  margin-left: 0.35rem;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* On comments posted by the site's author (see comments.js). */
+.owner-badge {
+  display: inline-block;
+  margin-left: 0.45rem;
+  padding: 0.05rem 0.4rem;
+  background: var(--tang);
+  color: var(--on-accent);
+  border-radius: 3px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: 0.05em;
+}
+
+.owner-note {
+  margin: -0.75rem 0 1.25rem;
+  color: var(--tang-text);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+
+/* Sent from this tab and shown straight away, before the server confirms. */
+.comment.is-new {
+  border-left-color: var(--sun);
+}
+
+/* The comment form borrows the contact form's .field layout, in the light
+   card style rather than the terminal panel. */
+.comment-form {
+  margin-top: 1.5rem;
+}
+
+.comment-form .field > span {
+  color: var(--muted);
+}
+
+.comment-form .field input,
+.comment-form .field textarea {
+  background: var(--bg);
+  color: var(--ink);
+  border-color: var(--rule);
+}
+
+.comment-form .field input::placeholder {
+  color: var(--muted);
+}
+
+.comment-form .field input:focus,
+.comment-form .field textarea:focus {
+  border-color: var(--sun-text);
+}
+
+.comment-form .field textarea {
+  min-height: 120px;
+}
+
+.comment-form-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.comment-form .btn[disabled] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.form-status {
+  margin: 0;
   color: var(--muted);
   font-family: var(--mono);
   font-size: 0.8rem;
+}
+
+.form-status.is-sent {
+  color: var(--mint-text);
+}
+
+.form-status.is-error {
+  color: var(--pink-text);
 }
 
 /* ------------------------------------------------------ contact & footer */

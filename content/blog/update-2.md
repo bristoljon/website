@@ -12,7 +12,6 @@ tags:
   - "Shadows"
   - "Router"
 draft: false
-comments: []
 ---
 
 So last week I started out playing with shadows in [Shader](/misc/shader/). Possibly inspired by the nice weather. This was kind of a proof of concept which I then applied to my dozenal calculator in ['SunCalc'](/misc/suncalc/), where I also added the option to change shadow lengths depending on distance from the 'sun'. This planted the seed for the project that I finished the week with..

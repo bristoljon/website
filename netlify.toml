@@ -6,6 +6,10 @@
   NODE_VERSION = "20"
   NPM_FLAGS = "--legacy-peer-deps"
 
+# Comment functions: see netlify/functions and README > "Comments".
+[functions]
+  directory = "netlify/functions"
+
 [[plugins]]
   package = "@netlify/plugin-gatsby"
 

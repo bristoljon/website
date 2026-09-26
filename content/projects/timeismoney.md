@@ -26,7 +26,6 @@ links:
   - label: "Source"
     url: "https://github.com/bristoljon/bristoljon.uk/tree/master/projects/units"
 draft: false
-comments: []
 ---
 
 This came from something I wanted to make whilst working as an agency paramedic, cashing in before switching careers. I was doing a lot of clock watching and thought it would be nice to have a counter so that I could view time as money earned and watch the pennies add up as the seconds roll by. Anyway, I still haven't gotten round to implementing that part yet but got the basic unit converter up now.

@@ -21,11 +21,6 @@ links:
   - label: Live app
     url: /projects/onetimepad/
 draft: false
-comments:
-  - id: "18"
-    author: "Anonymous"
-    date: "2017-11-23"
-    body: "Good riddles"
 ---
 
 A one-time-pad is a method for encrypting a message using a key. First, all the characters in both the key and message are converted to numbers. Then each character is subtracted from it's matching character in the key text. The result is converted back into a character. Technically there is no way to crack the code as the same cipher could decrypt to any message given the right key. However the problem is, you need some way to communicate the key to the recipient in the first place hence why it's not widely used. [More info](https://en.wikipedia.org/wiki/One-time_pad).

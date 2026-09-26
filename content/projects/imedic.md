@@ -23,7 +23,6 @@ images:
     caption: "GCS Guesser"
 links: []
 draft: false
-comments: []
 updates:
   - date: 2015-08-21
     title: "Added iPhone Screenshots"

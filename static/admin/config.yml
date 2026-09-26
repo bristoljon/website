@@ -38,22 +38,6 @@ collections:
           Raw HTML passes through. Wrap deeper passages in
           <div class="tech"> or <div class="pain"> to put them behind the
           detail toggles.
-      - name: comments
-        label: Archived comments
-        label_singular: Comment
-        widget: list
-        required: false
-        default: []
-        collapsed: true
-        summary: "{{fields.author}} — {{fields.date | date('MMM YYYY')}}"
-        hint: >-
-          Read-only history from the old comment table. Commenting is closed,
-          so nothing new arrives here — delete an entry to take it down.
-        fields:
-          - { name: id, label: Legacy ID, widget: string, required: false }
-          - { name: author, label: Author, widget: string, default: "Anonymous" }
-          - { name: date, label: Date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false }
-          - { name: body, label: Comment, widget: text }
 
   - name: projects
     label: Projects
@@ -109,19 +93,6 @@ collections:
           - { name: approxDate, label: Date is approximate, widget: boolean, default: false, required: false, hint: "Shows as 'c. Month Year'." }
       - { name: draft, label: Draft, widget: boolean, default: true }
       - { name: body, label: Body, widget: markdown }
-      - name: comments
-        label: Archived comments
-        label_singular: Comment
-        widget: list
-        required: false
-        default: []
-        collapsed: true
-        summary: "{{fields.author}} — {{fields.date | date('MMM YYYY')}}"
-        fields:
-          - { name: id, label: Legacy ID, widget: string, required: false }
-          - { name: author, label: Author, widget: string, default: "Anonymous" }
-          - { name: date, label: Date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false }
-          - { name: body, label: Comment, widget: text }
 
   - name: misc
     label: Misc
