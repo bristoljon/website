@@ -5,7 +5,9 @@ import Seo from "../components/seo"
 import PageHero from "../components/page-hero"
 import TagList from "../components/tag-list"
 
-const TONES = ["sun", "sky", "pink", "mint"]
+// Accent by kind of post.
+const toneFor = type => (type === "Geek Blog" ? "grape" : "sky")
+const pad = n => String(n).padStart(2, "0")
 
 /**
  * The old tags panel did an AJAX call to a PHP script that JOINed through the
@@ -32,7 +34,7 @@ const BlogIndex = ({ data, location }) => {
 
   return (
     <Layout>
-      <PageHero kicker="All posts" title="Blog" tone="sun" image="/img/pano-min.jpg">
+      <PageHero kicker="All posts" title="Blog" tone="pink" image="/img/pano-min.jpg">
         <p className="page-lede">
           Part journal, part blog, part collaboration station.
         </p>
@@ -56,16 +58,16 @@ const BlogIndex = ({ data, location }) => {
           )}
 
           <ol className="post-list">
-            {visible.map((post, i) => {
+            {visible.map(post => {
               const fm = post.frontmatter
               const count = (fm.comments || []).length
               return (
                 <li
-                  className={`card post-card tone-${TONES[i % TONES.length]}`}
+                  className={`card post-card tone-${toneFor(fm.type)}`}
                   key={post.id}
                 >
                   <span className="post-num" aria-hidden="true">
-                    {fm.number != null ? fm.number : "✦"}
+                    {fm.number != null ? `#${pad(fm.number)}` : "#--"}
                   </span>
                   <div className="post-card-body">
                     <div className="feed-meta">

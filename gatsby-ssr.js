@@ -1,8 +1,9 @@
 const React = require("react")
 
 /**
- * Fonts for the redesign: Bricolage Grotesque does the loud display type and
- * the body copy, Space Mono does the little labels, dates and tags.
+ * Fonts: IBM Plex Sans for headings and body copy, IBM Plex Mono for the
+ * labels, paths, dates, tags and anything else that wants to look like a
+ * terminal.
  *
  * Bootstrap and Font Awesome are no longer loaded on the Gatsby pages — the
  * site styles itself from src/styles/global.css. /css/styles.min.css stays in
@@ -25,7 +26,7 @@ exports.onRenderBody = ({ setHeadComponents }) => {
     <link
       key="fonts"
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Space+Mono:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
     />,
   ])
 }

@@ -54,11 +54,11 @@ const CvPage = ({ data }) => {
         {fm.headline && <p className="page-lede">{fm.headline}</p>}
         {contactList}
         <div className="hero-actions cv-actions">
-          <button type="button" className="btn tone-pink btn-big" onClick={downloadPdf}>
+          <button type="button" className="btn tone-sun" onClick={downloadPdf}>
             Download PDF <span aria-hidden="true">↓</span>
           </button>
           {fm.email && (
-            <a className="btn tone-paper btn-big" href={`mailto:${fm.email}`}>
+            <a className="btn" href={`mailto:${fm.email}`}>
               Email me
             </a>
           )}

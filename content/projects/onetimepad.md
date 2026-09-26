@@ -14,7 +14,7 @@ tags:
   - "Responsive"
 links:
   - label: Live app
-    url: /onetimepad/
+    url: /projects/onetimepad/
 draft: false
 comments:
   - id: "18"

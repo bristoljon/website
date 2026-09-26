@@ -2,12 +2,13 @@ import * as React from "react"
 import { graphql, Link } from "gatsby"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
+import Window from "../components/window"
 import { byNewest, plainExcerpt, projectUpdates, updateDate } from "../utils/updates"
 
-const TONES = ["sun", "sky", "pink", "mint", "tang", "grape"]
+// Accent per kind of item, so the feed reads at a glance.
+const KIND_TONE = { blog: "pink", project: "tang", update: "sky" }
 const FEED_SIZE = 9
 
-const ICONS = { blog: "✎", project: "★", update: "↻" }
 
 const IndexPage = ({ data }) => {
   const home = data.home
@@ -45,9 +46,8 @@ const IndexPage = ({ data }) => {
   ]
     .sort(byNewest)
     .slice(0, FEED_SIZE)
-  const ticker = data.projects.nodes.map(n => n.frontmatter.title)
 
-  // "bristoljon.uk" -> a giant "bristoljon" plus a ".uk" sticker.
+  // "bristoljon.uk" -> "bristoljon" with the ".uk" picked out in colour.
   const title = hero.title || "bristoljon.uk"
   const dot = title.indexOf(".")
   const word = dot > 0 ? title.slice(0, dot) : title
@@ -58,29 +58,21 @@ const IndexPage = ({ data }) => {
       <section id="home" className="hero-home">
         <div className="wrap hero-grid">
           <div className="hero-copy">
-            <p className="sticker tone-mint hero-hello">Hello, world!</p>
             <h1 className="hero-title">
-              <span className="sr-only">{title}</span>
-              <span className="hero-word" aria-hidden="true">
-                {[...word].map((ch, i) => (
-                  <span className="letter" style={{ "--i": i }} key={i}>
-                    {ch}
-                  </span>
-                ))}
-              </span>
-              {tld && (
-                <span className="hero-tld" aria-hidden="true">
-                  {tld}
-                </span>
-              )}
+              {word}
+              {tld && <span className="hero-tld">{tld}</span>}
+              <span className="cursor" aria-hidden="true" />
             </h1>
             {hero.excerpt && <p className="hero-lede">{hero.excerpt}</p>}
             <div className="hero-actions">
-              <a className="btn tone-sun btn-big" href="#recent">
+              <a className="btn tone-sun" href="#recent">
                 What's new <span aria-hidden="true">↓</span>
               </a>
-              <Link className="btn tone-paper btn-big" to="/blog">
+              <Link className="btn" to="/blog">
                 Read the blog
+              </Link>
+              <Link className="btn" to="/cv">
+                CV
               </Link>
             </div>
           </div>
@@ -91,28 +83,14 @@ const IndexPage = ({ data }) => {
                 <img src={hero.image} alt="" />
               </div>
               {hero.imageCredit && (
-                <figcaption className="tape">{hero.imageCredit}</figcaption>
+                <figcaption>
+                  <span>fig. 1</span> {hero.imageCredit}
+                </figcaption>
               )}
-              <span className="burst" aria-hidden="true">
-                <span>Made in Bristol</span>
-              </span>
             </figure>
           )}
         </div>
       </section>
-
-      {ticker.length > 0 && (
-        <div className="ticker" aria-hidden="true">
-          <div className="ticker-track">
-            {[...ticker, ...ticker].map((t, i) => (
-              <span key={i}>
-                {t}
-                <b>✦</b>
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/*
         Replaces the Angular {{ update.title }} widget that polled
@@ -122,23 +100,20 @@ const IndexPage = ({ data }) => {
       <section id="recent" className="section recent" aria-labelledby="recent-heading">
         <div className="wrap">
           <header className="section-head">
-            <p className="kicker">Recent</p>
+            <p className="kicker">01 / Recent</p>
             <h2 id="recent-heading" className="display">
               Fresh off the press
             </h2>
           </header>
 
           <ul className="card-grid">
-            {recent.map((item, i) => (
+            {recent.map(item => (
               <li
-                className={`card feed-card tone-${TONES[i % TONES.length]}`}
+                className={`card feed-card tone-${KIND_TONE[item.kind]}`}
                 key={item.key}
               >
                 <div className="feed-meta">
-                  <span className="chip">
-                    <span aria-hidden="true">{ICONS[item.kind]} </span>
-                    {item.label}
-                  </span>
+                  <span className="chip">{item.label}</span>
                   <time dateTime={item.isoDate}>{item.date}</time>
                 </div>
                 {item.project && <p className="feed-project">{item.project}</p>}
@@ -157,20 +132,17 @@ const IndexPage = ({ data }) => {
       <section id="about" className="section about" aria-labelledby="about-heading">
         <div className="wrap about-grid">
           <header className="about-head">
-            <p className="kicker">About</p>
+            <p className="kicker">02 / About</p>
             <h2 id="about-heading" className="display">
               {hero.aboutHeading || "About Me"}
             </h2>
-            <div className="about-doodles" aria-hidden="true">
-              <span className="doodle doodle-circle" />
-              <span className="doodle doodle-square" />
-              <span className="doodle doodle-star">✦</span>
-            </div>
           </header>
-          <div
-            className="card about-card prose"
-            dangerouslySetInnerHTML={{ __html: home?.html || "" }}
-          />
+          <Window name="about.md" className="about-card">
+            <div
+              className="prose"
+              dangerouslySetInnerHTML={{ __html: home?.html || "" }}
+            />
+          </Window>
         </div>
       </section>
     </Layout>
@@ -237,19 +209,6 @@ export const query = graphql`
             month: date(formatString: "MMMM YYYY")
             isoDate: date
           }
-        }
-      }
-    }
-    projects: allMarkdownRemark(
-      filter: {
-        fields: { collection: { eq: "projects" } }
-        frontmatter: { draft: { ne: true } }
-      }
-      sort: { frontmatter: { date: DESC } }
-    ) {
-      nodes {
-        frontmatter {
-          title
         }
       }
     }

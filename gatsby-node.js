@@ -29,6 +29,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       slug: String
       collection: String
       path: String
+      href: String
     }
 
     type Frontmatter @infer {
@@ -47,6 +48,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       updates: [ProjectUpdate]
       comments: [Comment]
       draft: Boolean
+      source: String
       name: String
       headline: String
       location: String
@@ -139,6 +141,12 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
   let urlPath = null
   if (collection === "blog") urlPath = `/blog/${slug}`
   if (collection === "projects") urlPath = `/project/${slug}`
+  // Misc entries get no page of their own: each one describes a static app
+  // served from static/misc/<slug>/. The href is kept separately so these
+  // stay out of the homepage feed, which lists everything with a path.
+  if (collection === "misc") {
+    actions.createNodeField({ node, name: "href", value: `/misc/${slug}/` })
+  }
 
   actions.createNodeField({ node, name: "slug", value: slug })
   actions.createNodeField({ node, name: "collection", value: collection })
@@ -216,7 +224,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   })
   createRedirect({
     fromPath: "/project/index.php",
-    toPath: "/#projects",
+    toPath: "/project/",
     isPermanent: true,
   })
   createRedirect({ fromPath: "/index.html", toPath: "/", isPermanent: true })

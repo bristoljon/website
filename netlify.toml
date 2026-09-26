@@ -10,35 +10,12 @@
   package = "@netlify/plugin-gatsby"
 
 # The old docroot had each mini-app at the top level *and* under /projects/.
-# Canonical home is now /projects/<name>/; the bare paths redirect in.
+# Apps with a project page live at /projects/<name>/; the small standalone
+# ones with no project page live at /misc/<name>/ (listed from content/misc).
+# Every old address redirects in.
 [[redirects]]
   from = "/dozenal"
   to = "/projects/dozenal/"
-  status = 301
-
-[[redirects]]
-  from = "/drinkscalc"
-  to = "/projects/drinkscalc/"
-  status = 301
-
-[[redirects]]
-  from = "/suncalc"
-  to = "/projects/suncalc/"
-  status = 301
-
-[[redirects]]
-  from = "/shader"
-  to = "/projects/shader/"
-  status = 301
-
-[[redirects]]
-  from = "/taptimer"
-  to = "/projects/taptimer/"
-  status = 301
-
-[[redirects]]
-  from = "/touchtimer/*"
-  to = "/projects/taptimer/"
   status = 301
 
 [[redirects]]
@@ -51,7 +28,109 @@
   to = "/projects/3d2/"
   status = 301
 
-# Anything that leaked the pre-.htaccess URLs.
+# Misc apps: bare paths, old /projects/ paths (with and without the
+# trailing slash, and anything beneath), all to /misc/<name>/.
+[[redirects]]
+  from = "/drinkscalc"
+  to = "/misc/drinkscalc/"
+  status = 301
+
+[[redirects]]
+  from = "/projects/drinkscalc"
+  to = "/misc/drinkscalc/"
+  status = 301
+
+[[redirects]]
+  from = "/projects/drinkscalc/*"
+  to = "/misc/drinkscalc/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/suncalc"
+  to = "/misc/suncalc/"
+  status = 301
+
+[[redirects]]
+  from = "/projects/suncalc"
+  to = "/misc/suncalc/"
+  status = 301
+
+[[redirects]]
+  from = "/projects/suncalc/*"
+  to = "/misc/suncalc/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/shader"
+  to = "/misc/shader/"
+  status = 301
+
+[[redirects]]
+  from = "/projects/shader"
+  to = "/misc/shader/"
+  status = 301
+
+[[redirects]]
+  from = "/projects/shader/*"
+  to = "/misc/shader/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/taptimer"
+  to = "/misc/taptimer/"
+  status = 301
+
+[[redirects]]
+  from = "/projects/taptimer"
+  to = "/misc/taptimer/"
+  status = 301
+
+[[redirects]]
+  from = "/projects/taptimer/*"
+  to = "/misc/taptimer/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/stylechanger"
+  to = "/misc/stylechanger/"
+  status = 301
+
+[[redirects]]
+  from = "/projects/stylechanger"
+  to = "/misc/stylechanger/"
+  status = 301
+
+[[redirects]]
+  from = "/projects/stylechanger/*"
+  to = "/misc/stylechanger/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/spoof"
+  to = "/misc/spoof/"
+  status = 301
+
+[[redirects]]
+  from = "/projects/spoof"
+  to = "/misc/spoof/"
+  status = 301
+
+[[redirects]]
+  from = "/projects/spoof/*"
+  to = "/misc/spoof/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/touchtimer/*"
+  to = "/misc/taptimer/"
+  status = 301
+
+# Pre-.htaccess URLs, and old links that pointed nowhere.
+[[redirects]]
+  from = "/projects"
+  to = "/project/"
+  status = 301
+
 [[redirects]]
   from = "/blog/index.php"
   to = "/blog"
@@ -59,31 +138,23 @@
 
 [[redirects]]
   from = "/project/index.php"
-  to = "/"
-  status = 301
-
-# The two PHP-only pages. There is no runtime to serve them on a static host:
-# /spoof sent mail through PHP's mail(), /stylechanger swapped stylesheets
-# server-side. Point them at the blog posts that describe them instead of
-# leaving dead links, or delete these two rules to let them 404.
-[[redirects]]
-  from = "/spoof"
-  to = "/blog/update-1"
+  to = "/project/"
   status = 301
 
 [[redirects]]
-  from = "/projects/spoof/*"
-  to = "/blog/update-1"
+  from = "/imedic"
+  to = "/project/imedic/"
   status = 301
 
 [[redirects]]
-  from = "/stylechanger"
-  to = "/blog/update-1"
+  from = "/project/drinkscalc"
+  to = "/misc/drinkscalc/"
   status = 301
 
+# Router Spy never had a page; the blog post that describes it will do.
 [[redirects]]
-  from = "/projects/stylechanger/*"
-  to = "/blog/update-1"
+  from = "/project/routerspy"
+  to = "/blog/update-2/"
   status = 301
 
 [[headers]]

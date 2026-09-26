@@ -131,18 +131,28 @@ ever in the HTML.
 
 ## Legacy apps
 
-The standalone bits (dozenal, drinkscalc, taptimer, suncalc, shader, 3d2,
-onetimepad, sudoku) are plain HTML/CSS/JS and work as-is. Copy them from the
-old docroot into `static/projects/<name>/` and they'll be served at
-`/projects/<name>/`. `netlify.toml` already redirects the bare paths
-(`/dozenal` → `/projects/dozenal/`) so old links keep working.
+The old site's standalone pages are plain HTML/CSS/JS, served as-is from
+`static/`:
 
-Two won't come across: `/spoof` and `/stylechanger` both needed PHP at request
-time. `netlify.toml` currently points them at `update-1`, which describes them.
-Delete those rules if you'd rather they 404.
+- **`static/projects/<name>/`** holds apps that have a project page: sudoku,
+  dozenal, 3d2, onetimepad and units (Time is Money). Their project pages link
+  to them.
+- **`static/misc/<name>/`** holds the small ones with no project page:
+  drinkscalc, suncalc, shader, taptimer, stylechanger and spoof. Each has an
+  entry in `content/misc/<name>.md` (title, date, summary, source link). The
+  entries drive the Misc menu and the `/misc` page. The filename must match
+  the folder.
 
-Also needs copying from the old repo: `static/img/hero.jpg` (the Flickr photo
-by @sage_solar) and the `png/` icons the drinks calculator uses.
+To add a misc app, drop its files in `static/misc/<name>/` and add
+`content/misc/<name>.md`.
+
+Two were PHP. `stylechanger` only used PHP to pick a stylesheet from a form,
+so it's now a static page that reads the choice from the URL instead. `spoof`
+sent e-mail through PHP's `mail()`, so `/misc/spoof/` is a short archive page
+linking the original source.
+
+`netlify.toml` redirects every old address (`/drinkscalc`,
+`/projects/drinkscalc/…`, `/stylechanger` and so on) to the new locations.
 
 ## Deploying
 

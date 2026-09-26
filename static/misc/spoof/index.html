@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>E-mail Spoofer (archived) — bristoljon.uk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600;700&display=swap" />
+  <!--
+    The original at /projects/spoof was a PHP form that sent mail through
+    PHP's mail() with whatever sender you typed in. A static host has nothing
+    to run it on, so this page stands in for it.
+  -->
+  <style>
+    :root {
+      --bg: #f5f5f1; --surface: #fffffd; --ink: #16181b; --muted: #5b6168;
+      --rule: #d8d8d0; --accent: #ea4c93; --link: #b33a05;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0e1012; --surface: #15181b; --ink: #e6e4de; --muted: #9aa1a9;
+        --rule: #2a2f35; --accent: #ff6aa9; --link: #ff8347;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center;
+      padding: 32px 16px; background: var(--bg); color: var(--ink);
+      font: 1.03rem/1.65 "IBM Plex Sans", system-ui, sans-serif;
+    }
+    main {
+      width: min(640px, 100%); padding: clamp(1.25rem, 4vw, 2rem);
+      background: var(--surface); border: 1px solid var(--rule);
+      border-top: 3px solid var(--accent); border-radius: 6px;
+    }
+    .path { margin: 0 0 1rem; color: var(--muted); font: 0.85rem "IBM Plex Mono", monospace; }
+    h1 { margin: 0 0 1rem; font-size: 1.9rem; line-height: 1.1; letter-spacing: -0.02em; }
+    p { margin: 0 0 1rem; }
+    a { color: inherit; text-decoration-color: var(--link); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+    ul { margin: 1.25rem 0 0; padding: 0; list-style: none; display: grid; gap: 0.4rem; font: 0.88rem "IBM Plex Mono", monospace; }
+    li::before { content: "→ "; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="path">~/misc/spoof</p>
+    <h1>E-mail Spoofer</h1>
+    <p>
+      One of the first things I made while learning PHP, during the opening
+      lecture on it. It was a form that sent an e-mail with whatever sender
+      name and address you typed in, using PHP's <code>mail()</code> function.
+    </p>
+    <p>
+      It needed a mail server behind it, so it didn't make the move to the new
+      static site. The original source is still on GitHub.
+    </p>
+    <ul>
+      <li><a href="/blog/update-1/">Where it's written up (Update 1)</a></li>
+      <li><a href="https://github.com/bristoljon/bristoljon.uk/blob/master/projects/spoof/index.php">Original PHP source</a></li>
+      <li><a href="/misc/">Other misc bits</a></li>
+    </ul>
+  </main>
+</body>
+</html>

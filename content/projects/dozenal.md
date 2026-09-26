@@ -13,7 +13,7 @@ tags:
   - "CSS"
 links:
   - label: Live app
-    url: /dozenal/
+    url: /projects/dozenal/
   - label: Source
     url: https://github.com/bristoljon/doz_tdd
 draft: false

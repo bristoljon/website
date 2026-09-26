@@ -26,6 +26,10 @@ module.exports = {
       options: { name: "pages", path: `${__dirname}/content/pages` },
     },
     {
+      resolve: "gatsby-source-filesystem",
+      options: { name: "misc", path: `${__dirname}/content/misc` },
+    },
+    {
       resolve: "gatsby-transformer-remark",
       options: {
         // The legacy MySQL `content` columns are HTML, including the

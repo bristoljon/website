@@ -6,6 +6,7 @@ import PageHero from "../components/page-hero"
 import TagList from "../components/tag-list"
 import Comments from "../components/comments"
 import DetailToggles, { useDetailLevel } from "../components/detail-toggles"
+import Window from "../components/window"
 
 const BlogPost = ({ data, pageContext }) => {
   const post = data.markdownRemark
@@ -20,7 +21,7 @@ const BlogPost = ({ data, pageContext }) => {
       <PageHero
         kicker={`${fm.type || "Update"}${fm.number != null ? ` ${fm.number}` : ""}`}
         title={fm.title}
-        tone="sun"
+        tone={fm.type === "Geek Blog" ? "grape" : "sky"}
         image="/img/pano-min.jpg"
       >
         <ul className="hero-meta">
@@ -37,13 +38,13 @@ const BlogPost = ({ data, pageContext }) => {
 
       <section className="section">
         <div className="wrap narrow stack">
-          <article className="card article">
+          <Window as="article" name={`blog/${pageContext.slug}.md`} className="article">
             <DetailToggles {...detail} />
             <div
               className={`post-body prose ${detail.bodyClass}`}
               dangerouslySetInnerHTML={{ __html: post.html }}
             />
-          </article>
+          </Window>
 
           {fm.tags && fm.tags.length > 0 && (
             <div className="card tag-card">

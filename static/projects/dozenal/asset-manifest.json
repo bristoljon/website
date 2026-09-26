@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/projects/dozenal/static/css/main.cf133066.chunk.css",
-    "main.js": "/projects/dozenal/static/js/main.2ba4f6f1.chunk.js",
-    "main.js.map": "/projects/dozenal/static/js/main.2ba4f6f1.chunk.js.map",
+    "main.css": "/projects/dozenal/static/css/main.86005dec.chunk.css",
+    "main.js": "/projects/dozenal/static/js/main.49635ce0.chunk.js",
+    "main.js.map": "/projects/dozenal/static/js/main.49635ce0.chunk.js.map",
     "runtime-main.js": "/projects/dozenal/static/js/runtime-main.4108a3c8.js",
     "runtime-main.js.map": "/projects/dozenal/static/js/runtime-main.4108a3c8.js.map",
     "static/js/2.6b71b5d7.chunk.js": "/projects/dozenal/static/js/2.6b71b5d7.chunk.js",
@@ -10,13 +10,13 @@
     "static/js/3.029024e4.chunk.js": "/projects/dozenal/static/js/3.029024e4.chunk.js",
     "static/js/3.029024e4.chunk.js.map": "/projects/dozenal/static/js/3.029024e4.chunk.js.map",
     "index.html": "/projects/dozenal/index.html",
-    "static/css/main.cf133066.chunk.css.map": "/projects/dozenal/static/css/main.cf133066.chunk.css.map",
+    "static/css/main.86005dec.chunk.css.map": "/projects/dozenal/static/css/main.86005dec.chunk.css.map",
     "static/js/2.6b71b5d7.chunk.js.LICENSE.txt": "/projects/dozenal/static/js/2.6b71b5d7.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.4108a3c8.js",
     "static/js/2.6b71b5d7.chunk.js",
-    "static/css/main.cf133066.chunk.css",
-    "static/js/main.2ba4f6f1.chunk.js"
+    "static/css/main.86005dec.chunk.css",
+    "static/js/main.49635ce0.chunk.js"
   ]
 }

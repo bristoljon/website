@@ -12,7 +12,9 @@ const NotFound = () => (
       <div className="wrap narrow">
         <div className="card not-found">
           <p className="not-found-num" aria-hidden="true">
-            4<span>0</span>4
+            <span>$</span> cd {"<that page>"}
+            <br />
+            bash: cd: no such file or directory
           </p>
           <p>
             That page has moved or never existed. Try the{" "}

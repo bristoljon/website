@@ -18,11 +18,13 @@ const Layout = ({ children, home }) => {
   const { social, author } = site.siteMetadata
 
   const socials = [
-    { label: "Facebook", href: social.facebook, tone: "sky" },
-    { label: "Twitter", href: social.twitter, tone: "mint" },
-    { label: "GitHub", href: social.github, tone: "sun" },
-    { label: "LinkedIn", href: social.linkedin, tone: "pink" },
+    { label: "Facebook", href: social.facebook },
+    { label: "Twitter", href: social.twitter },
+    { label: "GitHub", href: social.github },
+    { label: "LinkedIn", href: social.linkedin },
   ]
+  const bare = url =>
+    String(url).replace(/^https?:\/\/(www\.|uk\.)?/, "").replace(/\/$/, "")
 
   return (
     <div className={home ? "site page-home" : "site page"} id="top">
@@ -47,9 +49,9 @@ const Layout = ({ children, home }) => {
             <ul className="social">
               {socials.map(s => (
                 <li key={s.label}>
-                  <a className={`btn tone-${s.tone}`} href={s.href}>
-                    {s.label}
-                    <span aria-hidden="true"> ↗</span>
+                  <a className="social-link" href={s.href}>
+                    <span className="social-label">{s.label}</span>
+                    <span className="social-url">{bare(s.href)}</span>
                   </a>
                 </li>
               ))}
@@ -99,7 +101,7 @@ const Layout = ({ children, home }) => {
                 <textarea id="message" name="message" required />
               </label>
 
-              <button type="submit" className="btn tone-pink btn-big">
+              <button type="submit" className="btn tone-sun">
                 Send
                 <span aria-hidden="true"> ✉</span>
               </button>
@@ -111,7 +113,7 @@ const Layout = ({ children, home }) => {
       <footer className="footer">
         <div className="wrap footer-inner">
           <p className="footer-mark" aria-hidden="true">
-            bristoljon<span>.uk</span>
+            <span>~/</span>bristoljon.uk <span>$ exit 0</span>
           </p>
           <p className="license">
             <a
@@ -134,7 +136,7 @@ const Layout = ({ children, home }) => {
               .
             </span>
           </p>
-          <a className="btn tone-sun btn-small" href="#top">
+          <a className="btn btn-small" href="#top">
             Back to top <span aria-hidden="true">↑</span>
           </a>
         </div>

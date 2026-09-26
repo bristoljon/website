@@ -8,18 +8,24 @@ var output ="";
 var x = "X";
 var l = "L";
 
-$(document).keypress(function (event) {
-     var keynum;
-
-            if(window.event){ // IE                 
-                keynum = e.keyCode;
-            }else
-                if(e.which){ // Netscape/Firefox/Opera                  
-                    keynum = e.which;
-                 }
-            alert(String.fromCharCode(keynum));
-        }
-})
+/*
+ * Half-written keyboard support, left commented out when the site moved to
+ * Netlify: its stray closing brace was a syntax error that stopped this whole
+ * file loading, so none of the calculator buttons worked.
+ *
+ * $(document).keypress(function (event) {
+ *      var keynum;
+ *
+ *             if(window.event){ // IE                 
+ *                 keynum = e.keyCode;
+ *             }else
+ *                 if(e.which){ // Netscape/Firefox/Opera                  
+ *                     keynum = e.which;
+ *                  }
+ *             alert(String.fromCharCode(keynum));
+ *         }
+ * })
+ */
 
 
 function replaceXL (xlString) {

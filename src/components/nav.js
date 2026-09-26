@@ -1,5 +1,6 @@
 import * as React from "react"
 import { Link, useStaticQuery, graphql } from "gatsby"
+import { useLocation } from "@reach/router"
 
 /**
  * Same information architecture as the PHP navbar, minus the Login dropdown
@@ -10,17 +11,43 @@ import { Link, useStaticQuery, graphql } from "gatsby"
  * what's actually published.
  */
 
-// The standalone mini-apps. These are plain files in /static, carried over
-// from the old docroot — see README, "Legacy apps".
-const MISC = [
-  { label: "Sudoku Solver", href: "/projects/sudoku/" },
-  { label: "'Suncalc'", href: "/projects/suncalc/" },
-  { label: "Box Shadows", href: "/projects/shader/" },
-  { label: "Alcohol Unit Calculator", href: "/projects/drinkscalc/" },
-  { label: "Touch Timer", href: "/projects/taptimer/" },
-  { label: "3D Viewer", href: "/3d2/" },
-  { label: "Dozenal Calculator", href: "/dozenal/" },
-]
+// Section listing pages, so every breadcrumb segment is a link.
+const SECTION_LINKS = { blog: "/blog", project: "/project", misc: "/misc" }
+
+const Breadcrumb = () => {
+  const { pathname } = useLocation()
+  const parts = decodeURIComponent(pathname || "/")
+    .split("/")
+    .filter(Boolean)
+
+  return (
+    <nav className="crumbs" aria-label="Breadcrumb">
+      <ol>
+        <li>
+          <Link to="/" aria-current={parts.length === 0 ? "page" : undefined}>
+            <span aria-hidden="true">~/</span>
+            <span className="sr-only">bristoljon.uk home</span>
+          </Link>
+        </li>
+        {parts.map((part, i) => {
+          const last = i === parts.length - 1
+          const href = SECTION_LINKS[part]
+          return (
+            <li key={i}>
+              {last ? (
+                <span aria-current="page">{part}</span>
+              ) : href ? (
+                <Link to={href}>{part}</Link>
+              ) : (
+                <span>{part}</span>
+              )}
+            </li>
+          )
+        })}
+      </ol>
+    </nav>
+  )
+}
 
 const Nav = () => {
   const data = useStaticQuery(graphql`
@@ -47,6 +74,18 @@ const Nav = () => {
         nodes {
           fields { path }
           frontmatter { title number type }
+        }
+      }
+      misc: allMarkdownRemark(
+        filter: {
+          fields: { collection: { eq: "misc" } }
+          frontmatter: { draft: { ne: true } }
+        }
+        sort: [{ frontmatter: { date: DESC } }, { frontmatter: { title: ASC } }]
+      ) {
+        nodes {
+          fields { href }
+          frontmatter { title }
         }
       }
     }
@@ -109,12 +148,7 @@ const Nav = () => {
   return (
     <header className="topbar" ref={navRef}>
       <div className="wrap topbar-inner">
-        <Link className="brand" to="/">
-          <span className="brand-text">
-            bristoljon<span className="brand-tld">.uk</span>
-          </span>
-          <span className="sr-only"> — home</span>
-        </Link>
+        <Breadcrumb />
 
         <button
           type="button"
@@ -139,11 +173,16 @@ const Nav = () => {
               "projects",
               "Projects",
               "sky",
-              data.projects.nodes.map(p => (
-                <li key={p.fields.path}>
-                  <Link to={p.fields.path}>{p.frontmatter.title}</Link>
-                </li>
-              ))
+              [
+                ...data.projects.nodes.map(p => (
+                  <li key={p.fields.path}>
+                    <Link to={p.fields.path}>{p.frontmatter.title}</Link>
+                  </li>
+                )),
+                <li key="all" className="dd-all">
+                  <Link to="/project">All projects</Link>
+                </li>,
+              ]
             )}
 
             {dropdown(
@@ -161,11 +200,17 @@ const Nav = () => {
               "misc",
               "Misc",
               "pink",
-              MISC.map(m => (
-                <li key={m.href}>
-                  <a href={m.href}>{m.label}</a>
-                </li>
-              ))
+              [
+                ...data.misc.nodes.map(m => (
+                  <li key={m.fields.href}>
+                    {/* Plain <a>: these are static files, not Gatsby routes. */}
+                    <a href={m.fields.href}>{m.frontmatter.title}</a>
+                  </li>
+                )),
+                <li key="all" className="dd-all">
+                  <Link to="/misc">All misc</Link>
+                </li>,
+              ]
             )}
 
             <li>

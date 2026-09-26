@@ -12,7 +12,7 @@ const TagList = ({ tags = [], active, showAll }) => (
       <li>
         <Link
           to="/blog"
-          className="tag"
+          className="tag tag-all"
           aria-current={!active ? "true" : undefined}
         >
           All

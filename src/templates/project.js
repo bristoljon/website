@@ -7,8 +7,9 @@ import TagList from "../components/tag-list"
 import Comments from "../components/comments"
 import DetailToggles, { useDetailLevel } from "../components/detail-toggles"
 import { projectUpdates, updateDate } from "../utils/updates"
+import Window from "../components/window"
 
-const Project = ({ data, location }) => {
+const Project = ({ data, location, pageContext }) => {
   const project = data.markdownRemark
   const fm = project.frontmatter
   const detail = useDetailLevel()
@@ -24,7 +25,12 @@ const Project = ({ data, location }) => {
 
   return (
     <Layout>
-      <PageHero kicker="Project" title={fm.title} tone="sky" image="/img/proj-min.jpg">
+      <PageHero
+        kicker="Project"
+        title={fm.title}
+        tone="tang"
+        image="/img/proj-min.jpg"
+      >
         <dl className="stats">
           <div className="stat tone-sun">
             <dt>Created</dt>
@@ -61,7 +67,7 @@ const Project = ({ data, location }) => {
                   {fm.links.map((l, i) => (
                     <li key={l.url}>
                       <a
-                        className={`btn ${i === 0 ? "tone-sun" : "tone-paper"}`}
+                        className={`btn ${i === 0 ? "tone-sun" : ""}`}
                         href={l.url}
                       >
                         {l.label}
@@ -84,13 +90,17 @@ const Project = ({ data, location }) => {
           </aside>
 
           <div className="project-main stack">
-            <article className="card article">
+            <Window
+              as="article"
+              name={`project/${pageContext.slug}.md`}
+              className="article"
+            >
               <DetailToggles {...detail} />
               <div
                 className={`post-body prose ${detail.bodyClass}`}
                 dangerouslySetInnerHTML={{ __html: project.html }}
               />
-            </article>
+            </Window>
 
             {updates.length > 0 && (
               <section className="updates" aria-labelledby="updates-heading">
