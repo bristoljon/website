@@ -6,6 +6,7 @@ import {
   OWNER_NAME,
   problemWith,
 } from "../utils/comment-rules.mjs"
+import RelativeTime from "./relative-time"
 
 /**
  * Comments on a post or project, and the form to add one.
@@ -58,7 +59,7 @@ const Comment = ({ c, tone }) => (
         c.date && (
           <>
             {" · "}
-            <time dateTime={c.iso || c.date}>{c.date}</time>
+            <RelativeTime iso={c.iso} date={c.date} />
           </>
         )
       )}
