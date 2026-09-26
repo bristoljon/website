@@ -153,7 +153,7 @@ updates:
 
       The calculator now does exact fraction arithmetic, keeping every value as a whole-number numerator and denominator instead of a rounded decimal. Nothing gets rounded along the way, so recurring digits can be shown properly, with a line over the part that repeats. 1/5 in dozenal is 0.2497, with the 2497 recurring. Switching between dozenal and decimal is lossless now too, and dividing by zero now shows an error.
 
-      [Try it here](/projects/dozenal/).
+      You can also install it like a native app [Try it here](/projects/dozenal/).
   - date: 2021-12-08
     title: "Finally working on v2 now 🎉"
     body: "I finally dusted off the Dozenal Calculator code as it seems to be getting quite a bit of traffic.. Have basically rewritten it using React and bignumber.js which should provide much better accuracy especially with fractions. Check it out [here](https://dozenal.netlify.app/)"

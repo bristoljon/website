@@ -774,24 +774,14 @@ a.tag:hover {
 /* Photo behind the whole hero, darkened on the left where the text sits. */
 .hero-home--photo {
   display: flex;
-  align-items: flex-start;
-  padding-top: clamp(2rem, 4vw, 3rem);
+  align-items: center;
   min-height: min(78vh, 720px);
   background-color: #121417;
-  /* The text sits in the sky above the bridge, so only the top of the
-     photo is darkened; the bridge itself stays clear. */
-  --hero-shade: linear-gradient(
-    to bottom,
-    rgba(12, 14, 16, 0.7) 0%,
-    rgba(12, 14, 16, 0.35) 35%,
-    rgba(12, 14, 16, 0) 60%
-  );
-  --hero-shade-dark: linear-gradient(
-    to bottom,
-    rgba(12, 14, 16, 0.6) 0%,
-    rgba(12, 14, 16, 0.25) 35%,
-    rgba(12, 14, 16, 0) 58%
-  );
+  /* The photo stays at full brightness bar a whisper of shade at the top;
+     the text gets its own soft shadow instead (see .hero-copy::before). */
+  --hero-shade: linear-gradient(to bottom, rgba(12, 14, 16, 0.25), transparent 40%);
+  --hero-shade-dark: linear-gradient(to bottom, rgba(12, 14, 16, 0.35), transparent 45%);
+  text-align: center;
   background-image: var(--hero-shade), var(--hero-bg);
   background-position: center 15%;
   background-size: cover;
@@ -815,27 +805,44 @@ a.tag:hover {
 
 .hero-home--photo .hero-title,
 .hero-home--photo .hero-lede {
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.6);
 }
 
-/* Wide screens: text in the top-right corner, in the sky between the
-   towers rather than across the deck. */
-@media (min-width: 720px) {
-  .hero-home--photo .hero-copy {
-    margin-left: auto;
-    text-align: right;
-  }
-  .hero-home--photo .hero-lede {
-    margin-left: auto;
-    margin-bottom: 0;
-  }
+/* Text centred over the photo, with a very
+   diffused dark glow behind it so the white reads on any photo. */
+.hero-home--photo .hero-copy {
+  position: relative;
+  isolation: isolate;
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
 }
 
-/* Narrow screens: text centred at the top, in the sky, tinted evenly. */
+.hero-home--photo .hero-copy::before {
+  content: "";
+  position: absolute;
+  inset: -3.5rem -6rem;
+  z-index: -1;
+  background: radial-gradient(
+    closest-side,
+    rgba(12, 14, 16, 0.72),
+    rgba(12, 14, 16, 0.38) 60%,
+    transparent
+  );
+  filter: blur(24px);
+  pointer-events: none;
+}
+
+.hero-home--photo .hero-lede {
+  max-width: 30ch;
+  margin-inline: auto;
+  margin-bottom: 0;
+}
+
+/* Narrow screens: bigger type, and a tighter glow. */
 @media (max-width: 719px) {
-  .hero-home--photo {
-    padding-top: 2.5rem;
-    text-align: center;
+  .hero-home--photo .hero-copy::before {
+    inset: -2.5rem -1.5rem;
   }
 
   .hero-home--photo .hero-title {
@@ -844,14 +851,7 @@ a.tag:hover {
   }
 
   .hero-home--photo .hero-lede {
-    margin-inline: auto;
-    margin-bottom: 0;
     font-size: 1.3rem;
-  }
-
-  .hero-home--photo {
-    --hero-shade: linear-gradient(rgba(12, 14, 16, 0.45), rgba(12, 14, 16, 0.2));
-    --hero-shade-dark: linear-gradient(rgba(12, 14, 16, 0.35), rgba(12, 14, 16, 0.15));
   }
 }
 
@@ -927,14 +927,6 @@ a.tag:hover {
   color: var(--tang-text);
 }
 
-.cursor {
-  display: inline-block;
-  width: 0.08em;
-  height: 0.85em;
-  margin-left: 0.2em;
-  vertical-align: -0.04em;
-  background: var(--tang);
-}
 
 .hero-lede {
   max-width: 30ch;
@@ -2472,18 +2464,6 @@ a.tag:hover {
 }
 
 /* ------------------------------------------------------------------ motion */
-
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .cursor {
-    animation: blink 1.8s steps(1) infinite;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   *,

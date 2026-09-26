@@ -79,7 +79,6 @@ const IndexPage = ({ data }) => {
             <h1 className="hero-title">
               {word}
               {tld && <span className="hero-tld">{tld}</span>}
-              <span className="cursor" aria-hidden="true" />
             </h1>
             {hero.excerpt && <p className="hero-lede">{hero.excerpt}</p>}
           </div>

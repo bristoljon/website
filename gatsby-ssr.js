@@ -12,6 +12,12 @@ const React = require("react")
  */
 exports.onRenderBody = ({ setHeadComponents }) => {
   setHeadComponents([
+    // Favicon: an orange "/" (the nav's home mark) on a dark tile. SVG for
+    // modern browsers, .ico for older ones, a PNG for iOS home screens.
+    <link key="icon-ico" rel="icon" href="/favicon.ico" sizes="32x32" />,
+    <link key="icon-svg" rel="icon" href="/favicon.svg" type="image/svg+xml" />,
+    <link key="apple-icon" rel="apple-touch-icon" href="/apple-touch-icon.png" />,
+    <link key="manifest" rel="manifest" href="/site.webmanifest" />,
     // Apply a saved light/dark choice before first paint, so a visitor who
     // picked a theme doesn't see the other one flash first. See nav.js.
     <script
