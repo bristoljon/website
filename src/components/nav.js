@@ -7,7 +7,7 @@ import { useLocation } from "@reach/router"
  * and the "Get involved" sign-up modal — both of those were backed by the
  * $_SESSION / users table and have no home on a static build.
  *
- * Projects and Blog are pulled from content so the menu can't drift from
+ * Projects and Misc are pulled from content so the menu can't drift from
  * what's actually published.
  */
 
@@ -62,18 +62,6 @@ const Nav = () => {
         nodes {
           fields { path }
           frontmatter { title }
-        }
-      }
-      posts: allMarkdownRemark(
-        filter: {
-          fields: { collection: { eq: "blog" } }
-          frontmatter: { draft: { ne: true } }
-        }
-        sort: { frontmatter: { date: DESC } }
-      ) {
-        nodes {
-          fields { path }
-          frontmatter { title number type }
         }
       }
       misc: allMarkdownRemark(
@@ -185,16 +173,12 @@ const Nav = () => {
               ]
             )}
 
-            {dropdown(
-              "blog",
-              "Blog",
-              "sun",
-              data.posts.nodes.map(p => (
-                <li key={p.fields.path}>
-                  <Link to={p.fields.path}>{p.frontmatter.title}</Link>
-                </li>
-              ))
-            )}
+            <li>
+              <Link className="menu-link" to="/blog">
+                Blog
+              </Link>
+            </li>
+
 
             {dropdown(
               "misc",
@@ -213,11 +197,6 @@ const Nav = () => {
               ]
             )}
 
-            <li>
-              <Link className="menu-link" to="/blog">
-                All posts
-              </Link>
-            </li>
             <li>
               <Link className="menu-link" to="/cv">
                 CV

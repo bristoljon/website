@@ -3,6 +3,7 @@ title: "iMedic - Paramedic App"
 date: 2010-07-14
 excerpt: An iOS app written in Objective-C for paramedics — assessment tools and drug calculations.
 status: Archived
+image: /img/projects/imedic.jpg
 tags:
   - "PHP"
   - "Mobile"

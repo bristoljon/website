@@ -3,6 +3,7 @@ title: "Dozenal Calculator"
 date: 2015-07-30
 excerpt: A base-12 calculator, including fraction conversion.
 status: Archived
+image: /img/projects/dozenal.jpg
 tags:
   - "JavaScript"
   - "JQuery"
@@ -139,6 +140,14 @@ comments:
     date: "2025-07-27"
     body: "Changing the L and X characters doesn't work on latest version I think.. Old one does but it's even worse at maths 😆"
 updates:
+  - date: 2026-09-25
+    title: "Recurring fractions fixed, at last"
+    body: |-
+      Finally fixed the bug I found back in 2015, where 1/5 in dozenal came out wrong.
+
+      The calculator now does exact fraction arithmetic, keeping every value as a whole-number numerator and denominator instead of a rounded decimal. Nothing gets rounded along the way, so recurring digits can be shown properly, with a line over the part that repeats. 1/5 in dozenal is 0.2497, with the 2497 recurring. Switching between dozenal and decimal is lossless now too, and dividing by zero now shows an error.
+
+      [Try it here](/projects/dozenal/).
   - date: 2021-12-08
     title: "Finally working on v2 now 🎉"
     body: "I finally dusted off the Dozenal Calculator code as it seems to be getting quite a bit of traffic.. Have basically rewritten it using React and bignumber.js which should provide much better accuracy especially with fractions. Check it out [here](https://dozenal.netlify.app/)"

@@ -8,6 +8,9 @@ import Comments from "../components/comments"
 import DetailToggles, { useDetailLevel } from "../components/detail-toggles"
 import { projectUpdates, updateDate } from "../utils/updates"
 import Window from "../components/window"
+import ShowMore from "../components/show-more"
+
+const UPDATES_VISIBLE = 5
 
 const Project = ({ data, location, pageContext }) => {
   const project = data.markdownRemark
@@ -22,6 +25,15 @@ const Project = ({ data, location, pageContext }) => {
   React.useEffect(() => {
     setTarget(decodeURIComponent((location?.hash || "").slice(1)) || null)
   }, [location?.hash])
+  const targetIndex = updates.findIndex(u => u.anchor === target)
+
+  // An older update sits in the collapsed part of the list, so the browser
+  // can't scroll to it until the list is open. Scroll once it is.
+  React.useEffect(() => {
+    if (targetIndex >= UPDATES_VISIBLE) {
+      document.getElementById(target)?.scrollIntoView()
+    }
+  }, [target, targetIndex])
 
   return (
     <Layout>
@@ -29,7 +41,7 @@ const Project = ({ data, location, pageContext }) => {
         kicker="Project"
         title={fm.title}
         tone="tang"
-        image="/img/proj-min.jpg"
+        image={fm.image}
       >
         <dl className="stats">
           <div className="stat tone-sun">
@@ -107,8 +119,12 @@ const Project = ({ data, location, pageContext }) => {
                 <h2 id="updates-heading" className="section-title">
                   Updates
                 </h2>
-                <ol className="update-list">
-                  {updates.map(u => (
+                <ShowMore
+                  className="update-list"
+                  items={updates}
+                  visible={UPDATES_VISIBLE}
+                  open={targetIndex >= UPDATES_VISIBLE}
+                  renderItem={u => (
                     <li
                       className={`update ${target === u.anchor ? "is-target" : ""}`}
                       id={u.anchor}
@@ -123,8 +139,8 @@ const Project = ({ data, location, pageContext }) => {
                         dangerouslySetInnerHTML={{ __html: u.html }}
                       />
                     </li>
-                  ))}
-                </ol>
+                  )}
+                />
               </section>
             )}
 
@@ -159,6 +175,7 @@ export const query = graphql`
         isoDate: date
         excerpt
         status
+        image
         tags
         links {
           label

@@ -3,6 +3,7 @@ title: "bristoljon.uk"
 date: 2015-08-05
 excerpt: The site you're reading. Now a static build rather than PHP and MySQL.
 status: Archived
+image: /img/projects/this.jpg
 tags:
   - "PHP"
   - "JavaScript"
@@ -29,6 +30,14 @@ links:
 draft: false
 comments: []
 updates:
+  - date: 2026-09-26
+    title: "A long overdue rebuild"
+    body: |-
+      Eleven years on, the site has finally been rebuilt. It's off PHP and MySQL and is now a static Gatsby site on Netlify, with the posts and projects kept as markdown and edited through Decap CMS.
+
+      Credit where it's due: the redesign and migration were done with Claude, Anthropic's AI. I said what I wanted and it did the heavy lifting. That included a new look (with a dark mode), a [CV](/cv) page with PDF download, and rescuing the old project updates from the old site's feed so they show here and on the homepage again.
+
+      The old mini-apps that never had a project page now live under [misc](/misc), and every old link redirects to its new home. A couple got fixed on the way. 'Suncalc' had a syntax error that stopped it working at all, and the Styles Changer no longer needs PHP.
   - date: 2015-08-21
     title: "Added images"
     body: "Finally got round to adding images. True to form, I couldn't do it the easy way and opted for a custom PHP script and HTML form that uploads images to the server and adds details such as description and url to a table in the database. Then it associates the image record with a particular project. This means I can link multiple projects or blogs to one image. To display them I use AJAX to grab the matching image URL's from the db and display them as thumbnails in the image panel. Will start adding more images soon."

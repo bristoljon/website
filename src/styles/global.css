@@ -766,30 +766,6 @@ a.tag:hover {
   margin-right: 0.35rem;
 }
 
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
-  gap: 1.1rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.card.feed-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-  border-top: 3px solid var(--accent, var(--rule));
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.card-grid .feed-card:hover,
-.card-grid .feed-card:focus-within {
-  border-color: var(--rule-strong);
-  border-top-color: var(--accent);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-}
-
 .feed-meta {
   display: flex;
   flex-wrap: wrap;
@@ -807,17 +783,72 @@ a.tag:hover {
   color: var(--ink);
 }
 
-.feed-card .feed-project {
-  margin: 0.2rem 0 0;
-  color: var(--accent-text, var(--muted));
+/* The recent feed: one list, strictly newest first. */
+.feed-list {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feed-item {
+  position: relative;
+  display: grid;
+  gap: 0.3rem 1.5rem;
+  padding: 1rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent, var(--rule));
+  border-radius: var(--radius);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+@media (min-width: 720px) {
+  .feed-item {
+    grid-template-columns: 10.5rem 1fr;
+  }
+}
+
+.feed-item:hover,
+.feed-item:focus-within {
+  border-color: var(--rule-strong);
+  border-left-color: var(--accent);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.feed-date {
+  padding-top: 0.2rem;
+  color: var(--muted);
   font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.feed-kind {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.7rem;
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.feed-project {
+  color: var(--accent-text, var(--muted));
   font-size: 0.8rem;
   font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .feed-title {
-  margin: 0;
-  font-size: 1.18rem;
+  margin: 0.35rem 0 0.2rem;
+  font-size: 1.1rem;
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.01em;
@@ -828,11 +859,63 @@ a.tag:hover {
   text-decoration: none;
 }
 
-.feed-card p {
+.feed-excerpt {
   margin: 0;
   color: var(--muted);
   font-size: 0.94rem;
   line-height: 1.55;
+}
+
+/* "Show N older" expander under a list. */
+.show-more {
+  margin-top: 0.75rem;
+}
+
+.show-more > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.85rem;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  list-style: none;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.show-more > summary::-webkit-details-marker {
+  display: none;
+}
+
+.show-more > summary::before {
+  content: "+";
+  font-weight: 600;
+}
+
+.show-more[open] > summary::before {
+  content: "−";
+}
+
+.show-more > summary:hover {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.show-more[open] .when-closed,
+.show-more:not([open]) .when-open {
+  display: none;
+}
+
+.show-more > ol {
+  margin-top: 0.75rem;
+}
+
+.updates .show-more > summary {
+  margin-left: 1.4rem;
 }
 
 .about {

@@ -68,7 +68,7 @@ collections:
       - { name: date, label: Date, widget: datetime, picker_utc: true, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
       - { name: excerpt, label: Summary, widget: text, required: false }
       - { name: status, label: Status, widget: select, options: ["Active", "Paused", "Archived", "Idea"], default: "Archived", required: false }
-      - { name: image, label: Image, widget: image, required: false }
+      - { name: image, label: Header image, widget: image, required: false, hint: "Shown beside the title on the project page, cropped to 4:3. A screenshot of the app works well. Leave empty for no image." }
       - { name: tags, label: Tags, widget: list, required: false, default: [] }
       - name: links
         label: Links

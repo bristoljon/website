@@ -3,6 +3,7 @@ title: "Time is Money"
 date: 2015-09-03
 excerpt: A counter that reframes your working hours as money earned, and money as the hours it costs you.
 status: Archived
+image: /img/projects/timeismoney.jpg
 tags:
   - "JavaScript"
   - "JQuery"

@@ -3,6 +3,7 @@ title: "One Time Pad Encryption"
 date: 2015-07-09
 excerpt: One-time pad encryption and decryption in the browser. Unbreakable given a good key, and simple with it.
 status: Archived
+image: /img/projects/onetimepad.jpg
 tags:
   - "JavaScript"
   - "Encryption"

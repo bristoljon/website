@@ -3,19 +3,20 @@ import { graphql, Link } from "gatsby"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
 import Window from "../components/window"
+import ShowMore from "../components/show-more"
 import { byNewest, plainExcerpt, projectUpdates, updateDate } from "../utils/updates"
 
 // Accent per kind of item, so the feed reads at a glance.
 const KIND_TONE = { blog: "pink", project: "tang", update: "sky" }
-const FEED_SIZE = 9
 
 
 const IndexPage = ({ data }) => {
   const home = data.home
   const hero = home?.frontmatter || {}
 
-  // The recent feed mixes posts, new projects and project updates, newest
-  // first — the same mix the old /php/updates.php feed served.
+  // The recent feed mixes posts, new projects and project updates, strictly
+  // newest first — the same mix the old /php/updates.php feed served. The
+  // first few show; the rest sit behind "Show older".
   const recent = [
     ...data.recent.nodes.map(node => {
       const isBlog = node.fields.collection === "blog"
@@ -45,7 +46,6 @@ const IndexPage = ({ data }) => {
     ),
   ]
     .sort(byNewest)
-    .slice(0, FEED_SIZE)
 
   // "bristoljon.uk" -> "bristoljon" with the ".uk" picked out in colour.
   const title = hero.title || "bristoljon.uk"
@@ -106,26 +106,31 @@ const IndexPage = ({ data }) => {
             </h2>
           </header>
 
-          <ul className="card-grid">
-            {recent.map(item => (
-              <li
-                className={`card feed-card tone-${KIND_TONE[item.kind]}`}
-                key={item.key}
-              >
-                <div className="feed-meta">
-                  <span className="chip">{item.label}</span>
-                  <time dateTime={item.isoDate}>{item.date}</time>
+          <ShowMore
+            className="feed-list"
+            items={recent}
+            renderItem={item => (
+              <li className={`feed-item tone-${KIND_TONE[item.kind]}`} key={item.key}>
+                <time className="feed-date" dateTime={item.isoDate}>
+                  {item.date}
+                </time>
+                <div className="feed-body">
+                  <p className="feed-kind">
+                    <span className="chip">{item.label}</span>
+                    {item.project && (
+                      <span className="feed-project">{item.project}</span>
+                    )}
+                  </p>
+                  <h3 className="feed-title">
+                    <Link className="stretched" to={item.path}>
+                      {item.title}
+                    </Link>
+                  </h3>
+                  <p className="feed-excerpt">{item.excerpt}</p>
                 </div>
-                {item.project && <p className="feed-project">{item.project}</p>}
-                <h3 className="feed-title">
-                  <Link className="stretched" to={item.path}>
-                    {item.title}
-                  </Link>
-                </h3>
-                <p>{item.excerpt}</p>
               </li>
-            ))}
-          </ul>
+            )}
+          />
         </div>
       </section>
 
@@ -171,7 +176,6 @@ export const query = graphql`
         frontmatter: { draft: { ne: true } }
       }
       sort: { frontmatter: { date: DESC } }
-      limit: 9
     ) {
       nodes {
         id
