@@ -17,15 +17,6 @@ tags:
   - "Tags"
   - "Forms"
 draft: false
-comments:
-  - id: "14"
-    author: "Sam asiri"
-    date: "2015-08-04"
-    body: "I need to get my terminology up to speed to read this properly! You have gone into an amazing amount of detail! Nice work man"
-  - id: "15"
-    author: "Anonymous"
-    date: "2015-08-04"
-    body: "Yeh, I call it my geek blog!"
 ---
 
 So it's been about a month since my last post and 2 months since I stopped paramedic(k)ing around and took up coding (or learning to code) full-time. I've been pretty busy, mainly working on this site, adding features like the technical detail buttons above and adding member log-in. I've also been to Spain, moved in with my girlfriend and 'ushered' in a new era at my mates wedding on Saturday so not just been geeking out!

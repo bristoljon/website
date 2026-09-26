@@ -21,7 +21,7 @@ uncomment `local_backend: true` in `static/admin/config.yml` and run
 | --- | --- |
 | `blog` / `project` tables | markdown in `content/blog`, `content/projects` |
 | `tag` + `blog_tag` join, fetched by AJAX | `tags` array in frontmatter, filtered client-side on `/blog` |
-| `comment` table, fetched by AJAX | `comments` list in frontmatter, rendered read-only |
+| `comment` table, fetched by AJAX | Netlify Forms + Netlify Blobs, fetched from `/api/comments` |
 | `$_SESSION` log-in, sign-up modal, `user` table | removed |
 | PHP mailer on the contact form | Netlify Forms |
 | Angular `{{ update.title }}` recent panel | built at deploy time on the homepage |
@@ -67,24 +67,74 @@ launch note was marked hidden there, so it wasn't brought across.
 
 ## Comments
 
-Commenting is off: there is no endpoint to post to and no users table to
-authenticate against. Existing comments still render, from a `comments` list in
-each post's frontmatter:
+Anyone can comment on a post or project with a name (optional) and a message.
+No sign-up, and comments go up straight away. Every comment, including the
+36 carried over from the old `comment` table, lives in Netlify Blobs; nothing
+is in the markdown.
 
-```yaml
-comments:
-  - id: "42"
-    author: "Dave"
-    date: 2015-08-12
-    body: "Nice one."
+**How a comment gets published**
+
+1. The form at the bottom of each post is a Netlify Form called `comment`. The
+   page posts it with JavaScript and shows the comment as "just now".
+2. Netlify's spam filter (Akismet plus a honeypot field) screens it. Anything
+   it flags stops there.
+3. `netlify/functions/submission-created.mjs` runs on what's left and drops
+   anything that:
+   - was sent under 3 seconds (or over a day) after the form appeared;
+   - has a message under 2 or over 2000 characters, a name over 60, or more
+     than 2 links;
+   - comes from an IP that has already posted 5 comments in the last hour.
+     Only a keyed hash of the IP is stored.
+
+   Otherwise it strips any HTML and appends the comment to the page's list in
+   the `comments` Blobs store, keyed by path without the leading slash
+   (`blog/update-3`). A stored comment is an id, the path, the name, the
+   message and the date. The email field is optional and is never stored or
+   shown; it stays in the Netlify UI under Forms so you can reply.
+4. `netlify/functions/comments.mjs` serves `/api/comments?path=/blog/update-3`.
+   Posts, projects and the `/blog` list fetch it after the page loads.
+
+Dropped comments aren't lost: they're still under Forms > comment in Netlify,
+and the function log says why each was dropped. Without JavaScript the form
+still submits, but it's dropped by the time check.
+
+Comments load in the browser, so search engines don't index them.
+
+**Setup, once**
+
+- Add a `COMMENTS_ADMIN_KEY` environment variable in Netlify: any long random
+  string. It unlocks the moderation page and salts the IP hashes.
+- For an email per comment: Forms > comment > Form notifications > add an
+  email notification.
+
+**Moderating**
+
+Go to [/admin/comments/](https://bristoljon.uk/admin/comments/) and enter the
+admin key. It lists the latest 100 comments across the site, newest first,
+each with a Delete button. The key is remembered in that browser until you
+click "Forget key".
+
+**The archive**
+
+The old comments were copied into Blobs by
+`scripts/migrate-comments-to-blobs.mjs`, which read the `comments` lists that
+used to be in the frontmatter. Those lists were removed afterwards, so to run
+it again, point it at the last commit that had them:
+
+```bash
+node scripts/migrate-comments-to-blobs.mjs --ref 21dcffb --dry
+node scripts/migrate-comments-to-blobs.mjs --ref 21dcffb
 ```
 
-They show up in Decap under "Archived comments" on each post, collapsed, so you
-can delete anything you don't want up. Nothing new can be added.
+Re-running is safe: archived comments have ids like `legacy-16` and anything
+already in the store is skipped. It uses the linked site (`netlify link`) and
+your `netlify login`, or `NETLIFY_SITE_ID` and `NETLIFY_AUTH_TOKEN`.
 
-**These are empty right now.** Comments were loaded by AJAX, so they aren't in
-the rendered HTML and can't be recovered from the live site — they only exist
-in the `comment` table. See below.
+**Locally**
+
+`gatsby develop` has no functions, so posts show no comments and the form
+can't be sent. `netlify functions:serve` runs both functions against a local
+Blobs sandbox, which is enough to try the API with curl.
 
 ## Getting your content across
 
@@ -173,20 +223,12 @@ never see it.
 deploy preview rather than going straight live. Drop that line if you'd rather
 publish directly.
 
-## Turning comments back on
-
-The frontmatter list is deliberately the simplest thing that renders the
-archive. If you want live commenting later, the usual git-backed options are a
-Netlify Function that commits a file per comment, or Staticman. Both want one
-file per comment rather than a list, so you'd move to `content/comments/*.json`
-keyed by post slug, add `gatsby-transformer-json`, and join on slug in the
-template instead of reading `frontmatter.comments`.
-
 ## Notes
 
 - Gatsby 5, React 18, Node 18+.
 - `gatsby-node.js` declares the frontmatter schema explicitly. Without it, a
-  post with no comments yet breaks the build for every post that queries them.
+  project with no updates yet breaks the build for every project that queries
+  them.
   `@infer` is left on, so adding a field in Decap won't break the build before
   you've used it in a query.
 - No Sharp. Images are plain files in `static/`. Add

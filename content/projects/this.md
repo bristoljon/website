@@ -32,7 +32,6 @@ links:
   - label: Source
     url: https://github.com/bristoljon/bristoljon.uk
 draft: false
-comments: []
 updates:
   - date: 2026-09-26
     title: "A long overdue rebuild"

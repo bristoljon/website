@@ -23,11 +23,6 @@ links:
   - label: Source
     url: https://github.com/bristoljon/sudoku
 draft: false
-comments:
-  - id: "90"
-    author: "Jon"
-    date: "2025-07-27"
-    body: "Sorry, closed commenting until I can remember how to write PHP code and disable anon posting :-D"
 updates:
   - date: 2016-04-21
     title: "Babelified to ES5 - Now works on Safari and older browsers"

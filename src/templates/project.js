@@ -4,7 +4,7 @@ import Layout from "../components/layout"
 import Seo from "../components/seo"
 import PageHero from "../components/page-hero"
 import TagList from "../components/tag-list"
-import Comments from "../components/comments"
+import Comments, { useComments } from "../components/comments"
 import DetailToggles, { useDetailLevel } from "../components/detail-toggles"
 import { projectUpdates, updateDate } from "../utils/updates"
 import ShowMore from "../components/show-more"
@@ -22,6 +22,7 @@ const Project = ({ data, location }) => {
   const detail = useDetailLevel()
   const updates = projectUpdates(project)
   const latest = updates[0]
+  const thread = useComments(project.fields.path)
 
   // Highlight the update a feed link pointed at. :target alone misses it,
   // because Gatsby's client-side navigation doesn't re-evaluate :target.
@@ -68,7 +69,7 @@ const Project = ({ data, location }) => {
           </div>
           <div className="stat tone-mint">
             <dt>Comments</dt>
-            <dd>{(fm.comments || []).length}</dd>
+            <dd>{thread.comments ? thread.comments.length : "–"}</dd>
           </div>
         </dl>
       </PageHero>
@@ -146,7 +147,7 @@ const Project = ({ data, location }) => {
               </section>
             )}
 
-            <Comments comments={fm.comments} />
+            <Comments path={project.fields.path} {...thread} />
           </div>
         </div>
       </section>
@@ -171,6 +172,9 @@ export const query = graphql`
     markdownRemark(id: { eq: $id }) {
       html
       excerpt(pruneLength: 160)
+      fields {
+        path
+      }
       frontmatter {
         title
         date(formatString: "MMMM YYYY")
@@ -194,12 +198,6 @@ export const query = graphql`
           date(formatString: "D MMMM YYYY")
           month: date(formatString: "MMMM YYYY")
           isoDate: date
-        }
-        comments {
-          id
-          author
-          date(formatString: "D MMMM YYYY")
-          body
         }
       }
     }

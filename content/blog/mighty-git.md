@@ -11,7 +11,6 @@ tags:
   - "Grunt"
   - "NodeJS"
 draft: false
-comments: []
 ---
 
 Once again it's been about a month since my last update, so much for making this weekly. Anyway, I've been pretty busy since then and learning lots of new tricks!

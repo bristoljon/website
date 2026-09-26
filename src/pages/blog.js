@@ -4,6 +4,7 @@ import Layout from "../components/layout"
 import Seo from "../components/seo"
 import PageHero from "../components/page-hero"
 import TagList from "../components/tag-list"
+import { useCommentCounts } from "../components/comments"
 
 // Accent by kind of post.
 const toneFor = type => (type === "Geek Blog" ? "grape" : "sky")
@@ -16,6 +17,7 @@ const pad = n => String(n).padStart(2, "0")
  */
 const BlogIndex = ({ data, location }) => {
   const posts = data.posts.nodes
+  const commentCounts = useCommentCounts()
 
   // Read after mount. The server renders the unfiltered list, so reading
   // location.search during render would hydrate to different markup.
@@ -60,7 +62,7 @@ const BlogIndex = ({ data, location }) => {
           <ol className="post-list">
             {visible.map(post => {
               const fm = post.frontmatter
-              const count = (fm.comments || []).length
+              const count = commentCounts[post.fields.path] || 0
               return (
                 <li
                   className={`card post-card tone-${toneFor(fm.type)}`}
@@ -128,9 +130,6 @@ export const query = graphql`
           tags
           date(formatString: "D MMMM YYYY")
           isoDate: date
-          comments {
-            id
-          }
         }
       }
     }

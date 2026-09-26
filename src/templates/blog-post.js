@@ -4,7 +4,7 @@ import Layout from "../components/layout"
 import Seo from "../components/seo"
 import PageHero from "../components/page-hero"
 import TagList from "../components/tag-list"
-import Comments from "../components/comments"
+import Comments, { useComments } from "../components/comments"
 import DetailToggles, { useDetailLevel } from "../components/detail-toggles"
 
 const BlogPost = ({ data, pageContext }) => {
@@ -13,7 +13,8 @@ const BlogPost = ({ data, pageContext }) => {
   const detail = useDetailLevel()
   // Posts are sorted newest-first, so `previous` is newer and `next` older.
   const { previous, next } = pageContext
-  const count = (fm.comments || []).length
+  const thread = useComments(post.fields.path)
+  const count = (thread.comments || []).length
 
   return (
     <Layout>
@@ -52,7 +53,7 @@ const BlogPost = ({ data, pageContext }) => {
             </div>
           )}
 
-          <Comments comments={fm.comments} />
+          <Comments path={post.fields.path} {...thread} />
 
           {(previous || next) && (
             <nav className="pager" aria-label="More posts">
@@ -91,6 +92,9 @@ export const query = graphql`
     markdownRemark(id: { eq: $id }) {
       html
       excerpt(pruneLength: 160)
+      fields {
+        path
+      }
       frontmatter {
         title
         date(formatString: "D MMMM YYYY")
@@ -98,12 +102,6 @@ export const query = graphql`
         type
         number
         tags
-        comments {
-          id
-          author
-          date(formatString: "D MMMM YYYY")
-          body
-        }
       }
     }
   }

@@ -14,9 +14,9 @@ const markdownToHtml = md => {
 
 /**
  * Explicit types. Without these, Gatsby infers frontmatter shape from whatever
- * happens to be in the files — so a post with no comments yet breaks the build
- * for every other post's `comments { ... }` selection. Declaring them up front
- * means empty is always valid.
+ * happens to be in the files — so a project with no updates yet breaks the
+ * build for every other project's `updates { ... }` selection. Declaring them
+ * up front means empty is always valid.
  */
 exports.createSchemaCustomization = ({ actions }) => {
   actions.createTypes(`
@@ -51,7 +51,6 @@ exports.createSchemaCustomization = ({ actions }) => {
       links: [Link]
       updates: [ProjectUpdate]
       images: [ProjectImage]
-      comments: [Comment]
       draft: Boolean
       source: String
       name: String
@@ -117,13 +116,6 @@ exports.createSchemaCustomization = ({ actions }) => {
     type ProjectImage {
       image: String
       caption: String
-    }
-
-    type Comment {
-      id: String
-      author: String
-      date: Date @dateformat
-      body: String
     }
   `)
 }

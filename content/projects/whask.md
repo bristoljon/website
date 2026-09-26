@@ -11,7 +11,6 @@ tags:
   - "efficiency"
 links: []
 draft: false
-comments: []
 updates:
   - date: 2015-11-28
     title: "Too slow.."

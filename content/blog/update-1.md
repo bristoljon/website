@@ -11,7 +11,6 @@ tags:
   - "Parallax"
   - "Wordpress"
 draft: false
-comments: []
 ---
 
 Until I've got my SQL database running I'm going to be updating this manually but that's cool. So 3 weeks ago I started learning web development full time. Following a [course](https://www.udemy.com/complete-web-developer-course/) I got in a bundle for £59 (RRP $1,200 apparently). It's been really good, I've covered HTML, CSS, Javascript, Jquery, Bootstrap, PHP and MySQL. And I've created everything you can see up in the 'code' menu (top-right) plus this site of course.

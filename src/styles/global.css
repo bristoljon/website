@@ -1935,11 +1935,74 @@ a.tag:hover {
   font-weight: 600;
 }
 
-.comments-closed {
-  margin: 1.5rem 0 0;
+.comment-count {
+  margin-left: 0.35rem;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Sent from this tab and shown straight away, before the server confirms. */
+.comment.is-new {
+  border-left-color: var(--sun);
+}
+
+/* The comment form borrows the contact form's .field layout, in the light
+   card style rather than the terminal panel. */
+.comment-form {
+  margin-top: 1.5rem;
+}
+
+.comment-form .field > span {
+  color: var(--muted);
+}
+
+.comment-form .field input,
+.comment-form .field textarea {
+  background: var(--bg);
+  color: var(--ink);
+  border-color: var(--rule);
+}
+
+.comment-form .field input::placeholder {
+  color: var(--muted);
+}
+
+.comment-form .field input:focus,
+.comment-form .field textarea:focus {
+  border-color: var(--sun-text);
+}
+
+.comment-form .field textarea {
+  min-height: 120px;
+}
+
+.comment-form-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.comment-form .btn[disabled] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.form-status {
+  margin: 0;
   color: var(--muted);
   font-family: var(--mono);
   font-size: 0.8rem;
+}
+
+.form-status.is-sent {
+  color: var(--mint-text);
+}
+
+.form-status.is-error {
+  color: var(--pink-text);
 }
 
 /* ------------------------------------------------------ contact & footer */
