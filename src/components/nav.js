@@ -166,8 +166,13 @@ const Nav = () => {
     }
   }
 
-  const dropdown = (key, label, tone, items) => (
+  // On desktop a section is a dropdown; in the phone menu the toggle is
+  // swapped for a plain heading link and the items are always listed.
+  const dropdown = (key, label, tone, items, href) => (
     <li className={`dd ${open === key ? "is-open" : ""}`}>
+      <Link className="menu-link dd-heading" to={href}>
+        {label}
+      </Link>
       <button
         type="button"
         className="menu-link dd-toggle"
@@ -223,7 +228,8 @@ const Nav = () => {
                 <li key="all" className="dd-all">
                   <Link to="/project">All projects</Link>
                 </li>,
-              ]
+              ],
+              "/project"
             )}
 
             <li>
@@ -247,7 +253,8 @@ const Nav = () => {
                 <li key="all" className="dd-all">
                   <Link to="/misc">All misc</Link>
                 </li>,
-              ]
+              ],
+              "/misc"
             )}
 
             <li>

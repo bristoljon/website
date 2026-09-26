@@ -151,8 +151,12 @@ collections:
         fields:
           - { name: title, label: Hero heading, widget: string }
           - { name: excerpt, label: Hero strapline, widget: string, required: false }
-          - { name: image, label: Hero image, widget: image, required: false }
+          - { name: image, label: Hero image (light mode), widget: image, required: false }
           - { name: imageCredit, label: Hero image credit, widget: string, required: false }
+          - { name: imageCreditUrl, label: Hero image credit link, widget: string, required: false, hint: "Where the photo came from, e.g. its Wikimedia Commons page." }
+          - { name: imageDark, label: Hero image (dark mode), widget: image, required: false, hint: "Shown when the site is in dark mode. Leave empty to use the light one." }
+          - { name: imageDarkCredit, label: Dark hero image credit, widget: string, required: false }
+          - { name: imageDarkCreditUrl, label: Dark hero image credit link, widget: string, required: false }
           - { name: aboutHeading, label: About heading, widget: string, default: "About Me" }
           - { name: body, label: About text, widget: markdown }
 

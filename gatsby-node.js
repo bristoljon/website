@@ -41,6 +41,10 @@ exports.createSchemaCustomization = ({ actions }) => {
       excerpt: String
       image: String
       imageCredit: String
+      imageCreditUrl: String
+      imageDark: String
+      imageDarkCredit: String
+      imageDarkCreditUrl: String
       aboutHeading: String
       status: String
       tags: [String]

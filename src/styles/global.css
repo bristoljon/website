@@ -246,6 +246,10 @@ a {
   margin-bottom: 2rem;
 }
 
+.section-head > .kicker:only-child {
+  margin-bottom: -0.75rem;
+}
+
 .display {
   margin: 0;
   font-size: clamp(1.9rem, 4.2vw, 2.9rem);
@@ -499,8 +503,10 @@ a.tag:hover {
   cursor: pointer;
 }
 
-.icon-button:hover {
-  background: var(--surface-2);
+@media (hover: hover) {
+  .icon-button:hover {
+    background: var(--surface-2);
+  }
 }
 
 /* Show the icon for the theme you'd switch to. */
@@ -633,8 +639,10 @@ a.tag:hover {
   cursor: pointer;
 }
 
-.menu-toggle:hover {
-  background: var(--surface-2);
+@media (hover: hover) {
+  .menu-toggle:hover {
+    background: var(--surface-2);
+  }
 }
 
 .menu-toggle-bars {
@@ -700,16 +708,58 @@ a.tag:hover {
 
   .menu-link {
     width: 100%;
-    justify-content: space-between;
-    padding: 0.65rem 0.75rem;
+    padding: 0.55rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .menu-link:hover {
+    background: none;
+    border-color: transparent;
+    color: var(--tang-text);
+  }
+
+  /* Everything listed flat: section headings with their items beneath, no
+     toggles, no boxes. */
+  .dd-toggle,
+  .dd-panel .dd-all {
+    display: none;
+  }
+
+  .dd-panel,
+  .dd.is-open .dd-panel {
+    display: block;
+    position: static;
+    min-width: 0;
+    margin: 0 0 0.5rem;
+    padding: 0 0 0 0.9rem;
+    background: none;
+    border: 0;
+    border-left: 1px solid var(--rule);
+    border-radius: 0;
+    box-shadow: none;
+    animation: none;
+  }
+
+  .dd-panel a {
+    padding: 0.35rem 0;
+    color: var(--muted);
     font-size: 0.95rem;
   }
 
-  .dd-panel {
-    position: static;
-    min-width: 0;
-    margin: 0.25rem 0 0.5rem;
-    box-shadow: none;
+  .dd-panel a:hover {
+    background: none;
+    color: var(--ink);
+  }
+
+  .menu-list > li + li {
+    margin-top: 0.15rem;
+  }
+}
+
+@media (min-width: 1050px) {
+  .dd-heading {
+    display: none;
   }
 }
 
@@ -724,17 +774,26 @@ a.tag:hover {
 /* Photo behind the whole hero, darkened on the left where the text sits. */
 .hero-home--photo {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  padding-top: clamp(2rem, 4vw, 3rem);
   min-height: min(78vh, 720px);
   background-color: #121417;
-  background-image: linear-gradient(
-      90deg,
-      rgba(12, 14, 16, 0.88) 0%,
-      rgba(12, 14, 16, 0.62) 50%,
-      rgba(12, 14, 16, 0.2) 100%
-    ),
-    var(--hero-bg);
-  background-position: center 40%;
+  /* The text sits in the sky above the bridge, so only the top of the
+     photo is darkened; the bridge itself stays clear. */
+  --hero-shade: linear-gradient(
+    to bottom,
+    rgba(12, 14, 16, 0.7) 0%,
+    rgba(12, 14, 16, 0.35) 35%,
+    rgba(12, 14, 16, 0) 60%
+  );
+  --hero-shade-dark: linear-gradient(
+    to bottom,
+    rgba(12, 14, 16, 0.6) 0%,
+    rgba(12, 14, 16, 0.25) 35%,
+    rgba(12, 14, 16, 0) 58%
+  );
+  background-image: var(--hero-shade), var(--hero-bg);
+  background-position: center 15%;
   background-size: cover;
   border-bottom-color: var(--term-rule);
   color: var(--term-ink);
@@ -751,7 +810,49 @@ a.tag:hover {
 }
 
 .hero-home--photo .hero-lede {
-  color: var(--term-muted);
+  color: rgba(230, 228, 222, 0.9);
+}
+
+.hero-home--photo .hero-title,
+.hero-home--photo .hero-lede {
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+}
+
+/* Wide screens: text in the top-right corner, in the sky between the
+   towers rather than across the deck. */
+@media (min-width: 720px) {
+  .hero-home--photo .hero-copy {
+    margin-left: auto;
+    text-align: right;
+  }
+  .hero-home--photo .hero-lede {
+    margin-left: auto;
+    margin-bottom: 0;
+  }
+}
+
+/* Narrow screens: text centred at the top, in the sky, tinted evenly. */
+@media (max-width: 719px) {
+  .hero-home--photo {
+    padding-top: 2.5rem;
+    text-align: center;
+  }
+
+  .hero-home--photo .hero-title {
+    margin-bottom: 1rem;
+    font-size: min(12vw, 3.6rem);
+  }
+
+  .hero-home--photo .hero-lede {
+    margin-inline: auto;
+    margin-bottom: 0;
+    font-size: 1.3rem;
+  }
+
+  .hero-home--photo {
+    --hero-shade: linear-gradient(rgba(12, 14, 16, 0.45), rgba(12, 14, 16, 0.2));
+    --hero-shade-dark: linear-gradient(rgba(12, 14, 16, 0.35), rgba(12, 14, 16, 0.15));
+  }
 }
 
 .hero-home--photo .hero-tld {
@@ -766,13 +867,51 @@ a.tag:hover {
 
 .hero-credit {
   position: absolute;
-  right: 16px;
+  left: 16px;
   bottom: 12px;
   margin: 0;
   color: rgba(230, 228, 222, 0.75);
   font-family: var(--mono);
   font-size: 0.72rem;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.hero-credit a {
+  color: inherit;
+  text-decoration-color: rgba(230, 228, 222, 0.4);
+}
+
+.hero-credit a:hover {
+  color: var(--term-ink);
+}
+
+/* Night photo and its credit in dark mode (system or toggle). */
+.hero-credit--dark {
+  display: none;
+}
+
+:root[data-theme="dark"] .hero-home--photo {
+  background-image: var(--hero-shade-dark), var(--hero-bg-dark);
+}
+
+:root[data-theme="dark"] .hero-credit--light {
+  display: none;
+}
+
+:root[data-theme="dark"] .hero-credit--dark {
+  display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .hero-home--photo {
+    background-image: var(--hero-shade-dark), var(--hero-bg-dark);
+  }
+  :root:not([data-theme="light"]) .hero-credit--light {
+    display: none;
+  }
+  :root:not([data-theme="light"]) .hero-credit--dark {
+    display: block;
+  }
 }
 
 .hero-title {
@@ -851,7 +990,7 @@ a.tag:hover {
 
 @media (min-width: 720px) {
   .feed-item {
-    grid-template-columns: 10.5rem 1fr;
+    grid-template-columns: 9.5rem 1fr;
   }
 }
 
@@ -862,33 +1001,68 @@ a.tag:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
-.feed-date {
-  padding-top: 0.2rem;
-  color: var(--muted);
-  font-family: var(--mono);
-  font-size: 0.74rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.feed-when {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-top: 0.15rem;
 }
 
-.feed-kind {
-  display: flex;
-  flex-wrap: wrap;
+.feed-date {
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+/* Kind of item, under the date; dropped on phones to keep things quiet. */
+.feed-type {
+  display: inline-flex;
   align-items: center;
-  gap: 0.35rem 0.7rem;
-  margin: 0;
+  gap: 0.4rem;
+  color: var(--muted);
   font-family: var(--mono);
   font-size: 0.7rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
+.feed-type::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent, var(--muted));
+}
+
+@media (max-width: 719px) {
+  .feed-type {
+    display: none;
+  }
+
+  /* Project name on the date's line, top right, instead of its own line. */
+  .feed-item .feed-project {
+    position: absolute;
+    top: calc(1rem + 0.15rem);
+    right: 1.25rem;
+    max-width: 60%;
+    overflow: hidden;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .feed-date {
+    line-height: 1.6;
+  }
+}
+
 .feed-project {
+  margin: 0;
   color: var(--accent-text, var(--muted));
+  font-family: var(--mono);
   font-size: 0.8rem;
   font-weight: 500;
-  letter-spacing: 0;
-  text-transform: none;
 }
 
 .feed-title {
@@ -911,9 +1085,18 @@ a.tag:hover {
   line-height: 1.55;
 }
 
-/* "Show N older" expander under a list. */
+/* "Show N older" expander under a list. Once open, the button goes and the
+   rest of the list continues as if it had always been there. */
 .show-more {
   margin-top: 0.75rem;
+}
+
+.show-more[open] {
+  margin-top: 0;
+}
+
+.show-more[open] > summary {
+  display: none;
 }
 
 .show-more > summary {
@@ -941,22 +1124,18 @@ a.tag:hover {
   font-weight: 600;
 }
 
-.show-more[open] > summary::before {
-  content: "−";
-}
-
 .show-more > summary:hover {
   background: var(--ink);
   color: var(--bg);
 }
 
-.show-more[open] .when-closed,
-.show-more:not([open]) .when-open {
-  display: none;
+/* Match each list's own spacing so the join is invisible. */
+.show-more > .feed-list {
+  margin-top: 0.6rem;
 }
 
-.show-more > ol {
-  margin-top: 0.75rem;
+.show-more > .update-list {
+  margin-top: 0;
 }
 
 .updates .show-more > summary {
@@ -1680,6 +1859,10 @@ a.tag:hover {
 
 .update:last-child {
   padding-bottom: 0.25rem;
+}
+
+.update-list:has(+ .show-more[open]) > .update:last-child {
+  padding-bottom: 1.6rem;
 }
 
 .update::before {

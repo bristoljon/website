@@ -3,11 +3,18 @@ import { graphql, Link } from "gatsby"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
 import ShowMore from "../components/show-more"
+import RelativeTime from "../components/relative-time"
 import { byNewest, plainExcerpt, projectUpdates, updateDate } from "../utils/updates"
 
 // Accent per kind of item, so the feed reads at a glance.
 const KIND_TONE = { blog: "pink", project: "tang", update: "sky" }
 
+
+// Photo credit in the corner of the hero, linked to its source if given.
+const Credit = ({ className, text, url }) =>
+  text ? (
+    <p className={className}>{url ? <a href={url}>{text}</a> : text}</p>
+  ) : null
 
 const IndexPage = ({ data }) => {
   const home = data.home
@@ -22,7 +29,7 @@ const IndexPage = ({ data }) => {
       return {
         key: node.id,
         kind: isBlog ? "blog" : "project",
-        label: isBlog ? `New ${node.frontmatter.type || "Update"} Post` : "New Project",
+        label: isBlog ? node.frontmatter.type || "Update" : "New project",
         isoDate: node.frontmatter.isoDate,
         date: node.frontmatter.date,
         title: node.frontmatter.title,
@@ -34,7 +41,7 @@ const IndexPage = ({ data }) => {
       projectUpdates(node).map(u => ({
         key: `${node.fields.path}#${u.anchor}`,
         kind: "update",
-        label: "Project Update",
+        label: "Project update",
         project: node.frontmatter.title,
         isoDate: u.isoDate,
         date: updateDate(u),
@@ -58,7 +65,14 @@ const IndexPage = ({ data }) => {
       <section
         id="home"
         className={`hero-home${hero.image ? " hero-home--photo" : ""}`}
-        style={hero.image ? { "--hero-bg": `url(${hero.image})` } : undefined}
+        style={
+          hero.image
+            ? {
+                "--hero-bg": `url(${hero.image})`,
+                "--hero-bg-dark": `url(${hero.imageDark || hero.image})`,
+              }
+            : undefined
+        }
       >
         <div className="wrap">
           <div className="hero-copy">
@@ -70,9 +84,28 @@ const IndexPage = ({ data }) => {
             {hero.excerpt && <p className="hero-lede">{hero.excerpt}</p>}
           </div>
         </div>
-        {hero.image && hero.imageCredit && (
-          <p className="hero-credit">{hero.imageCredit}</p>
-        )}
+        {hero.image &&
+          (hero.imageDark ? (
+            // Separate dark-mode photo: each credit shows with its photo.
+            <>
+              <Credit
+                className="hero-credit hero-credit--light"
+                text={hero.imageCredit}
+                url={hero.imageCreditUrl}
+              />
+              <Credit
+                className="hero-credit hero-credit--dark"
+                text={hero.imageDarkCredit}
+                url={hero.imageDarkCreditUrl}
+              />
+            </>
+          ) : (
+            <Credit
+              className="hero-credit"
+              text={hero.imageCredit}
+              url={hero.imageCreditUrl}
+            />
+          ))}
       </section>
 
       {/*
@@ -83,9 +116,8 @@ const IndexPage = ({ data }) => {
       <section id="recent" className="section recent" aria-labelledby="recent-heading">
         <div className="wrap">
           <header className="section-head">
-            <p className="kicker">01 / Recent</p>
-            <h2 id="recent-heading" className="display">
-              Fresh off the press
+            <h2 id="recent-heading" className="kicker">
+              01 / Recent updates
             </h2>
           </header>
 
@@ -94,16 +126,16 @@ const IndexPage = ({ data }) => {
             items={recent}
             renderItem={item => (
               <li className={`feed-item tone-${KIND_TONE[item.kind]}`} key={item.key}>
-                <time className="feed-date" dateTime={item.isoDate}>
-                  {item.date}
-                </time>
+                <div className="feed-when">
+                  <RelativeTime
+                    className="feed-date"
+                    iso={item.isoDate}
+                    date={item.date}
+                  />
+                  <span className="feed-type">{item.label}</span>
+                </div>
                 <div className="feed-body">
-                  <p className="feed-kind">
-                    <span className="chip">{item.label}</span>
-                    {item.project && (
-                      <span className="feed-project">{item.project}</span>
-                    )}
-                  </p>
+                  {item.project && <p className="feed-project">{item.project}</p>}
                   <h3 className="feed-title">
                     <Link className="stretched" to={item.path}>
                       {item.title}
@@ -148,6 +180,10 @@ export const query = graphql`
         excerpt
         image
         imageCredit
+        imageCreditUrl
+        imageDark
+        imageDarkCredit
+        imageDarkCreditUrl
         aboutHeading
       }
     }
