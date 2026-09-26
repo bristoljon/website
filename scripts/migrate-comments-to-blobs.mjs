@@ -16,6 +16,10 @@
  * ids already in the store are skipped. Live comments on the same page are
  * kept, and each page's list stays in date order.
  *
+ * Comments signed with a reserved name ("Jon") are marked as the owner's, so
+ * they get the "author" badge. That flag is also set on archived comments
+ * already in the store from an earlier run.
+ *
  * Site: .netlify/state.json (from `netlify link`) or NETLIFY_SITE_ID.
  * Token: NETLIFY_AUTH_TOKEN, or the Netlify CLI's saved login.
  */
@@ -25,6 +29,7 @@ import { homedir } from "node:os"
 import { join } from "node:path"
 import matter from "gray-matter"
 import { commentStore, updateComments } from "../netlify/lib/comments.mjs"
+import { isReservedName } from "../src/utils/comment-rules.mjs"
 
 const args = process.argv.slice(2)
 const dry = args.includes("--dry")
@@ -69,6 +74,7 @@ for (const [dir, route] of Object.entries(COLLECTIONS)) {
         author: String(c.author || "").trim() || "Anonymous",
         body: String(c.body || "").trim(),
         date: isoDate(c.date),
+        ...(isReservedName(c.author) ? { owner: true } : {}),
       })
     )
   }
@@ -84,7 +90,8 @@ console.log(
     (ref ? ` (as of ${ref})` : "")
 )
 for (const [path, list] of Object.entries(byPath)) {
-  console.log(`  ${path}  ${list.length}`)
+  const owner = list.filter(c => c.owner).length
+  console.log(`  ${path}  ${list.length}${owner ? ` (${owner} by the owner)` : ""}`)
 }
 if (dry || archived.length === 0) process.exit(0)
 
@@ -117,20 +124,33 @@ if (!siteID || !token) {
 
 const store = commentStore({ siteID, token })
 let added = 0
+let flagged = 0
 for (const [path, list] of Object.entries(byPath)) {
+  const byId = new Map(list.map(c => [c.id, c]))
   let fresh = []
+  let marked = 0
   await updateComments(
     path,
     current => {
       const have = new Set(current.map(c => c.id))
       fresh = list.filter(c => !have.has(c.id))
-      if (fresh.length === 0) return current
-      return [...current, ...fresh].sort((a, b) =>
+      marked = 0
+      const kept = current.map(c => {
+        if (!byId.get(c.id)?.owner || c.owner) return c
+        marked++
+        return { ...c, owner: true }
+      })
+      if (fresh.length === 0 && marked === 0) return current
+      return [...kept, ...fresh].sort((a, b) =>
         a.date < b.date ? -1 : a.date > b.date ? 1 : 0
       )
     },
     store
   )
   added += fresh.length
+  flagged += marked
 }
-console.log(`Added ${added}; ${archived.length - added} were already there.`)
+console.log(
+  `Added ${added}; ${archived.length - added} were already there` +
+    (flagged ? `, ${flagged} of those now marked as the owner's.` : ".")
+)

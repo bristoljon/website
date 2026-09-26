@@ -5,12 +5,21 @@ import {
   randomUUID,
   timingSafeEqual,
 } from "node:crypto"
+import {
+  cleanName,
+  clean,
+  LIMITS,
+  OWNER_NAME,
+  problemWith,
+} from "../../src/utils/comment-rules.mjs"
+
+export { LIMITS }
 
 /**
  * Shared by the two comment functions. Live comments sit in the "comments"
  * Blobs store, one JSON list per page, keyed on the page path without its
  * leading slash ("blog/update-3"), because Blobs keys can't start with "/".
- * Archived comments stay in each post's frontmatter and never come here.
+ * That includes the archive from the old MySQL comment table.
  *
  * Strong consistency, so a comment written by submission-created shows up on
  * the next read rather than up to a minute later. Inside a function the site
@@ -31,34 +40,24 @@ export const normalisePath = raw => {
   return PAGE.test(path) ? path : null
 }
 
-/*
- * The checks submission-created runs on top of Netlify's spam filter.
+/**
+ * A stored comment. Only the owner's carry `owner`, which shows as the
+ * "author" badge; those come in through the admin-keyed POST, never the form.
  */
+export const makeComment = (path, { name, message }, { owner = false } = {}) => ({
+  id: randomUUID(),
+  path,
+  author: cleanName(name) || (owner ? OWNER_NAME : "Anonymous"),
+  body: clean(message),
+  date: new Date().toISOString(),
+  ...(owner ? { owner: true } : {}),
+})
 
-export const LIMITS = {
-  minElapsed: 3 * 1000, // faster than a person can type a comment
-  maxElapsed: 24 * 3600 * 1000, // a stale tab, or a replayed form
-  minMessage: 2,
-  maxMessage: 2000,
-  maxName: 60,
-  maxLinks: 2,
-  perHour: 5,
-}
-
-const LINK = /https?:\/\/|www\.|\[url/gi
-
-// Strip tags and control characters. Comments render as plain text, so this
-// is tidiness rather than the XSS defence, but nobody needs to see "<b>".
-const clean = s =>
-  String(s || "")
-    .replace(/<[^>]*>/g, "")
-    .replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, "")
-    .replace(/\r\n?/g, "\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim()
-
-/** Returns [comment, null] or [null, reason]. */
-export const check = (data, now = Date.now()) => {
+/**
+ * The checks submission-created runs on top of Netlify's spam filter.
+ * Returns [comment, null] or [null, reason].
+ */
+export const check = data => {
   if (data["bot-field"]) return [null, "honeypot"]
 
   const path = normalisePath(data.page)
@@ -72,25 +71,10 @@ export const check = (data, now = Date.now()) => {
     return [null, "too fast"]
   if (elapsed > LIMITS.maxElapsed) return [null, "too slow"]
 
-  const body = clean(data.message)
-  if (body.length < LIMITS.minMessage) return [null, "too short"]
-  if (body.length > LIMITS.maxMessage) return [null, "too long"]
-  if ((body.match(LINK) || []).length > LIMITS.maxLinks)
-    return [null, "too many links"]
+  const problem = problemWith(data)
+  if (problem) return [null, problem]
 
-  const name = clean(data.name).replace(/\s+/g, " ")
-  if (name.length > LIMITS.maxName) return [null, "name too long"]
-
-  return [
-    {
-      id: randomUUID(),
-      path,
-      author: name || "Anonymous",
-      body,
-      date: new Date(now).toISOString(),
-    },
-    null,
-  ]
+  return [makeComment(path, data), null]
 }
 
 export const keyFor = path => path.slice(1)

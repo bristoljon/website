@@ -1943,6 +1943,28 @@ a.tag:hover {
   font-weight: 500;
 }
 
+/* On comments posted by the site's author (see comments.js). */
+.owner-badge {
+  display: inline-block;
+  margin-left: 0.45rem;
+  padding: 0.05rem 0.4rem;
+  background: var(--tang);
+  color: var(--on-accent);
+  border-radius: 3px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: 0.05em;
+}
+
+.owner-note {
+  margin: -0.75rem 0 1.25rem;
+  color: var(--tang-text);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+
 /* Sent from this tab and shown straight away, before the server confirms. */
 .comment.is-new {
   border-left-color: var(--sun);

@@ -2,24 +2,35 @@ import {
   commentStore,
   isAdmin,
   json,
+  makeComment,
   normalisePath,
   readComments,
   updateComments,
 } from "../lib/comments.mjs"
+import { problemWith } from "../../src/utils/comment-rules.mjs"
 
 /**
  * GET    /api/comments?path=/blog/update-3   a page's live comments, oldest first
  * GET    /api/comments?counts=1              {path: count} for every page
  * GET    /api/comments?recent=1              newest across the site (admin)
+ * POST   /api/comments  {path, name, message} the owner's comment (admin)
  * DELETE /api/comments  {path, id}           remove one (admin)
  *
- * Admin calls carry "Authorization: Bearer <COMMENTS_ADMIN_KEY>".
- * Comments are posted through the Netlify Form, never here.
+ * Admin calls carry "Authorization: Bearer <COMMENTS_ADMIN_KEY>". Everyone
+ * else comments through the Netlify Form. The owner posts here instead, so
+ * the key never lands in the form's submission log or notification emails,
+ * and so the comment can carry the "author" badge and a reserved name.
  */
 
 const RECENT = 100
 
-const publicFields = ({ id, author, body, date }) => ({ id, author, body, date })
+const publicFields = ({ id, author, body, date, owner }) => ({
+  id,
+  author,
+  body,
+  date,
+  ...(owner ? { owner: true } : {}),
+})
 
 const byDate = (a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0)
 
@@ -68,6 +79,19 @@ export default async req => {
     return json({ comments })
   }
 
+  if (req.method === "POST") {
+    if (!isAdmin(req)) return json({ error: "unauthorised" }, { status: 401 })
+    const body = await req.json().catch(() => ({}))
+    const path = normalisePath(body.path)
+    if (!path) return json({ error: "bad path" }, { status: 400 })
+    const problem = problemWith(body, { owner: true })
+    if (problem) return json({ error: problem }, { status: 400 })
+
+    const comment = makeComment(path, body, { owner: true })
+    await updateComments(path, list => [...list, comment])
+    return json({ comment: publicFields(comment) }, { status: 201 })
+  }
+
   if (req.method === "DELETE") {
     if (!isAdmin(req)) return json({ error: "unauthorised" }, { status: 401 })
     const body = await req.json().catch(() => ({}))
@@ -85,7 +109,7 @@ export default async req => {
 
   return json(
     { error: "method not allowed" },
-    { status: 405, headers: { allow: "GET, DELETE" } }
+    { status: 405, headers: { allow: "GET, POST, DELETE" } }
   )
 }
 

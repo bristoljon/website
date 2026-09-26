@@ -107,6 +107,22 @@ Comments load in the browser, so search engines don't index them.
 - For an email per comment: Forms > comment > Form notifications > add an
   email notification.
 
+**Posting as yourself**
+
+"Jon" and names that look like it (J0n, Jón, Jon Wyatt, bristoljon, "the
+real jon") are reserved, as are admin, owner and author. The form tells a
+visitor to pick another, and `submission-created` drops any that get past
+it. The list and the look-alike matching are in
+`src/utils/comment-rules.mjs`, which the form and the functions share.
+
+To post as yourself, open `/admin/comments/` in that browser once and load
+it with the admin key. After that, the comment form on every page says
+"Posting as the author" and sends your comment straight to
+`POST /api/comments` with the key, skipping Netlify Forms so the key never
+reaches the submission log or emails. Your comments go up at once, default
+to the name "Jon", aren't limited on links, and carry an "author" badge.
+Your 8 archived comments get the badge too: the migration marks them.
+
 **Moderating**
 
 Go to [/admin/comments/](https://bristoljon.uk/admin/comments/) and enter the

@@ -138,7 +138,7 @@
           meta.className = "meta"
 
           const who = document.createElement("strong")
-          who.textContent = c.author
+          who.textContent = c.owner ? `${c.author} (author)` : c.author
           const page = document.createElement("a")
           page.href = c.path
           page.textContent = c.path

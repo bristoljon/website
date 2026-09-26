@@ -35,14 +35,13 @@ export default async req => {
   if (payload?.form_name !== "comment") return new Response("ignored")
 
   const data = payload.data || {}
-  const now = Date.now()
-  const [comment, reason] = check(data, now)
+  const [comment, reason] = check(data)
   if (!comment) {
     console.log(`comment dropped: ${reason}`)
     return new Response("dropped")
   }
 
-  if (!(await underRateLimit(data.ip, now))) {
+  if (!(await underRateLimit(data.ip, Date.now()))) {
     console.log("comment dropped: rate limit")
     return new Response("dropped")
   }

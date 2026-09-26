@@ -1,4 +1,11 @@
 import * as React from "react"
+import {
+  clean,
+  cleanName,
+  LIMITS,
+  OWNER_NAME,
+  problemWith,
+} from "../utils/comment-rules.mjs"
 
 /**
  * Comments on a post or project, and the form to add one.
@@ -11,26 +18,16 @@ import * as React from "react"
  *
  * The form has to stay in the server-rendered HTML: Netlify finds forms by
  * parsing the built pages, and only keeps fields it saw there.
+ *
+ * In a browser where the admin key is saved (from /admin/comments/), the
+ * form posts straight to /api/comments with the key instead, as the site's
+ * author: that's the only way to use a reserved name like "Jon", and those
+ * comments get the "author" badge.
  */
 const TONES = ["sky", "mint", "sun", "pink"]
 
-// Same limits as netlify/lib/comments.mjs. Checked here too so a real person
-// gets told, rather than having their comment dropped quietly.
-const MAX_NAME = 60
-const MAX_MESSAGE = 2000
-const MAX_LINKS = 2
-const LINK = /https?:\/\/|www\.|\[url/gi
-
-// Mirrors the server's clean-up, so a comment shown as "just now" can be
-// matched against the saved copy once it comes back.
-const clean = s =>
-  String(s || "")
-    .replace(/<[^>]*>/g, "")
-    .replace(/\r\n?/g, "\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim()
-
-const cleanName = s => clean(s).replace(/\s+/g, " ") || "Anonymous"
+// Where /admin/comments/ keeps the admin key. Same origin, so readable here.
+const ADMIN_KEY_STORAGE = "comments-admin-key"
 
 const formatDate = iso =>
   new Date(iso).toLocaleDateString("en-GB", {
@@ -54,6 +51,7 @@ const Comment = ({ c, tone }) => (
     </div>
     <p className="comment-by">
       <strong>{c.author || "Anonymous"}</strong>
+      {c.owner && <span className="owner-badge">author</span>}
       {c.justNow ? (
         <> · just now</>
       ) : (
@@ -114,11 +112,17 @@ const Comments = ({ path, comments, reload }) => {
   const live = comments || []
   const [sent, setSent] = React.useState([])
   const [status, setStatus] = React.useState({ state: "idle" })
+  const [ownerKey, setOwnerKey] = React.useState(null)
   const shownAt = React.useRef(0)
   const timers = React.useRef([])
 
   React.useEffect(() => {
     shownAt.current = Date.now()
+    try {
+      setOwnerKey(localStorage.getItem(ADMIN_KEY_STORAGE))
+    } catch (e) {
+      // Storage blocked: post as a visitor.
+    }
     const pending = timers.current
     return () => pending.forEach(clearTimeout)
   }, [])
@@ -136,15 +140,14 @@ const Comments = ({ path, comments, reload }) => {
     const name = String(fields.get("name") || "")
     const message = clean(fields.get("message"))
 
-    let problem = null
-    if (message.length < 2) problem = "Write a message first."
-    else if (message.length > MAX_MESSAGE)
-      problem = `That's over ${MAX_MESSAGE} characters. Try trimming it.`
-    else if ((message.match(LINK) || []).length > MAX_LINKS)
-      problem = `At most ${MAX_LINKS} links, please.`
-    else if (name.trim().length > MAX_NAME) problem = "That name's too long."
+    const problem = problemWith({ name, message }, { owner: !!ownerKey })
     if (problem) {
       setStatus({ state: "error", text: problem })
+      return
+    }
+
+    if (ownerKey) {
+      postAsOwner(form, name, message)
       return
     }
 
@@ -170,7 +173,7 @@ const Comments = ({ path, comments, reload }) => {
       ...s,
       {
         id: `sent-${Date.now()}`,
-        author: cleanName(name),
+        author: cleanName(name) || "Anonymous",
         body: message,
         justNow: true,
       },
@@ -178,6 +181,38 @@ const Comments = ({ path, comments, reload }) => {
     form.elements.message.value = ""
     setStatus({ state: "sent", text: "Thanks! Your comment is up." })
     timers.current.push(...REFETCH_AFTER.map(ms => setTimeout(reload, ms)))
+  }
+
+  // Straight to the function, published at once, so no "just now" stage.
+  const postAsOwner = async (form, name, message) => {
+    setStatus({ state: "sending" })
+    try {
+      const res = await fetch("/api/comments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${ownerKey}`,
+        },
+        body: JSON.stringify({ path, name, message }),
+      })
+      if (res.status === 401) {
+        setStatus({
+          state: "error",
+          text: "The saved admin key was turned down. Update it at /admin/comments/.",
+        })
+        return
+      }
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || `HTTP ${res.status}`)
+      }
+    } catch (err) {
+      setStatus({ state: "error", text: `That didn't post: ${err.message}` })
+      return
+    }
+    form.elements.message.value = ""
+    setStatus({ state: "sent", text: "Posted." })
+    reload()
   }
 
   return (
@@ -220,6 +255,11 @@ const Comments = ({ path, comments, reload }) => {
             ? "Be the first to comment"
             : "Add a comment"}
         </h3>
+        {ownerKey && (
+          <p className="owner-note">
+            Posting as the author, with the admin key saved in this browser.
+          </p>
+        )}
 
         <div className="field-row">
           <label className="field" htmlFor="comment-name">
@@ -228,9 +268,9 @@ const Comments = ({ path, comments, reload }) => {
               id="comment-name"
               name="name"
               type="text"
-              maxLength={MAX_NAME}
+              maxLength={LIMITS.maxName}
               autoComplete="name"
-              placeholder="Anonymous"
+              placeholder={ownerKey ? OWNER_NAME : "Anonymous"}
             />
           </label>
           <label className="field" htmlFor="comment-email">
@@ -250,7 +290,7 @@ const Comments = ({ path, comments, reload }) => {
             id="comment-message"
             name="message"
             required
-            maxLength={MAX_MESSAGE}
+            maxLength={LIMITS.maxMessage}
           />
         </label>
 
