@@ -3,7 +3,6 @@ title: "iMedic - Paramedic App"
 date: 2010-07-14
 excerpt: An iOS app written in Objective-C for paramedics — assessment tools and drug calculations.
 status: Archived
-image: /img/projects/imedic.jpg
 tags:
   - "PHP"
   - "Mobile"
@@ -11,6 +10,17 @@ tags:
   - "App"
   - "Full-stack"
   - "Paramedic"
+images:
+  - image: /img/projects/imedic-1.png
+    caption: "JRCALC guidelines"
+  - image: /img/projects/imedic-2.png
+    caption: "Paediatric doses and equipment at 18 months"
+  - image: /img/projects/imedic-3.png
+    caption: "Rate Checker, which became the Touch Timer"
+  - image: /img/projects/imedic-4.png
+    caption: "\"Knocked App\" pregnancy date calculator"
+  - image: /img/projects/imedic-5.png
+    caption: "GCS Guesser"
 links: []
 draft: false
 comments: []

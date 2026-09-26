@@ -12,6 +12,15 @@ const React = require("react")
  */
 exports.onRenderBody = ({ setHeadComponents }) => {
   setHeadComponents([
+    // Apply a saved light/dark choice before first paint, so a visitor who
+    // picked a theme doesn't see the other one flash first. See nav.js.
+    <script
+      key="theme"
+      dangerouslySetInnerHTML={{
+        __html:
+          "try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}",
+      }}
+    />,
     <link
       key="preconnect-fonts"
       rel="preconnect"

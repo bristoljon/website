@@ -46,6 +46,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       tags: [String]
       links: [Link]
       updates: [ProjectUpdate]
+      images: [ProjectImage]
       comments: [Comment]
       draft: Boolean
       source: String
@@ -105,6 +106,13 @@ exports.createSchemaCustomization = ({ actions }) => {
       title: String
       body: String
       html: String
+    }
+
+    # A picture on a project page: shown as a thumbnail in the sidebar and
+    # full size when clicked.
+    type ProjectImage {
+      image: String
+      caption: String
     }
 
     type Comment {

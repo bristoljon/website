@@ -3,7 +3,6 @@ title: "bristoljon.uk"
 date: 2015-08-05
 excerpt: The site you're reading. Now a static build rather than PHP and MySQL.
 status: Archived
-image: /img/projects/this.jpg
 tags:
   - "PHP"
   - "JavaScript"
@@ -24,6 +23,11 @@ tags:
   - "Responsive"
   - "AngularJS"
   - "CMS"
+images:
+  - image: /img/projects/this.jpg
+    caption: "The rebuilt site, 2026"
+  - image: /img/projects/this-2016.jpg
+    caption: "The old PHP site, showing the iMedic project page"
 links:
   - label: Source
     url: https://github.com/bristoljon/bristoljon.uk

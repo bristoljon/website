@@ -7,12 +7,16 @@ import TagList from "../components/tag-list"
 import Comments from "../components/comments"
 import DetailToggles, { useDetailLevel } from "../components/detail-toggles"
 import { projectUpdates, updateDate } from "../utils/updates"
-import Window from "../components/window"
 import ShowMore from "../components/show-more"
+import ProjectImages from "../components/project-images"
+
+// The drafting-table photo from the old site, behind every project title
+// unless the project sets its own.
+const DEFAULT_BACKGROUND = "/img/proj-min.jpg"
 
 const UPDATES_VISIBLE = 5
 
-const Project = ({ data, location, pageContext }) => {
+const Project = ({ data, location }) => {
   const project = data.markdownRemark
   const fm = project.frontmatter
   const detail = useDetailLevel()
@@ -41,7 +45,7 @@ const Project = ({ data, location, pageContext }) => {
         kicker="Project"
         title={fm.title}
         tone="tang"
-        image={fm.image}
+        background={fm.image || DEFAULT_BACKGROUND}
       >
         <dl className="stats">
           <div className="stat tone-sun">
@@ -93,6 +97,8 @@ const Project = ({ data, location, pageContext }) => {
               )}
             </div>
 
+            <ProjectImages images={fm.images} />
+
             {fm.tags && fm.tags.length > 0 && (
               <div className="card side-card">
                 <h2 className="card-label">Tags</h2>
@@ -102,17 +108,13 @@ const Project = ({ data, location, pageContext }) => {
           </aside>
 
           <div className="project-main stack">
-            <Window
-              as="article"
-              name={`project/${pageContext.slug}.md`}
-              className="article"
-            >
+            <article className="card article">
               <DetailToggles {...detail} />
               <div
                 className={`post-body prose ${detail.bodyClass}`}
                 dangerouslySetInnerHTML={{ __html: project.html }}
               />
-            </Window>
+            </article>
 
             {updates.length > 0 && (
               <section className="updates" aria-labelledby="updates-heading">
@@ -176,6 +178,10 @@ export const query = graphql`
         excerpt
         status
         image
+        images {
+          image
+          caption
+        }
         tags
         links {
           label

@@ -2,7 +2,6 @@ import * as React from "react"
 import { graphql, Link } from "gatsby"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
-import Window from "../components/window"
 import ShowMore from "../components/show-more"
 import { byNewest, plainExcerpt, projectUpdates, updateDate } from "../utils/updates"
 
@@ -55,8 +54,13 @@ const IndexPage = ({ data }) => {
 
   return (
     <Layout home>
-      <section id="home" className="hero-home">
-        <div className="wrap hero-grid">
+      {/* The CMS "Hero image" fills the band, darkened behind the text. */}
+      <section
+        id="home"
+        className={`hero-home${hero.image ? " hero-home--photo" : ""}`}
+        style={hero.image ? { "--hero-bg": `url(${hero.image})` } : undefined}
+      >
+        <div className="wrap">
           <div className="hero-copy">
             <h1 className="hero-title">
               {word}
@@ -64,32 +68,11 @@ const IndexPage = ({ data }) => {
               <span className="cursor" aria-hidden="true" />
             </h1>
             {hero.excerpt && <p className="hero-lede">{hero.excerpt}</p>}
-            <div className="hero-actions">
-              <a className="btn tone-sun" href="#recent">
-                What's new <span aria-hidden="true">↓</span>
-              </a>
-              <Link className="btn" to="/blog">
-                Read the blog
-              </Link>
-              <Link className="btn" to="/cv">
-                CV
-              </Link>
-            </div>
           </div>
-
-          {hero.image && (
-            <figure className="hero-photo">
-              <div className="photo-frame">
-                <img src={hero.image} alt="" />
-              </div>
-              {hero.imageCredit && (
-                <figcaption>
-                  <span>fig. 1</span> {hero.imageCredit}
-                </figcaption>
-              )}
-            </figure>
-          )}
         </div>
+        {hero.image && hero.imageCredit && (
+          <p className="hero-credit">{hero.imageCredit}</p>
+        )}
       </section>
 
       {/*
@@ -142,12 +125,10 @@ const IndexPage = ({ data }) => {
               {hero.aboutHeading || "About Me"}
             </h2>
           </header>
-          <Window name="about.md" className="about-card">
-            <div
-              className="prose"
-              dangerouslySetInnerHTML={{ __html: home?.html || "" }}
-            />
-          </Window>
+          <div
+            className="card about-card prose"
+            dangerouslySetInnerHTML={{ __html: home?.html || "" }}
+          />
         </div>
       </section>
     </Layout>

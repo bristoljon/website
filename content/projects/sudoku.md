@@ -3,7 +3,6 @@ title: "Sudoku Grader"
 date: 2016-03-24
 excerpt: JavaScript sudoku solver and difficulty grader with solving-algorithm visualisation.
 status: Archived
-image: /img/projects/sudoku.jpg
 tags:
   - "JavaScript"
   - "OOP"
@@ -15,6 +14,9 @@ tags:
   - "Proxies"
   - "Promises"
   - "Generators"
+images:
+  - image: /img/projects/sudoku.jpg
+    caption: "The grader, with its search methods"
 links:
   - label: Live app
     url: /projects/sudoku/

@@ -68,7 +68,18 @@ collections:
       - { name: date, label: Date, widget: datetime, picker_utc: true, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
       - { name: excerpt, label: Summary, widget: text, required: false }
       - { name: status, label: Status, widget: select, options: ["Active", "Paused", "Archived", "Idea"], default: "Archived", required: false }
-      - { name: image, label: Header image, widget: image, required: false, hint: "Shown beside the title on the project page, cropped to 4:3. A screenshot of the app works well. Leave empty for no image." }
+      - { name: image, label: Header background, widget: image, required: false, hint: "Photo behind the title, darkened for the text. Leave empty for the default drafting-table photo." }
+      - name: images
+        label: Images
+        label_singular: Image
+        widget: list
+        required: false
+        default: []
+        summary: "{{fields.caption}}"
+        hint: "Thumbnails down the side of the project page; each opens full size."
+        fields:
+          - { name: image, label: Image, widget: image }
+          - { name: caption, label: Caption, widget: string, required: false }
       - { name: tags, label: Tags, widget: list, required: false, default: [] }
       - name: links
         label: Links

@@ -3,7 +3,6 @@ title: "Dozenal Calculator"
 date: 2015-07-30
 excerpt: A base-12 calculator, including fraction conversion.
 status: Archived
-image: /img/projects/dozenal.jpg
 tags:
   - "JavaScript"
   - "JQuery"
@@ -12,6 +11,13 @@ tags:
   - "Numbers"
   - "Dozenal"
   - "CSS"
+images:
+  - image: /img/projects/dozenal.jpg
+    caption: "Version 2 (2026): 1/5 with the recurring digits overlined"
+  - image: /img/projects/dozenal-v1.png
+    caption: "Version 1 (2015)"
+  - image: /img/projects/dozenal-v1-page.jpg
+    caption: "The original version 1 page"
 links:
   - label: Live app
     url: /projects/dozenal/

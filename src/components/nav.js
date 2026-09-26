@@ -25,7 +25,7 @@ const Breadcrumb = () => {
       <ol>
         <li>
           <Link to="/" aria-current={parts.length === 0 ? "page" : undefined}>
-            <span aria-hidden="true">~/</span>
+            <span aria-hidden="true">/</span>
             <span className="sr-only">bristoljon.uk home</span>
           </Link>
         </li>
@@ -46,6 +46,57 @@ const Breadcrumb = () => {
         })}
       </ol>
     </nav>
+  )
+}
+
+/**
+ * Light/dark override. With no choice saved the site follows the system
+ * setting; a click flips whichever theme is showing and remembers it. Both
+ * icons are rendered and CSS shows the right one, so the server-rendered
+ * markup never disagrees with the browser.
+ */
+const ThemeToggle = () => {
+  const flip = () => {
+    const root = document.documentElement
+    const current =
+      root.getAttribute("data-theme") ||
+      (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+    const next = current === "dark" ? "light" : "dark"
+    root.setAttribute("data-theme", next)
+    try {
+      localStorage.setItem("theme", next)
+    } catch (e) {
+      // Private browsing or storage blocked: the choice just won't persist.
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      className="icon-button theme-toggle"
+      onClick={flip}
+      aria-label="Toggle light or dark theme"
+      title="Toggle light or dark theme"
+    >
+      <svg className="icon-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <path
+          d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinejoin="round"
+        />
+      </svg>
+      <svg className="icon-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" strokeWidth="1.8" />
+        <path
+          d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+      </svg>
+    </button>
   )
 }
 
@@ -138,6 +189,8 @@ const Nav = () => {
       <div className="wrap topbar-inner">
         <Breadcrumb />
 
+        <ThemeToggle />
+
         <button
           type="button"
           className="menu-toggle"
@@ -146,7 +199,7 @@ const Nav = () => {
           onClick={() => setMenuOpen(!menuOpen)}
         >
           <span className="menu-toggle-bars" aria-hidden="true" />
-          {menuOpen ? "Close" : "Menu"}
+          <span className="sr-only">{menuOpen ? "Close menu" : "Menu"}</span>
         </button>
 
         {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions */}
@@ -200,24 +253,6 @@ const Nav = () => {
             <li>
               <Link className="menu-link" to="/cv">
                 CV
-              </Link>
-            </li>
-          </ul>
-
-          <ul className="menu-list menu-list-end">
-            <li>
-              <Link className="menu-link" to="/#recent">
-                Recent
-              </Link>
-            </li>
-            <li>
-              <Link className="menu-link" to="/#about">
-                About
-              </Link>
-            </li>
-            <li>
-              <Link className="menu-link menu-link-cta" to="/#contact">
-                Contact
               </Link>
             </li>
           </ul>

@@ -6,7 +6,6 @@ import PageHero from "../components/page-hero"
 import TagList from "../components/tag-list"
 import Comments from "../components/comments"
 import DetailToggles, { useDetailLevel } from "../components/detail-toggles"
-import Window from "../components/window"
 
 const BlogPost = ({ data, pageContext }) => {
   const post = data.markdownRemark
@@ -38,13 +37,13 @@ const BlogPost = ({ data, pageContext }) => {
 
       <section className="section">
         <div className="wrap narrow stack">
-          <Window as="article" name={`blog/${pageContext.slug}.md`} className="article">
+          <article className="card article">
             <DetailToggles {...detail} />
             <div
               className={`post-body prose ${detail.bodyClass}`}
               dangerouslySetInnerHTML={{ __html: post.html }}
             />
-          </Window>
+          </article>
 
           {fm.tags && fm.tags.length > 0 && (
             <div className="card tag-card">
