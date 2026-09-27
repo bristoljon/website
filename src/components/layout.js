@@ -34,81 +34,87 @@ const Layout = ({ children, home }) => {
       <Nav />
       <main id="main">{children}</main>
 
-      {/* html/contact.html, with the PHP/AJAX mailer swapped for Netlify Forms. */}
-      <section
-        id="contact"
-        className="band contact"
-        aria-labelledby="contact-heading"
-      >
-        <div className="wrap contact-grid">
-          <div className="contact-intro">
-            <p className="kicker">Contact</p>
-            <h2 id="contact-heading" className="display">
-              Connect on..
-            </h2>
-            <ul className="social">
-              {socials.map(s => (
-                <li key={s.label}>
-                  <a className="social-link" href={s.href}>
-                    <span className="social-label">{s.label}</span>
-                    <span className="social-url">{bare(s.href)}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
+      {/*
+        html/contact.html, with the PHP/AJAX mailer swapped for Netlify Forms.
+        Home page only: posts and projects have their comment form instead.
+        Netlify still finds the form, since it's in the home page's HTML.
+      */}
+      {home && (
+        <section
+          id="contact"
+          className="band contact"
+          aria-labelledby="contact-heading"
+        >
+          <div className="wrap contact-grid">
+            <div className="contact-intro">
+              <p className="kicker">Contact</p>
+              <h2 id="contact-heading" className="display">
+                Connect on..
+              </h2>
+              <ul className="social">
+                {socials.map(s => (
+                  <li key={s.label}>
+                    <a className="social-link" href={s.href}>
+                      <span className="social-label">{s.label}</span>
+                      <span className="social-url">{bare(s.href)}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="card form-card">
+              <h2 className="form-title">Or send me a nice old-fashioned..</h2>
+
+              {/*
+                Netlify Forms replaces the old PHP mailer. The hidden form-name
+                input is what Netlify's build-time parser keys on; without it the
+                POST 404s. Submissions land in the Netlify UI and can be
+                forwarded on with a notification.
+              */}
+              <form
+                name="contact"
+                method="POST"
+                data-netlify="true"
+                netlify-honeypot="bot-field"
+              >
+                <input type="hidden" name="form-name" value="contact" />
+                <p className="hp">
+                  <label>
+                    Leave this empty <input name="bot-field" />
+                  </label>
+                </p>
+
+                <div className="field-row">
+                  <label className="field" htmlFor="name">
+                    <span>Name</span>
+                    <input id="name" name="name" type="text" required />
+                  </label>
+                  <label className="field" htmlFor="email">
+                    <span>Email</span>
+                    <input id="email" name="email" type="email" required />
+                  </label>
+                </div>
+
+                <label className="field" htmlFor="subject">
+                  <span>Subject</span>
+                  <input id="subject" name="subject" type="text" />
+                </label>
+
+                <label className="field" htmlFor="message">
+                  <span>Message</span>
+                  <textarea id="message" name="message" required />
+                </label>
+
+                <button type="submit" className="btn tone-sun">
+                  Send
+                  <span aria-hidden="true"> ✉</span>
+                </button>
+              </form>
+            </div>
           </div>
-
-          <div className="card form-card">
-            <h2 className="form-title">Or send me a nice old-fashioned..</h2>
-
-            {/*
-              Netlify Forms replaces the old PHP mailer. The hidden form-name
-              input is what Netlify's build-time parser keys on; without it the
-              POST 404s. Submissions land in the Netlify UI and can be
-              forwarded on with a notification.
-            */}
-            <form
-              name="contact"
-              method="POST"
-              data-netlify="true"
-              netlify-honeypot="bot-field"
-            >
-              <input type="hidden" name="form-name" value="contact" />
-              <p className="hp">
-                <label>
-                  Leave this empty <input name="bot-field" />
-                </label>
-              </p>
-
-              <div className="field-row">
-                <label className="field" htmlFor="name">
-                  <span>Name</span>
-                  <input id="name" name="name" type="text" required />
-                </label>
-                <label className="field" htmlFor="email">
-                  <span>Email</span>
-                  <input id="email" name="email" type="email" required />
-                </label>
-              </div>
-
-              <label className="field" htmlFor="subject">
-                <span>Subject</span>
-                <input id="subject" name="subject" type="text" />
-              </label>
-
-              <label className="field" htmlFor="message">
-                <span>Message</span>
-                <textarea id="message" name="message" required />
-              </label>
-
-              <button type="submit" className="btn tone-sun">
-                Send
-                <span aria-hidden="true"> ✉</span>
-              </button>
-            </form>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <footer className="footer">
         <div className="wrap footer-inner">

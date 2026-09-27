@@ -41,7 +41,8 @@
   --mint-text: #0a6e44;
   --grape-text: #5236d6;
 
-  /* The contact band and footer are a terminal whatever the theme. */
+  /* The footer, photo heroes and code blocks are a terminal whatever the
+     theme. */
   --term-bg: #121417;
   --term-panel: #181b1f;
   --term-ink: #e6e4de;
@@ -1970,30 +1971,9 @@ a.tag:hover {
   border-left-color: var(--sun);
 }
 
-/* The comment form borrows the contact form's .field layout, in the light
-   card style rather than the terminal panel. */
+/* The comment form uses the contact form's .field styles. */
 .comment-form {
   margin-top: 1.5rem;
-}
-
-.comment-form .field > span {
-  color: var(--muted);
-}
-
-.comment-form .field input,
-.comment-form .field textarea {
-  background: var(--bg);
-  color: var(--ink);
-  border-color: var(--rule);
-}
-
-.comment-form .field input::placeholder {
-  color: var(--muted);
-}
-
-.comment-form .field input:focus,
-.comment-form .field textarea:focus {
-  border-color: var(--sun-text);
 }
 
 .comment-form .field textarea {
@@ -2029,17 +2009,18 @@ a.tag:hover {
 
 /* ------------------------------------------------------ contact & footer */
 
+/* Home page only (see layout.js). Follows the light/dark theme. */
 .contact {
   padding: clamp(3rem, 6vw, 5rem) 0;
-  background: var(--term-bg);
-  color: var(--term-ink);
+  background: var(--surface-2);
+  color: var(--ink);
+  border-top: 1px solid var(--rule);
 }
 
 .contact .kicker {
-  color: var(--term-muted);
+  color: var(--muted);
 }
 
-.contact :focus-visible,
 .footer :focus-visible {
   outline-color: var(--sun);
 }
@@ -2070,7 +2051,8 @@ a.tag:hover {
   align-items: center;
   gap: 1rem;
   padding: 0.65rem 0.9rem;
-  border: 1px solid var(--term-rule);
+  background: var(--surface);
+  border: 1px solid var(--rule);
   border-left: 3px solid var(--accent);
   border-radius: 4px;
   font-family: var(--mono);
@@ -2095,12 +2077,11 @@ a.tag:hover {
 .social-link::after {
   content: "↗";
   margin-left: auto;
-  color: var(--term-muted);
+  color: var(--muted);
 }
 
 .social-link:hover {
-  background: var(--term-panel);
-  border-color: var(--term-muted);
+  border-color: var(--rule-strong);
   border-left-color: var(--accent);
 }
 
@@ -2110,14 +2091,8 @@ a.tag:hover {
 }
 
 .social-url {
-  color: var(--term-muted);
+  color: var(--muted);
   overflow-wrap: anywhere;
-}
-
-.contact .form-card {
-  background: var(--term-panel);
-  color: var(--term-ink);
-  border-color: var(--term-rule);
 }
 
 .form-title {
@@ -2145,7 +2120,7 @@ a.tag:hover {
 }
 
 .field > span {
-  color: var(--term-muted);
+  color: var(--muted);
   font-family: var(--mono);
   font-size: 0.7rem;
   letter-spacing: 0.08em;
@@ -2156,19 +2131,23 @@ a.tag:hover {
 .field textarea {
   width: 100%;
   padding: 0.6rem 0.75rem;
-  background: var(--term-bg);
-  color: var(--term-ink);
-  border: 1px solid var(--term-rule);
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--rule);
   border-radius: 4px;
   font-family: var(--sans);
   font-size: 1rem;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
+.field input::placeholder {
+  color: var(--muted);
+}
+
 .field input:focus,
 .field textarea:focus {
   outline: none;
-  border-color: var(--sun);
+  border-color: var(--sun-text);
   box-shadow: 0 0 0 3px rgba(255, 210, 63, 0.22);
 }
 
