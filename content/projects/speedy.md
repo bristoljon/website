@@ -1,42 +1,45 @@
 ---
-title: "Speedy"
+title: Speedy
 date: 2026-06-21
-excerpt: Crowdsourced average speed cameras. Phones along a road read number plates on-device, and when two of them see the same car, Speedy works out how fast it went between them.
+excerpt: Crowdsourced average speed cameras. Phones along a road read number
+  plates on-device, and when two of them see the same car, Speedy works out how
+  fast it went between them.
 status: Active
-tags:
-  - "React Native"
-  - "iOS"
-  - "Android"
-  - "OCR"
-  - "AWS"
-  - "CDK"
-  - "WebSocket"
-  - "WebRTC"
-  - "Leaflet"
-  - "TypeScript"
 images:
   - image: /img/projects/speedy.jpg
-    caption: "The matches map and the live camera, flashing 41 mph"
+    caption: The matches map and the live camera, flashing 41 mph
   - image: /img/projects/speedy-camera.webp
-    caption: "Live camera, reading plates as they pass"
+    caption: Live camera, reading plates as they pass
   - image: /img/projects/speedy-flash.webp
     caption: "A match: speed flashed over the car"
   - image: /img/projects/speedy-matches.webp
-    caption: "Matches, with both capture points on a map"
+    caption: Matches, with both capture points on a map
   - image: /img/projects/speedy-nearby.webp
-    caption: "Other phones nearby"
+    caption: Other phones nearby
+tags:
+  - React Native
+  - iOS
+  - Android
+  - OCR
+  - AWS
+  - CDK
+  - WebSocket
+  - WebRTC
+  - Leaflet
+  - TypeScript
 links:
-  - label: "Website"
-    url: "https://d20tra4i0hvi3z.cloudfront.net/"
-  - label: "iPhone beta"
-    url: "https://testflight.apple.com/join/peCUGzxA"
-  - label: "Android beta"
-    url: "https://play.google.com/apps/internaltest/4701417886656338036"
+  - label: Website
+    url: https://d20tra4i0hvi3z.cloudfront.net/
+  - label: iPhone beta
+    url: https://testflight.apple.com/join/peCUGzxA
+  - label: Android beta
+    url: https://play.google.com/apps/internaltest/4701417886656338036
 updates:
   - date: 2026-09-25
-    title: "iPhone and Android betas open"
-    body: "Speedy is on TestFlight and Google Play internal testing. Links on the website."
-draft: true
+    title: iPhone and Android betas open
+    body: Speedy is on TestFlight and Google Play internal testing. Links on the
+      website.
+draft: false
 ---
 
 An average speed camera anyone can set up. Prop a phone up facing a road, get a mate to do the same further along it, and Speedy reads the number plates going past. When both phones see the same car it works out the road distance between them and how long the car took, and flashes the average speed.
