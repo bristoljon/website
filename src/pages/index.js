@@ -168,7 +168,30 @@ const IndexPage = ({ data }) => {
 
 export default IndexPage
 
-export const Head = ({ location }) => <Seo pathname={location.pathname} />
+// WebSite data is what Google uses for the site name shown above results.
+export const Head = ({ location }) => (
+  <Seo
+    pathname={location.pathname}
+    jsonLd={[
+      {
+        "@type": "WebSite",
+        name: "bristoljon.uk",
+        url: "https://bristoljon.uk/",
+      },
+      {
+        "@type": "Person",
+        name: "Jon Wyatt",
+        url: "https://bristoljon.uk/",
+        sameAs: [
+          "https://github.com/bristoljon",
+          "https://uk.linkedin.com/in/bristoljon",
+          "https://twitter.com/brisjon",
+          "https://facebook.com/bristoljon",
+        ],
+      },
+    ]}
+  />
+)
 
 export const query = graphql`
   {

@@ -84,6 +84,7 @@ export const Head = ({ data, location }) => (
     title={data.markdownRemark.frontmatter.title}
     description={data.markdownRemark.excerpt}
     pathname={location.pathname}
+    article={{ published: data.markdownRemark.frontmatter.isoDate }}
   />
 )
 
