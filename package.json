@@ -13,7 +13,8 @@
     "cms": "decap-server",
     "migrate:sql": "node scripts/migrate-mysql.js",
     "import:dump": "node scripts/import-sql-dump.js",
-    "migrate:scrape": "node scripts/scrape-legacy.js"
+    "migrate:scrape": "node scripts/scrape-legacy.js",
+    "sync:dozenal": "sh scripts/sync-dozenal.sh"
   },
   "dependencies": {
     "@netlify/blobs": "^10.7.13",
