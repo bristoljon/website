@@ -1,15 +1,16 @@
 ---
 title: "Dozenal Calculator"
 date: 2015-07-30
-excerpt: A base-12 calculator, including fraction conversion.
-status: Archived
+excerpt: A free dozenal (base 12) calculator and converter. Works in dozenal or decimal, with exact fractions and recurring digits shown.
+status: Active
 tags:
   - "JavaScript"
-  - "JQuery"
+  - "React"
   - "App"
   - "Maths"
   - "Numbers"
   - "Dozenal"
+  - "Base 12"
   - "CSS"
 images:
   - image: /img/projects/dozenal.jpg
@@ -35,7 +36,7 @@ updates:
       You can also install it like a native app [Try it here](/projects/dozenal/).
   - date: 2021-12-08
     title: "Finally working on v2 now 🎉"
-    body: "I finally dusted off the Dozenal Calculator code as it seems to be getting quite a bit of traffic.. Have basically rewritten it using React and bignumber.js which should provide much better accuracy especially with fractions. Check it out [here](https://dozenal.netlify.app/)"
+    body: "I finally dusted off the Dozenal Calculator code as it seems to be getting quite a bit of traffic.. Have basically rewritten it using React and bignumber.js which should provide much better accuracy especially with fractions. Check it out [here](/projects/dozenal/)"
   - date: 2015-08-06
     approxDate: true
     title: "Bug Found"
@@ -46,13 +47,30 @@ updates:
     body: "Changed colour for dozenal mode so that ';' key is consistent as well. Still don't really like the whole colour scheme but it'll do for now."
 ---
 
-**UPDATE**I've finally started work on v2 of this calculator [here](https://dozenal.netlify.app/). Please submit any issues or suggestions to the github repo [here](https://github.com/bristoljon/dozenal-calculator/issues). I've not implemented any validation of input or supported keyboard input yet but the conversion of fractions seems to be much better at least.
+**[Open the Dozenal Calculator](/projects/dozenal/)**
 
-Dozenal maths is base 12, unlike decimal base 10 so there are 2 extra digits (in this case X+L). For more info and all the reasons why it's considered superior, look [here](http://www.dozenalsociety.org.uk/) and [here](http://www.dozenal.org/drupal/). I made this for some practice and because I always wanted a quick way to convert between the different number systems.
+A calculator for dozenal (base 12, also called duodecimal) maths. Add, subtract, multiply and divide in dozenal or decimal, and switch between the two at any point, even halfway through a sum. Nothing is lost in the conversion: every value is stored as an exact fraction, so 1/5 in dozenal comes out as 0.2497 with the 2497 recurring, marked with a line over the top.
+
+## How to use it
+
+- **DOZ / DEC** switches between dozenal and decimal. Whatever's on the display converts with it.
+- The two extra dozenal digits, ten and eleven, start as **a** and **b**. Long-press either one to pick a different symbol, such as ↊ and ↋ or X and E. Your choice is remembered.
+- Fractions are exact. A recurring part has a line over it rather than being cut off after a few places.
+- You can install it to your home screen like a native app.
+
+Found a bug or got an idea? Leave a comment below or open an issue on [GitHub](https://github.com/bristoljon/dozenal-calculator/issues).
+
+## What is dozenal?
+
+Dozenal (or duodecimal) is counting in twelves instead of tens. It needs two extra digits, for ten and eleven, and "10" means twelve, "100" a gross (144). Twelve divides evenly by 2, 3, 4 and 6, so a third is 0.4 and a quarter is 0.3, where in decimal a third goes on forever. For more info and all the reasons why it's considered superior, look [here](http://www.dozenalsociety.org.uk/) and [here](https://dozenal.org/).
+
+## Version 1 (2015)
+
+I made the first version in 2015 for some practice and because I always wanted a quick way to convert between the different number systems.
 
 I had it working for whole numbers fairly quickly but fractions proved to be a nightmare as Javascript only has a function for converting decimal fractions into dozenal strings but not vice versa. I spent ages writing my own function to do the job before I hit google and found [this](http://flud.org/dozenal-calc.html) little gem! So thanks to flud.org for your beautiful functions (sorry I took without consent I couldn't find any contact email).
 
-## How to use it
+### How it worked
 
 Should work pretty much like a normal calculator but with the addition of 'dec' and 'el' numbers. The DOZ button shows the current mode the calculator is in and you can change modes at any time (even with an unfinished equation on the display). Fractions only output to the same number of decimal (or dozenal) places as the input so if you want more precise output just add zeros. There are definitely still bugs in it but the maths seems to be correct (again thanks to Flud.org).
 
@@ -60,6 +78,6 @@ Also you can change the XL characters to any other letter (or symbol) by simply 
 
 Any questions, bug reports or feature requests, just send me a message. It is definitely still a work in progress! Enjoy.
 
-## Known bugs
+### Known bugs (fixed in 2026)
 
 1/5 (dozenal) = 0;2 - Pretty sure this is related to the accuracy issue I mentioned before. When converting from doz to dec or vice versa, the output only shows as many decimal or dozenal places as the input. Should be pretty easy fix but won't be till after next week.

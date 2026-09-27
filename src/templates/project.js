@@ -157,15 +157,23 @@ const Project = ({ data, location }) => {
 
 export default Project
 
-export const Head = ({ data, location }) => (
-  <Seo
-    title={data.markdownRemark.frontmatter.title}
-    description={
-      data.markdownRemark.frontmatter.excerpt || data.markdownRemark.excerpt
-    }
-    pathname={location.pathname}
-  />
-)
+export const Head = ({ data, location }) => {
+  const fm = data.markdownRemark.frontmatter
+  const updated = (fm.updates || [])
+    .map(u => u.isoDate)
+    .sort()
+    .pop()
+
+  return (
+    <Seo
+      title={fm.title}
+      description={fm.excerpt || data.markdownRemark.excerpt}
+      pathname={location.pathname}
+      image={fm.images?.[0]?.image || fm.image}
+      article={{ published: fm.isoDate, modified: updated }}
+    />
+  )
+}
 
 export const query = graphql`
   query ProjectById($id: String!) {

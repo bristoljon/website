@@ -1,3 +1,17 @@
+const fs = require("fs")
+const path = require("path")
+
+// The standalone apps under static/projects and static/misc aren't Gatsby
+// pages, so the sitemap plugin can't see them. List every folder with an
+// index.html.
+const staticApps = ["projects", "misc"].flatMap(dir => {
+  const root = path.join(__dirname, "static", dir)
+  return fs
+    .readdirSync(root)
+    .filter(name => fs.existsSync(path.join(root, name, "index.html")))
+    .map(name => `/${dir}/${name}/`)
+})
+
 module.exports = {
   siteMetadata: {
     title: "bristoljon.uk",
@@ -38,7 +52,16 @@ module.exports = {
         plugins: [],
       },
     },
-    "gatsby-plugin-sitemap",
+    {
+      resolve: "gatsby-plugin-sitemap",
+      options: {
+        resolvePages: ({ allSitePage }) => [
+          ...allSitePage.nodes,
+          ...staticApps.map(p => ({ path: p })),
+        ],
+        serialize: ({ path }) => ({ url: path }),
+      },
+    },
     "gatsby-plugin-netlify",
   ],
 }

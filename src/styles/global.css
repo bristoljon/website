@@ -41,8 +41,7 @@
   --mint-text: #0a6e44;
   --grape-text: #5236d6;
 
-  /* The footer, photo heroes and code blocks are a terminal whatever the
-     theme. */
+  /* Photo heroes and code blocks are a terminal whatever the theme. */
   --term-bg: #121417;
   --term-panel: #181b1f;
   --term-ink: #e6e4de;
@@ -2009,7 +2008,8 @@ a.tag:hover {
 
 /* ------------------------------------------------------ contact & footer */
 
-/* Home page only (see layout.js). Follows the light/dark theme. */
+/* Home page only (see layout.js). The contact band and footer follow the
+   light/dark theme. */
 .contact {
   padding: clamp(3rem, 6vw, 5rem) 0;
   background: var(--surface-2);
@@ -2019,10 +2019,6 @@ a.tag:hover {
 
 .contact .kicker {
   color: var(--muted);
-}
-
-.footer :focus-visible {
-  outline-color: var(--sun);
 }
 
 .contact-grid {
@@ -2164,9 +2160,9 @@ a.tag:hover {
 
 .footer {
   padding: 1.75rem 0 2rem;
-  background: var(--term-bg);
-  color: var(--term-muted);
-  border-top: 1px solid var(--term-rule);
+  background: var(--surface-2);
+  color: var(--muted);
+  border-top: 1px solid var(--rule);
 }
 
 .footer-inner {
@@ -2185,18 +2181,18 @@ a.tag:hover {
 .footer-mark {
   grid-column: 1 / -1;
   margin: 0;
-  color: var(--term-ink);
+  color: var(--ink);
   font-family: var(--mono);
   font-size: 0.9rem;
 }
 
 .footer-mark span:first-child {
-  color: var(--sun);
+  color: var(--sun-text);
 }
 
 .footer-mark span:last-child {
   margin-left: 0.75rem;
-  color: var(--term-muted);
+  color: var(--muted);
 }
 
 .license {
@@ -2213,18 +2209,18 @@ a.tag:hover {
 }
 
 .license a {
-  color: var(--term-ink);
+  color: var(--ink);
 }
 
 .footer .btn {
   background: transparent;
-  color: var(--term-ink);
-  border-color: var(--term-rule);
+  color: var(--ink);
+  border-color: var(--rule);
 }
 
 .footer .btn:hover {
-  background: var(--term-ink);
-  color: var(--term-bg);
+  background: var(--ink);
+  color: var(--bg);
 }
 
 /* ----------------------------------------------------------------------- CV */
