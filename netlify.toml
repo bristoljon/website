@@ -33,6 +33,8 @@
   status = 301
 
 # Sudoku is its own Netlify project (github.com/bristoljon/sudoku).
+# Forced, because the Gatsby build cache can keep the old static copy in
+# public/ and an unforced redirect never shadows an existing file.
 [[redirects]]
   from = "/sudoku"
   to = "https://sudoku.bristoljon.uk/"
@@ -42,11 +44,13 @@
   from = "/projects/sudoku"
   to = "https://sudoku.bristoljon.uk/"
   status = 301
+  force = true
 
 [[redirects]]
   from = "/projects/sudoku/*"
   to = "https://sudoku.bristoljon.uk/"
   status = 301
+  force = true
 
 # Misc apps: bare paths, old /projects/ paths (with and without the
 # trailing slash, and anything beneath), all to /misc/<name>/.
