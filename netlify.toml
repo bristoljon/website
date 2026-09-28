@@ -32,6 +32,22 @@
   to = "/projects/3d2/"
   status = 301
 
+# Sudoku is its own Netlify project (github.com/bristoljon/sudoku).
+[[redirects]]
+  from = "/sudoku"
+  to = "https://sudoku.bristoljon.uk/"
+  status = 301
+
+[[redirects]]
+  from = "/projects/sudoku"
+  to = "https://sudoku.bristoljon.uk/"
+  status = 301
+
+[[redirects]]
+  from = "/projects/sudoku/*"
+  to = "https://sudoku.bristoljon.uk/"
+  status = 301
+
 # Misc apps: bare paths, old /projects/ paths (with and without the
 # trailing slash, and anything beneath), all to /misc/<name>/.
 [[redirects]]

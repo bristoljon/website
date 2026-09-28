@@ -19,7 +19,7 @@ images:
     caption: "The grader, with its search methods"
 links:
   - label: Live app
-    url: /projects/sudoku/
+    url: https://sudoku.bristoljon.uk/
   - label: Source
     url: https://github.com/bristoljon/sudoku
 draft: false
