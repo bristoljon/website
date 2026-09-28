@@ -27,6 +27,8 @@ links:
     url: /projects/dozenal/
   - label: Source
     url: https://github.com/bristoljon/doz_tdd
+  - label: Version 1 (2015)
+    url: /projects/dozenal/v1/
 updates:
   - date: 2026-09-25
     title: Recurring fractions fixed, at last
@@ -79,7 +81,7 @@ Dozenal (or duodecimal) is counting in twelves instead of tens. It needs two ext
 
 ## Version 1 (2015)
 
-I made the first version in 2015 for some practice and because I always wanted a quick way to convert between the different number systems.
+I made the first version in 2015 for some practice and because I always wanted a quick way to convert between the different number systems. It's still up [here](/projects/dozenal/v1/), bugs and all.
 
 I had it working for whole numbers fairly quickly but fractions proved to be a nightmare as Javascript only has a function for converting decimal fractions into dozenal strings but not vice versa. I spent ages writing my own function to do the job before I hit google and found [this](http://flud.org/dozenal-calc.html) little gem! So thanks to flud.org for your beautiful functions (sorry I took without consent I couldn't find any contact email).
 

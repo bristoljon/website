@@ -22,6 +22,8 @@ links:
     url: https://sudoku.bristoljon.uk/
   - label: Source
     url: https://github.com/bristoljon/sudoku
+  - label: Version 1 (2016)
+    url: https://v1.sudoku.bristoljon.uk/
 draft: false
 updates:
   - date: 2016-04-21

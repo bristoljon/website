@@ -1,7 +1,8 @@
 #!/bin/sh
 # Build the Dozenal Calculator (its own repo, a sibling of this one by
 # default) and copy it into static/projects/dozenal/, where the site serves
-# it. Old hashed bundles are removed. Commit the result and deploy as usual.
+# it. Old hashed bundles are removed, but v1/ (the 2015 version) is left
+# alone. Commit the result and deploy as usual.
 #
 #   npm run sync:dozenal
 #   DOZENAL_DIR=~/somewhere/else npm run sync:dozenal
@@ -24,5 +25,6 @@ grep -q 'rel="canonical"' "$DOZENAL_DIR/build/index.html" || {
   exit 1
 }
 
-rsync -a --delete "$DOZENAL_DIR/build/" "$DEST/"
+# v1/ is the original 2015 calculator, which lives only here; keep it.
+rsync -a --delete --exclude=/v1/ "$DOZENAL_DIR/build/" "$DEST/"
 echo "Copied $DOZENAL_DIR/build to $DEST"
