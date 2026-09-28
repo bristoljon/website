@@ -11,7 +11,7 @@ import PageHero from "../components/page-hero"
  */
 const MiscIndex = ({ data }) => (
   <Layout>
-    <PageHero kicker="Misc" title="Bits and bobs" tone="grape">
+    <PageHero title="Bits and bobs" tone="grape">
       <p className="page-lede">
         Small experiments from when I was learning, kept as they were.
       </p>

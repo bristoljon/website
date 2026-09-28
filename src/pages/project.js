@@ -11,7 +11,7 @@ import { projectUpdates } from "../utils/updates"
  */
 const ProjectIndex = ({ data }) => (
   <Layout>
-    <PageHero kicker="Projects" title="Projects" tone="tang">
+    <PageHero title="Projects" tone="tang">
       <p className="page-lede">
         Apps, gadgets and half-built ideas, each with its own write-up.
       </p>

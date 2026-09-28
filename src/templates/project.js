@@ -43,7 +43,6 @@ const Project = ({ data, location }) => {
   return (
     <Layout>
       <PageHero
-        kicker="Project"
         title={fm.title}
         tone="tang"
         background={fm.image || DEFAULT_BACKGROUND}

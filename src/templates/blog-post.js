@@ -19,12 +19,15 @@ const BlogPost = ({ data, pageContext }) => {
   return (
     <Layout>
       <PageHero
-        kicker={`${fm.type || "Update"}${fm.number != null ? ` ${fm.number}` : ""}`}
         title={fm.title}
         tone={fm.type === "Geek Blog" ? "grape" : "sky"}
         image="/img/pano-min.jpg"
       >
         <ul className="hero-meta">
+          <li>
+            {fm.type || "Update"}
+            {fm.number != null ? ` ${fm.number}` : ""}
+          </li>
           <li>
             <time dateTime={fm.isoDate}>{fm.date}</time>
           </li>

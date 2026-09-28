@@ -1,6 +1,5 @@
 import * as React from "react"
 import { Link, useStaticQuery, graphql } from "gatsby"
-import { useLocation } from "@reach/router"
 
 /**
  * Same information architecture as the PHP navbar, minus the Login dropdown
@@ -10,44 +9,6 @@ import { useLocation } from "@reach/router"
  * Projects and Misc are pulled from content so the menu can't drift from
  * what's actually published.
  */
-
-// Section listing pages, so every breadcrumb segment is a link.
-const SECTION_LINKS = { blog: "/blog", project: "/project", misc: "/misc" }
-
-const Breadcrumb = () => {
-  const { pathname } = useLocation()
-  const parts = decodeURIComponent(pathname || "/")
-    .split("/")
-    .filter(Boolean)
-
-  return (
-    <nav className="crumbs" aria-label="Breadcrumb">
-      <ol>
-        <li>
-          <Link to="/" aria-current={parts.length === 0 ? "page" : undefined}>
-            <span aria-hidden="true">/</span>
-            <span className="sr-only">bristoljon.uk home</span>
-          </Link>
-        </li>
-        {parts.map((part, i) => {
-          const last = i === parts.length - 1
-          const href = SECTION_LINKS[part]
-          return (
-            <li key={i}>
-              {last ? (
-                <span aria-current="page">{part}</span>
-              ) : href ? (
-                <Link to={href}>{part}</Link>
-              ) : (
-                <span>{part}</span>
-              )}
-            </li>
-          )
-        })}
-      </ol>
-    </nav>
-  )
-}
 
 /**
  * Light/dark override. With no choice saved the site follows the system
@@ -192,7 +153,9 @@ const Nav = () => {
   return (
     <header className="topbar" ref={navRef}>
       <div className="wrap topbar-inner">
-        <Breadcrumb />
+        <Link className="brand" to="/">
+          bristoljon<span className="brand-tld">.uk</span>
+        </Link>
 
         <ThemeToggle />
 

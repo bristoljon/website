@@ -50,7 +50,7 @@ const CvPage = ({ data }) => {
 
   return (
     <Layout>
-      <PageHero kicker="Curriculum vitae" title={name} tone="mint">
+      <PageHero title={name} tone="mint">
         {fm.headline && <p className="page-lede">{fm.headline}</p>}
         {contactList}
         <div className="hero-actions cv-actions">

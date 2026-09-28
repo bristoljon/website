@@ -424,13 +424,31 @@ a.tag:hover {
 
 
 
-/* The breadcrumb doubles as the site mark: "~/" is home. */
-.crumbs {
-  flex: 0 1 auto;
-  min-width: 0;
+/* The site mark, and the way home. */
+.brand {
   margin-right: auto;
+  color: var(--ink);
   font-family: var(--mono);
   font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.brand-tld {
+  color: var(--tang-text);
+}
+
+.brand:hover {
+  text-decoration: underline;
+}
+
+/* The page's path, where a kicker would sit at the top of the page hero. */
+.crumbs {
+  min-width: 0;
+  margin: 0 0 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
 }
 
 .crumbs ol {
@@ -470,7 +488,7 @@ a.tag:hover {
 }
 
 .crumbs li:first-child a {
-  color: var(--tang-text);
+  color: var(--accent-text, var(--tang-text));
   font-weight: 600;
 }
 
@@ -485,7 +503,7 @@ a.tag:hover {
 }
 
 .crumbs li:first-child a[aria-current="page"] {
-  color: var(--tang-text);
+  color: var(--accent-text, var(--tang-text));
 }
 
 /* Bare icon buttons in the top bar: the theme toggle and the menu. */
@@ -1238,9 +1256,20 @@ a.tag:hover {
   color: var(--term-ink);
 }
 
-.page-hero--photo .kicker,
-.page-hero--photo .page-lede {
+.page-hero--photo .page-lede,
+.page-hero--photo .crumbs a,
+.page-hero--photo .crumbs li > span,
+.page-hero--photo .crumbs li::before {
   color: var(--term-muted);
+}
+
+.page-hero--photo .crumbs [aria-current="page"],
+.page-hero--photo .crumbs a:hover {
+  color: var(--term-ink);
+}
+
+.page-hero--photo .crumbs li:first-child a {
+  color: var(--accent);
 }
 
 .page-hero--photo .stat {

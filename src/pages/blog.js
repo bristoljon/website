@@ -36,7 +36,7 @@ const BlogIndex = ({ data, location }) => {
 
   return (
     <Layout>
-      <PageHero kicker="All posts" title="Blog" tone="pink" image="/img/pano-min.jpg">
+      <PageHero title="Blog" tone="pink" image="/img/pano-min.jpg">
         <p className="page-lede">
           Part journal, part blog, part collaboration station.
         </p>

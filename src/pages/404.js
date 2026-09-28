@@ -6,7 +6,7 @@ import PageHero from "../components/page-hero"
 
 const NotFound = () => (
   <Layout>
-    <PageHero kicker="Error 404" title="Nothing here" tone="pink" />
+    <PageHero title="Nothing here" tone="pink" />
 
     <section className="section">
       <div className="wrap narrow">
