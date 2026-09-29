@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Corner Mic Locator · bristoljon.uk</title>
+<meta name="description" content="Locates sounds in a room from the arrival-time differences at four corner microphones. Runs a simulated room, or live from a multichannel audio interface.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#E9EEF2; --surface:#F7F9FB; --ink:#13212C; --muted:#566673; --line:#C5D0D9; --accent:#0B6E7A; --accent-ink:#FFFFFF;
+  --heat:47,63,168; --warn:#A8530A;
+  --t0:#E0476B; --t1:#0F9C9C; --t2:#E8801A; --t3:#7A5CE0;
+  --display:"Barlow Semi Condensed","Arial Narrow",sans-serif; --body:"Barlow","Helvetica Neue",Arial,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --ground:#0F1A22; --surface:#16242E; --ink:#E6EEF3; --muted:#8FA1AE; --line:#2B3C48; --accent:#4FC3CF; --accent-ink:#06222A; --heat:243,201,105; --warn:#F0A95B; } }
+:root[data-theme="dark"]{
+  --ground:#0F1A22; --surface:#16242E; --ink:#E6EEF3; --muted:#8FA1AE; --line:#2B3C48; --accent:#4FC3CF; --accent-ink:#06222A; --heat:243,201,105; --warn:#F0A95B; }
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--ground);color:var(--ink);font:400 15px/1.5 var(--body);padding-inline:16px;padding-block:20px 48px}
+.wrap{max-width:1180px;margin-inline:auto;display:flex;flex-direction:column;gap:20px}
+header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px 24px;border-bottom:2px solid var(--ink);padding-bottom:12px}
+h1{font:600 30px/1.05 var(--display);letter-spacing:.01em;margin:0;text-wrap:balance}
+header p{margin:4px 0 0;color:var(--muted);max-width:60ch}
+.back{font:500 13px var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:6px}
+.back:hover{color:var(--accent)}
+h2{font:600 13px/1.2 var(--display);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0}
+.seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:3px;overflow:hidden}
+.seg button{font:600 14px var(--display);letter-spacing:.04em;padding:8px 14px;border:0;background:transparent;color:var(--ink);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--ground)}
+button:focus-visible,select:focus-visible,input:focus-visible,canvas:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.main{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:860px){.main{grid-template-columns:minmax(0,1fr)}}
+.col{display:flex;flex-direction:column;gap:18px;min-width:0}
+.plan{background:var(--surface);border:1px solid var(--line);padding:10px}
+#room{display:block;width:100%;touch-action:pan-y;cursor:grab}
+.chips{display:flex;flex-wrap:wrap;gap:6px 14px;font:400 12px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.chips b{color:var(--ink);font-weight:500}
+#tracks{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+#tracks li{display:grid;grid-template-columns:14px minmax(0,1fr) auto;gap:10px;align-items:center;font:400 13px var(--mono);font-variant-numeric:tabular-nums;padding:6px 0;border-bottom:1px solid var(--line)}
+#tracks .sw{width:12px;height:12px;border-radius:50%}
+#tracks .none{display:block;color:var(--muted);font-family:var(--body);border:0}
+.err{color:var(--muted)}
+fieldset{border:0;border-top:1px solid var(--line);margin:0;padding:12px 0 0;display:flex;flex-direction:column;gap:10px;min-width:0}
+legend{padding:0 8px 0 0;font:600 13px/1.2 var(--display);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.src{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:center}
+.src label.tag{display:flex;align-items:center;gap:6px;font:600 14px var(--display)}
+.row{display:grid;grid-template-columns:minmax(0,9.5em) minmax(0,1fr) 4.6em;gap:10px;align-items:center;font-size:14px}
+.row output{font:400 12px var(--mono);text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.grid2 label{display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--muted)}
+input[type=number],select{font:400 14px var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:6px 8px;width:100%;min-width:0}
+input[type=range]{width:100%;accent-color:var(--accent);min-width:0}
+input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px}
+.check{display:flex;align-items:center;gap:8px;font-size:14px}
+.btn{font:600 14px var(--display);letter-spacing:.04em;padding:10px 16px;border-radius:3px;border:0;background:var(--accent);color:var(--accent-ink);cursor:pointer;align-self:start}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.note{color:var(--muted);font-size:13.5px;margin:0;max-width:65ch}
+.msg{border-left:3px solid var(--warn);padding:8px 12px;background:var(--surface);font-size:14px;margin:0}
+.meters{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.meter{font:400 11px var(--mono);color:var(--muted)}
+.meter i{display:block;height:6px;background:var(--line);margin-top:3px;position:relative;overflow:hidden}
+.meter i b{position:absolute;inset:0 auto 0 0;background:var(--accent);width:0}
+.pairs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:560px){.pairs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pair{display:flex;flex-direction:column;gap:3px;min-width:0}
+.pair .hd{display:flex;justify-content:space-between;gap:6px;font:400 11px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden}
+.pair .hd b{color:var(--ink);font-weight:500}
+.pair canvas{width:100%;height:58px;display:block;background:var(--surface);border:1px solid var(--line)}
+details{border-top:1px solid var(--line);padding-top:10px}
+summary{cursor:pointer;font:600 13px var(--display);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+details p,details li{max-width:65ch}
+details ul{padding-left:1.1em;margin:8px 0;display:flex;flex-direction:column;gap:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <a class="back" href="/project/locator/">← About this project</a>
+      <h1>Corner Mic Locator</h1>
+      <p>Finds where sounds are in a room from the arrival-time differences at four corner microphones.</p>
+    </div>
+    <div class="seg" role="group" aria-label="Input">
+      <button id="modeSim" aria-pressed="true">Simulator</button>
+      <button id="modeLive" aria-pressed="false">Live mics</button>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="col">
+      <div class="plan"><canvas id="room" tabindex="0" aria-label="Room plan showing microphones, sound sources and the likelihood heat map"></canvas></div>
+      <div class="chips" id="chips"></div>
+      <div class="col" style="gap:8px">
+        <h2>Located sources</h2>
+        <ul id="tracks"></ul>
+      </div>
+      <div class="col" style="gap:10px">
+        <h2>Arrival-time difference per mic pair</h2>
+        <p class="note">Each trace is the GCC-PHAT correlation between two mics. A spike at lag Δt means the sound reached one mic Δt before the other. Coloured ticks mark where each located source should spike.</p>
+        <div class="pairs" id="pairs"></div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div id="simPanel" class="col">
+        <fieldset id="srcBox"><legend>Virtual sources · drag them on the plan</legend></fieldset>
+        <label class="check"><input type="checkbox" id="walk"> Source A walks around the room</label>
+        <fieldset><legend>Room acoustics</legend>
+          <div class="row"><label for="echo">Wall reflections</label><input type="range" id="echo" min="0" max="0.85" step="0.05" value="0.4"><output id="echoO"></output></div>
+          <div class="row"><label for="noise">Mic noise floor</label><input type="range" id="noise" min="-60" max="-5" step="1" value="-35"><output id="noiseO"></output></div>
+        </fieldset>
+      </div>
+
+      <div id="livePanel" class="col" hidden>
+        <fieldset><legend>Microphone input</legend>
+          <button class="btn" id="startLive">Start microphones</button>
+          <p class="msg" id="liveMsg" hidden></p>
+          <div class="meters" id="meters"></div>
+          <p class="note">Needs one audio interface with 4 or more inputs, opened as a single device. Channels map clockwise from the top-left corner of the plan: input 1 → M1, 2 → M2, 3 → M3, 4 → M4. Enter your real room and mic measurements below.</p>
+        </fieldset>
+      </div>
+
+      <fieldset><legend>Detection</legend>
+        <div class="row"><label for="maxSrc">Sources at once</label><input type="range" id="maxSrc" min="1" max="3" step="1" value="2"><output id="maxSrcO"></output></div>
+        <div class="row"><label for="thresh">Min. strength</label><input type="range" id="thresh" min="0.12" max="0.5" step="0.01" value="0.2"><output id="threshO"></output></div>
+      </fieldset>
+
+      <fieldset><legend>Room and mic geometry</legend>
+        <div class="grid2">
+          <label>Room width (m)<input type="number" id="roomW" min="2" max="15" step="0.05" value="5"></label>
+          <label>Room length (m)<input type="number" id="roomL" min="2" max="15" step="0.05" value="4"></label>
+          <label>Mic inset from walls (m)<input type="number" id="inset" min="0" max="1" step="0.01" value="0.2"></label>
+          <label>Height of M1, M3 (m)<input type="number" id="hA" min="0" max="4" step="0.01" value="2.2"></label>
+          <label>Height of M2, M4 (m)<input type="number" id="hB" min="0" max="4" step="0.01" value="1.9"></label>
+          <label>Listening height (m)<input type="number" id="planeZ" min="0" max="3" step="0.05" value="1.3"></label>
+          <label>Air temperature (°C)<input type="number" id="temp" min="-5" max="40" step="0.5" value="20"></label>
+        </div>
+        <p class="note">Listening height is the level the plan is searched at: about 1.2 m for seated heads, 1.6 m for standing.</p>
+      </fieldset>
+
+      <details>
+        <summary>What the simulator does and doesn't tell you</summary>
+        <ul>
+          <li>Each virtual source is synthesised, delayed to every mic by distance ÷ speed of sound, and mixed with first- and second-order wall reflections, a diffuse echo tail and independent mic noise. The locator only ever sees the four mic signals.</li>
+          <li>The simulator's geometry matches the locator's exactly, so errors near 0 cm here are a best case. A real room adds mic-position error, furniture, directional talkers and longer reverb. Expect roughly 10–30 cm.</li>
+          <li>Try "Hum": a steady tone repeats every cycle, so its arrival-time difference is ambiguous and it can't be located. Claps, speech and broadband noise can.</li>
+          <li>Move two talkers together and watch them merge at around half a metre apart.</li>
+        </ul>
+      </details>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== Localisation core: FFT, GCC-PHAT, SRP grid search, tracker, room simulator ===== */
+
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function makeFFT(N) {
+  const levels = Math.round(Math.log2(N));
+  const cos = new Float64Array(N / 2), sin = new Float64Array(N / 2);
+  for (let i = 0; i < N / 2; i++) { cos[i] = Math.cos(2 * Math.PI * i / N); sin[i] = Math.sin(2 * Math.PI * i / N); }
+  const rev = new Uint32Array(N);
+  for (let i = 0; i < N; i++) { let r = 0; for (let b = 0; b < levels; b++) r |= ((i >>> b) & 1) << (levels - 1 - b); rev[i] = r >>> 0; }
+  function transform(re, im) {
+    for (let i = 0; i < N; i++) { const j = rev[i]; if (j > i) { let t = re[i]; re[i] = re[j]; re[j] = t; t = im[i]; im[i] = im[j]; im[j] = t; } }
+    for (let size = 2; size <= N; size *= 2) {
+      const half = size / 2, step = N / size;
+      for (let i = 0; i < N; i += size) {
+        for (let j = i, k = 0; j < i + half; j++, k += step) {
+          const l = j + half;
+          const tre = re[l] * cos[k] + im[l] * sin[k];
+          const tim = -re[l] * sin[k] + im[l] * cos[k];
+          re[l] = re[j] - tre; im[l] = im[j] - tim; re[j] += tre; im[j] += tim;
+        }
+      }
+    }
+  }
+  return {
+    forward: transform,
+    inverse(re, im) { transform(im, re); const s = 1 / N; for (let i = 0; i < N; i++) { re[i] *= s; im[i] *= s; } }
+  };
+}
+
+function speedOfSound(tempC) { return 331.3 * Math.sqrt(1 + tempC / 273.15); }
+
+/* ---------- Locator ---------- */
+function makeLocator(o) {
+  const fs = o.fs, N = o.N || 4096, c = o.c || 343, mics = o.mics, M = mics.length;
+  const cell = o.cell || 0.05, z = o.planeZ == null ? 1.3 : o.planeZ;
+  const nx = Math.max(2, Math.ceil(o.room.w / cell)), ny = Math.max(2, Math.ceil(o.room.l / cell));
+  const fLo = o.fLo || 250, fHi = Math.min(o.fHi || 6000, fs / 2 - 100);
+  const kLo = Math.ceil(fLo * N / fs), kHi = Math.floor(fHi * N / fs), K = kHi - kLo + 1;
+  const fft = makeFFT(N);
+  const hann = new Float32Array(N);
+  for (let i = 0; i < N; i++) hann[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (N - 1));
+  const pairs = [];
+  for (let i = 0; i < M; i++) for (let j = i + 1; j < M; j++) {
+    const d = Math.hypot(mics[i].x - mics[j].x, mics[i].y - mics[j].y, mics[i].z - mics[j].z);
+    pairs.push({ i, j, maxLag: Math.min(N / 2 - 2, Math.ceil(d / c * fs) + 3), tau: new Float32Array(nx * ny), r: new Float64Array(N), rs: new Float32Array(N) });
+  }
+  const P = pairs.length;
+  const dist = new Float32Array(M);
+  for (let iy = 0; iy < ny; iy++) for (let ix = 0; ix < nx; ix++) {
+    const x = (ix + 0.5) * cell, y = (iy + 0.5) * cell;
+    for (let m = 0; m < M; m++) dist[m] = Math.hypot(x - mics[m].x, y - mics[m].y, z - mics[m].z);
+    for (let p = 0; p < P; p++) pairs[p].tau[iy * nx + ix] = (dist[pairs[p].i] - dist[pairs[p].j]) / c * fs;
+  }
+  const Xre = [], Xim = [];
+  for (let m = 0; m < M; m++) { Xre.push(new Float64Array(N)); Xim.push(new Float64Array(N)); }
+  const gim = new Float64Array(N);
+  const map = new Float32Array(nx * ny), work = new Float32Array(nx * ny);
+  const notchW = Math.round(fs / (fHi - fLo)) + 2;
+
+  function tauAt(p, x, y) {
+    const a = mics[pairs[p].i], b = mics[pairs[p].j];
+    return (Math.hypot(x - a.x, y - a.y, z - a.z) - Math.hypot(x - b.x, y - b.y, z - b.z)) / c * fs;
+  }
+  // widen each correlation peak to the delay span of one grid cell, so a coarse grid cannot step over it
+  const holdW = Math.ceil(cell * Math.SQRT2 / c * fs) + 1;
+  function smooth(pr) {
+    const r = pr.r, rs = pr.rs, L = pr.maxLag;
+    for (let t = -L; t <= L; t++) {
+      let mx = 0;
+      for (let u = t - holdW; u <= t + holdW; u++) { const v = r[u < 0 ? u + N : u]; if (v > mx) mx = v; }
+      rs[t < 0 ? t + N : t] = mx;
+    }
+  }
+  function buildMap(out) {
+    out.fill(0);
+    for (let p = 0; p < P; p++) {
+      const tau = pairs[p].tau, rs = pairs[p].rs;
+      for (let q = 0; q < out.length; q++) { const f = Math.round(tau[q]); out[q] += rs[f < 0 ? f + N : f]; }
+    }
+    const s = 1 / P; for (let q = 0; q < out.length; q++) out[q] *= s;
+  }
+  function rawScore(x, y) {
+    let sc = 0;
+    for (let p = 0; p < P; p++) {
+      const t = tauAt(p, x, y), f = Math.floor(t), a = t - f, r = pairs[p].r;
+      const i0 = f < 0 ? f + N : f; sc += r[i0] * (1 - a) + r[(i0 + 1) % N] * a;
+    }
+    return sc / P;
+  }
+  function refine(pk) {
+    let best = -1e9, bx = pk.x, by = pk.y;
+    for (const step of [0.02, 0.005]) {
+      const span = step === 0.02 ? cell * 1.5 : 0.03, cx = bx, cy = by;
+      for (let y = cy - span; y <= cy + span + 1e-9; y += step) for (let x = cx - span; x <= cx + span + 1e-9; x += step) {
+        const sc = rawScore(x, y); if (sc > best) { best = sc; bx = x; by = y; }
+      }
+    }
+    return { x: Math.min(o.room.w, Math.max(0, bx)), y: Math.min(o.room.l, Math.max(0, by)), score: pk.score, sharp: best };
+  }
+  function findPeak(m) {
+    let best = -1e9, bi = 0;
+    for (let q = 0; q < m.length; q++) if (m[q] > best) { best = m[q]; bi = q; }
+    const ix = bi % nx, iy = (bi - ix) / nx;
+    let dx = 0, dy = 0;
+    if (ix > 0 && ix < nx - 1) { const a = m[bi - 1], b = m[bi], cc = m[bi + 1], den = a - 2 * b + cc; if (den < 0) dx = 0.5 * (a - cc) / den; }
+    if (iy > 0 && iy < ny - 1) { const a = m[bi - nx], b = m[bi], cc = m[bi + nx], den = a - 2 * b + cc; if (den < 0) dy = 0.5 * (a - cc) / den; }
+    return { x: (ix + 0.5 + dx) * cell, y: (iy + 0.5 + dy) * cell, score: best };
+  }
+
+  function process(frames, opt) {
+    opt = opt || {};
+    const maxSources = opt.maxSources || 2, thresh = opt.thresh == null ? 0.2 : opt.thresh, rel = opt.rel == null ? 0.45 : opt.rel;
+    let e = 0;
+    for (let m = 0; m < M; m++) {
+      const re = Xre[m], im = Xim[m], f = frames[m];
+      for (let i = 0; i < N; i++) { const v = f[i]; e += v * v; re[i] = v * hann[i]; im[i] = 0; }
+      fft.forward(re, im);
+    }
+    const rms = Math.sqrt(e / (N * M));
+    const norm = N / (2 * K);
+    const corr = [];
+    for (let p = 0; p < P; p++) {
+      const pr = pairs[p], r = pr.r, ar = Xre[pr.i], ai = Xim[pr.i], br = Xre[pr.j], bi = Xim[pr.j];
+      r.fill(0); gim.fill(0);
+      for (let k = kLo; k <= kHi; k++) {
+        const cr = ar[k] * br[k] + ai[k] * bi[k], ci = ai[k] * br[k] - ar[k] * bi[k];
+        const w = 1 / (Math.hypot(cr, ci) + 1e-20);
+        r[k] = cr * w; gim[k] = ci * w; r[N - k] = cr * w; gim[N - k] = -ci * w;
+      }
+      fft.inverse(r, gim);
+      for (let i = 0; i < N; i++) r[i] *= norm;
+      const L = pr.maxLag, cw = new Float32Array(2 * L + 1);
+      for (let t = -L; t <= L; t++) cw[t + L] = r[t < 0 ? t + N : t];
+      corr.push(cw);
+    }
+    const peaks = [];
+    for (let s = 0; s < maxSources; s++) {
+      const target = s === 0 ? map : work;
+      for (let p = 0; p < P; p++) smooth(pairs[p]);
+      buildMap(target);
+      let pk = findPeak(target);
+      if (pk.score < thresh || (s > 0 && pk.score < rel * peaks[0].score)) break;
+      pk = refine(pk);
+      peaks.push(pk);
+      if (s === maxSources - 1) break;
+      for (let p = 0; p < P; p++) {
+        const t0 = Math.round(tauAt(p, pk.x, pk.y)), r = pairs[p].r;
+        for (let t = t0 - notchW; t <= t0 + notchW; t++) r[((t % N) + N) % N] = 0;
+      }
+    }
+    return { map, peaks, corr, rms };
+  }
+  return { process, nx, ny, cell, pairs, tauAt, N, fs, c };
+}
+
+/* ---------- Tracker ---------- */
+function makeTracker(o) {
+  o = o || {};
+  const gate = o.gate || 0.6, confirm = o.confirm || 4, maxAge = o.maxAge || 2.5, tentAge = o.tentAge || 0.6, alpha = o.alpha || 0.3, slots = o.slots || 4;
+  let tracks = [], nextId = 1;
+  function update(peaks, t) {
+    const used = new Set();
+    const order = tracks.slice().sort((a, b) => (b.confirmed - a.confirmed) || (b.hits - a.hits));
+    for (const tr of order) {
+      let best = -1, bd = gate;
+      peaks.forEach((p, i) => { if (used.has(i)) return; const d = Math.hypot(p.x - tr.x, p.y - tr.y); if (d < bd) { bd = d; best = i; } });
+      if (best >= 0) {
+        used.add(best); const p = peaks[best];
+        const a = tr.confirmed ? alpha : 0.5;
+        tr.x += a * (p.x - tr.x); tr.y += a * (p.y - tr.y);
+        tr.hits++; tr.last = t; tr.score = p.score;
+        if (!tr.confirmed && tr.hits >= confirm) {
+          const taken = new Set(tracks.filter(q => q.confirmed).map(q => q.slot));
+          let s = 0; while (taken.has(s) && s < slots) s++;
+          if (s < slots) { tr.confirmed = true; tr.slot = s; }
+        }
+        if (tr.confirmed) { tr.trail.push({ x: tr.x, y: tr.y, t }); if (tr.trail.length > 120) tr.trail.shift(); }
+      }
+    }
+    peaks.forEach((p, i) => { if (!used.has(i)) tracks.push({ id: nextId++, x: p.x, y: p.y, hits: 1, born: t, last: t, confirmed: false, slot: -1, score: p.score, trail: [] }); });
+    tracks = tracks.filter(tr => t - tr.last < (tr.confirmed ? maxAge : tentAge));
+    return tracks;
+  }
+  return { update, get tracks() { return tracks; }, reset() { tracks = []; } };
+}
+
+/* ---------- Room simulator ---------- */
+function makeVoice(type, fs, rnd) {
+  // returns fill(buf, n) producing n samples of a dry source signal
+  if (type === 'pink') {
+    let b0 = 0, b1 = 0, b2 = 0;
+    return out => { for (let i = 0; i < out.length; i++) { const w = rnd() * 2 - 1; b0 = 0.99765 * b0 + w * 0.0990460; b1 = 0.96300 * b1 + w * 0.2965164; b2 = 0.57000 * b2 + w * 1.0526913; out[i] = (b0 + b1 + b2 + w * 0.1848) * 0.12; } };
+  }
+  if (type === 'hum') {
+    let ph = 0; const f0 = 100;
+    return out => { for (let i = 0; i < out.length; i++) { ph += 2 * Math.PI * f0 / fs; out[i] = 0.25 * (Math.sin(ph) + 0.6 * Math.sin(2 * ph) + 0.4 * Math.sin(3 * ph) + 0.3 * Math.sin(5 * ph)); } };
+  }
+  if (type === 'clap') {
+    let env = 0, wait = Math.floor(fs * (0.2 + rnd() * 0.5)), lp = 0;
+    return out => { for (let i = 0; i < out.length; i++) { if (--wait <= 0) { env = 1; wait = Math.floor(fs * (0.55 + rnd() * 0.5)); } const w = rnd() * 2 - 1; lp += 0.5 * (w - lp); out[i] = (w - lp) * env * 0.9; env *= Math.exp(-1 / (0.006 * fs)); } };
+  }
+  // speech-like: jittered glottal pulses + breath noise through two moving formants, syllable envelope, phrase pauses
+  const f0base = 95 + rnd() * 120;
+  let pulseIn = 0, f0 = f0base, sylLeft = 0, sylLen = 1, gap = 0, pauseLeft = Math.floor(fs * rnd() * 0.6), phraseLeft = 0, fric = false;
+  const R = [{ y1: 0, y2: 0, a1: 0, a2: 0, g: 0 }, { y1: 0, y2: 0, a1: 0, a2: 0, g: 0 }, { y1: 0, y2: 0, a1: 0, a2: 0, g: 0 }];
+  function setRes(r, f, bw) { const rr = Math.exp(-Math.PI * bw / fs); r.a1 = 2 * rr * Math.cos(2 * Math.PI * f / fs); r.a2 = -rr * rr; r.g = 1 - rr; }
+  function newSyl() {
+    sylLen = Math.floor(fs * (0.11 + rnd() * 0.16)); sylLeft = sylLen; gap = Math.floor(fs * (0.02 + rnd() * 0.06));
+    fric = rnd() < 0.22; f0 = f0base * (0.85 + rnd() * 0.35);
+    setRes(R[0], 280 + rnd() * 550, 90); setRes(R[1], 900 + rnd() * 1500, 140); setRes(R[2], 2500 + rnd() * 900, 220);
+  }
+  let hp = 0;
+  return out => {
+    for (let i = 0; i < out.length; i++) {
+      if (pauseLeft > 0) { pauseLeft--; out[i] = 0; continue; }
+      if (phraseLeft <= 0) { phraseLeft = Math.floor(fs * (1.0 + rnd() * 2.2)); newSyl(); }
+      if (sylLeft <= 0) { if (gap-- > 0) { out[i] = 0; phraseLeft--; continue; } newSyl(); }
+      const ph = 1 - sylLeft / sylLen, env = Math.sin(Math.PI * ph) ** 0.6;
+      let ex;
+      const w = rnd() * 2 - 1;
+      if (fric) { hp += 0.35 * (w - hp); ex = (w - hp) * 0.35; }
+      else { pulseIn -= 1; ex = w * 0.04; if (pulseIn <= 0) { pulseIn += fs / (f0 * (1 + (rnd() - 0.5) * 0.06)); ex += 1; } }
+      let y = ex * 0.25;
+      if (!fric) for (const r of R) { const v = r.g * ex + r.a1 * r.y1 + r.a2 * r.y2; r.y2 = r.y1; r.y1 = v; y += v * 4; }
+      out[i] = y * env * 0.5;
+      sylLeft--; phraseLeft--;
+      if (phraseLeft <= 0) pauseLeft = Math.floor(fs * (0.35 + rnd() * 1.3));
+    }
+  };
+}
+
+function makeSim(o) {
+  const fs = o.fs, room = o.room, mics = o.mics, M = mics.length, rnd = mulberry32(o.seed || 7);
+  const RB = 32768, mask = RB - 1;
+  const st = { c: o.c || 343, echo: o.echo == null ? 0.4 : o.echo, noiseDb: o.noiseDb == null ? -35 : o.noiseDb };
+  const sources = [];
+  // fixed, per-mic random late-reflection taps (decorrelated diffuse tail)
+  const late = [];
+  for (let m = 0; m < M; m++) { const taps = []; for (let k = 0; k < 14; k++) { const ms = 12 + rnd() * 75; taps.push({ d: ms * fs / 1000, g: (rnd() < 0.5 ? -1 : 1) * Math.exp(-ms / 35) * 0.5 }); } late.push(taps); }
+  function addSource(s) {
+    const src = Object.assign({ x: 1, y: 1, z: 1.3, type: 'speech', level: 1, on: true }, s);
+    src.buf = new Float32Array(RB); src.w = 0; src.gen = makeVoice(src.type, fs, mulberry32(Math.floor(rnd() * 1e9))); src.rms = 0;
+    sources.push(src); return src;
+  }
+  function setType(src, type) { src.type = type; src.gen = makeVoice(type, fs, mulberry32(Math.floor(rnd() * 1e9))); }
+  let tmp = new Float32Array(0);
+  function render(hop) {
+    if (tmp.length !== hop) tmp = new Float32Array(hop);
+    const out = []; for (let m = 0; m < M; m++) out.push(new Float32Array(hop));
+    const nAmp = Math.pow(10, st.noiseDb / 20) * 0.1;
+    for (const s of sources) {
+      s.gen(tmp); let e = 0;
+      for (let i = 0; i < hop; i++) { const v = s.on ? tmp[i] * s.level : 0; s.buf[(s.w + i) & mask] = v; e += v * v; }
+      s.rms = Math.sqrt(e / hop);
+      const w0 = s.w; s.w = (s.w + hop) & mask;
+      if (!s.on) continue;
+      const W = room.w, L = room.l, H = room.h, g = st.echo;
+      const imgs = [[s.x, s.y, s.z, 1]];
+      if (g > 0) imgs.push([-s.x, s.y, s.z, g], [2 * W - s.x, s.y, s.z, g], [s.x, -s.y, s.z, g], [s.x, 2 * L - s.y, s.z, g], [s.x, s.y, -s.z, g * 0.7], [s.x, s.y, 2 * H - s.z, g],
+        [-s.x, -s.y, s.z, g * g], [2 * W - s.x, -s.y, s.z, g * g], [-s.x, 2 * L - s.y, s.z, g * g], [2 * W - s.x, 2 * L - s.y, s.z, g * g]);
+      for (let m = 0; m < M; m++) {
+        const mic = mics[m], o = out[m];
+        const d0 = Math.max(0.2, Math.hypot(s.x - mic.x, s.y - mic.y, s.z - mic.z));
+        const paths = imgs.map(im => { const d = Math.max(0.2, Math.hypot(im[0] - mic.x, im[1] - mic.y, im[2] - mic.z)); return { d: d / st.c * fs, g: im[3] / d }; });
+        if (g > 0) for (const t of late[m]) paths.push({ d: d0 / st.c * fs + t.d, g: t.g * g * g / d0 });
+        for (const p of paths) {
+          const di = Math.floor(p.d), a = p.d - di, gg = p.g, buf = s.buf;
+          let idx = w0 - di - 1 + RB * 4;
+          for (let i = 0; i < hop; i++, idx++) o[i] += gg * (buf[idx & mask] * a + buf[(idx + 1) & mask] * (1 - a));
+        }
+      }
+    }
+    for (let m = 0; m < M; m++) { const o = out[m]; for (let i = 0; i < hop; i++) o[i] += (rnd() + rnd() + rnd() - 1.5) * 1.15 * nAmp; }
+    return out;
+  }
+  return { sources, addSource, setType, render, st };
+}
+
+if (typeof module !== 'undefined') module.exports = { makeFFT, makeLocator, makeTracker, makeSim, speedOfSound, mulberry32 };
+
+</script>
+<script>
+(function(){
+const $ = id => document.getElementById(id);
+const N = 4096, HOP = 2048, LETTERS = ['A','B','C'];
+const S = { mode:'sim', fs:48000, srcCfg:[
+  {x:1.4,y:1.2,type:'speech',level:1,on:true},
+  {x:3.7,y:2.9,type:'speech',level:1,on:true},
+  {x:3.6,y:0.9,type:'clap',level:1,on:false}] };
+let room, mics, c, sim, loc, trk, frames, dispMap, lastRes=null, procMs=0, simClock=0, lastT=0, walkPh=0;
+let live = null, livePending = false;
+const css = {}; let cssAt = 0;
+function tokens(){ const now=performance.now(); if(now-cssAt<800 && css.ink) return css; cssAt=now;
+  const g=getComputedStyle(document.documentElement); for(const k of ['ground','surface','ink','muted','line','accent','heat','t0','t1','t2','t3']) css[k]=g.getPropertyValue('--'+k).trim(); return css; }
+const num = (id,d)=>{ const v=parseFloat($(id).value); return isFinite(v)?v:d; };
+
+function rebuild(){
+  room = { w:Math.min(15,Math.max(2,num('roomW',5))), l:Math.min(15,Math.max(2,num('roomL',4))), h:2.4 };
+  const ins=num('inset',0.2), hA=num('hA',2.2), hB=num('hB',1.9);
+  room.h = Math.max(2.4, hA+0.2, hB+0.2);
+  mics = [{x:ins,y:ins,z:hA},{x:room.w-ins,y:ins,z:hB},{x:room.w-ins,y:room.l-ins,z:hA},{x:ins,y:room.l-ins,z:hB}];
+  c = speedOfSound(num('temp',20));
+  const planeZ = num('planeZ',1.3);
+  const cell = Math.max(0.05, Math.sqrt(room.w*room.l/9000));
+  loc = makeLocator({ fs:S.fs, N, mics, room, planeZ, cell, c });
+  sim = makeSim({ fs:S.fs, room, mics, c, echo:+$('echo').value, noiseDb:+$('noise').value, seed:11 });
+  S.srcCfg.forEach(s=>{ s.x=Math.min(room.w-0.1,Math.max(0.1,s.x)); s.y=Math.min(room.l-0.1,Math.max(0.1,s.y)); s.ref = sim.addSource({x:s.x,y:s.y,z:planeZ,type:s.type,level:s.level,on:s.on}); });
+  trk = makeTracker(); frames = mics.map(()=>new Float32Array(N)); dispMap = new Float32Array(loc.nx*loc.ny); lastRes=null;
+  buildPairs(); sizeRoom();
+}
+
+/* ---------- controls ---------- */
+function buildSources(){
+  const box=$('srcBox');
+  S.srcCfg.forEach((s,i)=>{
+    const d=document.createElement('div'); d.className='src';
+    d.innerHTML=`<label class="tag"><input type="checkbox" id="on${i}" ${s.on?'checked':''}> ${LETTERS[i]}</label>
+      <select id="type${i}" aria-label="Source ${LETTERS[i]} sound"><option value="speech">Speech</option><option value="clap">Claps</option><option value="pink">Broadband noise</option><option value="hum">Hum (steady tone)</option></select>
+      <input type="range" id="lvl${i}" min="0.1" max="1.5" step="0.05" value="${s.level}" aria-label="Source ${LETTERS[i]} loudness">`;
+    box.appendChild(d);
+    $('type'+i).value=s.type;
+    $('on'+i).onchange=e=>{ s.on=e.target.checked; s.ref.on=s.on; };
+    $('type'+i).onchange=e=>{ s.type=e.target.value; sim.setType(s.ref,s.type); };
+    $('lvl'+i).oninput=e=>{ s.level=+e.target.value; s.ref.level=s.level; };
+  });
+}
+function bindOutputs(){
+  const upd=()=>{ $('echoO').textContent=(+$('echo').value*100).toFixed(0)+'%'; $('noiseO').textContent=$('noise').value+' dB'; $('maxSrcO').textContent=$('maxSrc').value; $('threshO').textContent=(+$('thresh').value).toFixed(2);
+    if(sim){ sim.st.echo=+$('echo').value; sim.st.noiseDb=+$('noise').value; } };
+  ['echo','noise','maxSrc','thresh'].forEach(id=>$(id).oninput=upd); upd();
+  ['roomW','roomL','inset','hA','hB','planeZ','temp'].forEach(id=>$(id).onchange=rebuild);
+}
+function setMode(m){
+  S.mode=m; $('modeSim').setAttribute('aria-pressed',m==='sim'); $('modeLive').setAttribute('aria-pressed',m==='live');
+  $('simPanel').hidden = m!=='sim'; $('livePanel').hidden = m!=='live';
+  if(m==='sim'){ stopLive(); if(S.fs!==48000){S.fs=48000;} rebuild(); } else { trk.reset(); dispMap.fill(0); lastRes=null; }
+}
+
+/* ---------- live input ---------- */
+function liveMsg(t){ const el=$('liveMsg'); el.hidden=!t; el.textContent=t||''; }
+async function startLive(){
+  liveMsg('');
+  if(live){ stopLive(); return; }
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ liveMsg('This browser can\'t open a microphone here. Use Chrome or Firefox over https on the computer the interface is plugged into.'); return; }
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({audio:{channelCount:{ideal:8},echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+    const track = stream.getAudioTracks()[0], st = track.getSettings();
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const srcNode = ctx.createMediaStreamSource(stream);
+    const ch = Math.min(st.channelCount||4, 32);
+    if(ch < 4){
+      stream.getTracks().forEach(t=>t.stop()); ctx.close();
+      liveMsg(`"${track.label}" only gave ${ch} channel(s). Four are needed. Pick the multichannel interface as the system input, and on Windows check it isn't split into stereo pairs.`); return;
+    }
+    S.fs = ctx.sampleRate; rebuild();
+    const sp = ctx.createScriptProcessor(HOP, ch, 1), mute = ctx.createGain(); mute.gain.value=0;
+    sp.onaudioprocess = e=>{ for(let m=0;m<4;m++){ const f=frames[m]; f.copyWithin(0,HOP); f.set(e.inputBuffer.getChannelData(m),N-HOP); } livePending=true; };
+    sp.channelInterpretation='discrete'; srcNode.connect(sp); sp.connect(mute); mute.connect(ctx.destination);
+    live = {stream,ctx,sp,label:track.label,ch};
+    $('startLive').textContent='Stop microphones';
+    $('meters').innerHTML=[1,2,3,4].map(i=>`<div class="meter">M${i}<i><b id="mt${i}"></b></i></div>`).join('');
+  }catch(err){
+    liveMsg(err && err.name==='NotAllowedError' ? 'Microphone access was refused. Allow it from the icon in the address bar, then try again.' : 'Could not open the audio input: '+(err&&err.message||err));
+  }
+}
+function stopLive(){ if(!live) return; try{ live.sp.disconnect(); live.stream.getTracks().forEach(t=>t.stop()); live.ctx.close(); }catch(e){} live=null; $('startLive').textContent='Start microphones'; $('meters').innerHTML=''; }
+
+/* ---------- processing ---------- */
+function step(){
+  const t0=performance.now();
+  const res = loc.process(frames,{maxSources:+$('maxSrc').value, thresh:+$('thresh').value});
+  const peaks = res.rms>1e-6 ? res.peaks : [];
+  trk.update(peaks, simClock);
+  const m=res.map; for(let q=0;q<m.length;q++) { const d=m[q]-dispMap[q]; dispMap[q] += (d>0?0.5:0.05)*d; }
+  lastRes=res; procMs += 0.1*((performance.now()-t0)-procMs);
+}
+function tick(now){
+  requestAnimationFrame(tick);
+  if(!lastT) lastT=now; let dt=Math.min(0.2,(now-lastT)/1000); lastT=now;
+  if(S.mode==='sim'){
+    S.acc=(S.acc||0)+dt; let n=0; const hopS=HOP/S.fs;
+    while(S.acc>=hopS && n<2){ S.acc-=hopS; n++; simClock+=hopS;
+      if($('walk').checked){ walkPh+=hopS*0.22; const s=S.srcCfg[0]; s.x=room.w*(0.5+0.34*Math.cos(walkPh)); s.y=room.l*(0.5+0.34*Math.sin(walkPh*1.31)); s.ref.x=s.x; s.ref.y=s.y; }
+      const h=sim.render(HOP); for(let m=0;m<4;m++){ const f=frames[m]; f.copyWithin(0,HOP); f.set(h[m],N-HOP); }
+      step(); }
+    if(S.acc>hopS*3) S.acc=0;
+  } else if(live && livePending){ livePending=false; simClock+=HOP/S.fs; step();
+    for(let m=0;m<4;m++){ let e=0; const f=frames[m]; for(let i=N-HOP;i<N;i++) e+=f[i]*f[i]; const db=10*Math.log10(e/HOP+1e-12); const el=$('mt'+(m+1)); if(el) el.style.width=Math.max(0,Math.min(100,(db+70)/70*100))+'%'; } }
+  draw();
+}
+
+/* ---------- room plan ---------- */
+const cv=$('room'), g=cv.getContext('2d'); let heat=document.createElement('canvas'), geo={};
+function sizeRoom(){
+  const wCss=cv.parentElement.clientWidth-20, pad=26, sc=(wCss-pad*2)/room.w, hCss=Math.round(room.l*sc+pad*2), dpr=Math.min(2,window.devicePixelRatio||1);
+  cv.style.height=hCss+'px'; cv.width=Math.round(wCss*dpr); cv.height=Math.round(hCss*dpr);
+  geo={pad,sc,dpr,w:wCss,h:hCss}; heat.width=loc.nx; heat.height=loc.ny;
+}
+const X=x=>geo.pad+x*geo.sc, Y=y=>geo.pad+y*geo.sc;
+function confirmed(){ return trk.tracks.filter(t=>t.confirmed); }
+function draw(){
+  const k=tokens(); g.setTransform(geo.dpr,0,0,geo.dpr,0,0); g.clearRect(0,0,geo.w,geo.h);
+  g.fillStyle=k.surface; g.fillRect(0,0,geo.w,geo.h);
+  // heat map
+  const hx=heat.getContext('2d'), img=hx.createImageData(loc.nx,loc.ny), rgb=k.heat.split(',').map(Number);
+  let mx=0.45; for(let q=0;q<dispMap.length;q++) if(dispMap[q]>mx) mx=dispMap[q];
+  const lo=0.17; for(let q=0;q<dispMap.length;q++){ const v=Math.max(0,(dispMap[q]-lo)/(mx-lo)); img.data[q*4]=rgb[0]; img.data[q*4+1]=rgb[1]; img.data[q*4+2]=rgb[2]; img.data[q*4+3]=Math.min(255,Math.pow(v,1.15)*235); }
+  hx.putImageData(img,0,0); g.imageSmoothingEnabled=true; g.drawImage(heat,X(0),Y(0),room.w*geo.sc,room.l*geo.sc);
+  // metre grid
+  g.strokeStyle=k.line; g.lineWidth=1; g.fillStyle=k.muted; g.font='10px "IBM Plex Mono",monospace'; g.textAlign='center'; g.textBaseline='middle';
+  for(let x=0;x<=room.w+1e-6;x+=1){ g.globalAlpha=.6; g.beginPath(); g.moveTo(X(x),Y(0)); g.lineTo(X(x),Y(room.l)); g.stroke(); g.globalAlpha=1; g.fillText(x+(x===0?' m':''),X(x),Y(0)-13); }
+  for(let y=1;y<=room.l+1e-6;y+=1){ g.globalAlpha=.6; g.beginPath(); g.moveTo(X(0),Y(y)); g.lineTo(X(room.w),Y(y)); g.stroke(); g.globalAlpha=1; g.fillText(y,X(0)-13,Y(y)); }
+  g.strokeStyle=k.ink; g.lineWidth=2; g.strokeRect(X(0),Y(0),room.w*geo.sc,room.l*geo.sc);
+  // mics
+  mics.forEach((m,i)=>{ g.fillStyle=k.ink; g.fillRect(X(m.x)-5,Y(m.y)-5,10,10); g.fillStyle=k.ink; g.font='600 11px "Barlow Semi Condensed",sans-serif';
+    g.fillText('M'+(i+1), X(m.x)+(m.x<room.w/2?17:-17), Y(m.y)+(m.y<room.l/2?1:-1)); });
+  // true sources (simulator)
+  if(S.mode==='sim') S.srcCfg.forEach((s,i)=>{ g.globalAlpha=s.on?1:.35; g.strokeStyle=k.ink; g.lineWidth=1.5; g.setLineDash(s.on?[]:[3,3]); g.beginPath(); g.arc(X(s.x),Y(s.y),13,0,6.283); g.stroke(); g.setLineDash([]);
+    g.fillStyle=k.ink; g.font='600 12px "Barlow Semi Condensed",sans-serif'; g.fillText(LETTERS[i],X(s.x),Y(s.y)-21); g.globalAlpha=1; });
+  // tracks
+  for(const t of confirmed()){ const col=k['t'+t.slot]||k.accent, age=simClock-t.last, fade=Math.max(0.15,1-age/2.5);
+    g.strokeStyle=col; g.lineWidth=2; g.lineJoin='round'; g.globalAlpha=.45*fade; g.beginPath(); t.trail.forEach((p,i)=>{ if(simClock-p.t>4) return; i?g.lineTo(X(p.x),Y(p.y)):g.moveTo(X(p.x),Y(p.y)); }); g.stroke();
+    g.globalAlpha=fade; g.fillStyle=col; g.beginPath(); g.arc(X(t.x),Y(t.y),7,0,6.283); g.fill(); g.strokeStyle=k.surface; g.lineWidth=2; g.stroke(); g.globalAlpha=1; }
+  drawPairs(k); readouts();
+}
+
+/* ---------- pair plots ---------- */
+let pairEls=[];
+function buildPairs(){ const box=$('pairs'); box.innerHTML=''; pairEls=loc.pairs.map(p=>{ const d=document.createElement('div'); d.className='pair';
+  d.innerHTML=`<div class="hd"><b>M${p.i+1}–M${p.j+1}</b><span></span></div><canvas></canvas>`; box.appendChild(d); return {cv:d.querySelector('canvas'),lab:d.querySelector('span')}; }); }
+let pairTick=0;
+function drawPairs(k){
+  if(!lastRes || (pairTick++%2)) return;
+  const trs=confirmed();
+  loc.pairs.forEach((p,pi)=>{ const el=pairEls[pi], c2=el.cv, w=c2.clientWidth, h=c2.clientHeight, dpr=geo.dpr; if(!w) return;
+    if(c2.width!==Math.round(w*dpr)){ c2.width=Math.round(w*dpr); c2.height=Math.round(h*dpr); }
+    const x=c2.getContext('2d'); x.setTransform(dpr,0,0,dpr,0,0); x.clearRect(0,0,w,h);
+    const r=lastRes.corr[pi], L=p.maxLag, base=h-12, amp=base-6;
+    x.strokeStyle=k.line; x.lineWidth=1; x.beginPath(); x.moveTo(0,base); x.lineTo(w,base); x.moveTo(w/2,4); x.lineTo(w/2,base); x.stroke();
+    for(const t of trs){ const tx=(loc.tauAt(pi,t.x,t.y)+L)/(2*L)*w; x.strokeStyle=k['t'+t.slot]; x.lineWidth=2; x.beginPath(); x.moveTo(tx,2); x.lineTo(tx,base); x.stroke(); }
+    // column-max so narrow spikes survive downsampling
+    x.strokeStyle=k.ink; x.lineWidth=1.2; x.beginPath(); let bi=0;
+    for(let px=0;px<w;px++){ const a=Math.floor(px/w*r.length), b=Math.max(a+1,Math.floor((px+1)/w*r.length)); let v=0; for(let i=a;i<b&&i<r.length;i++){ if(r[i]>v) v=r[i]; if(r[i]>r[bi]) bi=i; } const y=base-Math.min(1,v)*amp; px?x.lineTo(px,y):x.moveTo(px,y); }
+    x.stroke();
+    x.fillStyle=k.muted; x.font='9px "IBM Plex Mono",monospace'; x.textBaseline='bottom'; const ms=(L/S.fs*1000).toFixed(1);
+    x.textAlign='left'; x.fillText('−'+ms+' ms',2,h); x.textAlign='right'; x.fillText('+'+ms+' ms',w-2,h);
+    const lag=bi-L; el.lab.textContent = r[bi]>0.25 ? `${(lag/S.fs*1000).toFixed(2)} ms · ${(lag/S.fs*c*100).toFixed(0)} cm` : '—';
+  });
+}
+
+/* ---------- readouts ---------- */
+let roTick=0;
+function readouts(){
+  if(roTick++%6) return;
+  const k=tokens(), ul=$('tracks'), trs=confirmed().sort((a,b)=>a.slot-b.slot);
+  if(!trs.length) ul.innerHTML='<li class="none">'+(S.mode==='live'&&!live?'Microphones are off.':'Listening. Nothing above the minimum strength yet.')+'</li>';
+  else ul.innerHTML=trs.map(t=>{ let err='';
+    if(S.mode==='sim'){ let bd=9,bn=''; S.srcCfg.forEach((s,i)=>{ if(!s.on) return; const d=Math.hypot(s.x-t.x,s.y-t.y); if(d<bd){bd=d;bn=LETTERS[i];} }); err = bd<1 ? `${bn} · error ${(bd*100).toFixed(0)} cm` : 'no true source nearby'; }
+    const quiet = simClock-t.last>0.4 ? ' · silent' : '';
+    return `<li><span class="sw" style="background:${k['t'+t.slot]}"></span><span>x ${t.x.toFixed(2)} m · y ${t.y.toFixed(2)} m${quiet}</span><span class="err">${err}</span></li>`; }).join('');
+  $('chips').innerHTML=`<span>input <b>${S.mode==='sim'?'simulated room':(live?live.label+' · '+live.ch+' ch':'off')}</b></span><span>rate <b>${(S.fs/1000).toFixed(1)} kHz</b></span><span>speed of sound <b>${c.toFixed(1)} m/s</b></span><span>1 sample = <b>${(c/S.fs*1000).toFixed(1)} mm</b></span><span>grid <b>${(loc.cell*100).toFixed(0)} cm</b></span><span>compute <b>${procMs.toFixed(1)} ms</b> per ${(HOP/S.fs*1000).toFixed(0)} ms frame</span>`;
+}
+
+/* ---------- dragging ---------- */
+let drag=-1;
+function hit(e){ const r=cv.getBoundingClientRect(), px=e.clientX-r.left, py=e.clientY-r.top; let best=-1,bd=30; S.srcCfg.forEach((s,i)=>{ const d=Math.hypot(X(s.x)-px,Y(s.y)-py); if(d<bd){bd=d;best=i;} }); return best; }
+function moveTo(e){ const r=cv.getBoundingClientRect(), s=S.srcCfg[drag]; s.x=Math.min(room.w-0.05,Math.max(0.05,(e.clientX-r.left-geo.pad)/geo.sc)); s.y=Math.min(room.l-0.05,Math.max(0.05,(e.clientY-r.top-geo.pad)/geo.sc)); s.ref.x=s.x; s.ref.y=s.y; }
+cv.addEventListener('touchstart',e=>{ if(S.mode==='sim' && hit(e.touches[0])>=0) e.preventDefault(); },{passive:false});
+cv.addEventListener('pointerdown',e=>{ if(S.mode!=='sim') return; drag=hit(e); if(drag>=0){ cv.setPointerCapture(e.pointerId); cv.style.cursor='grabbing'; if(drag===0) $('walk').checked=false; } });
+cv.addEventListener('pointermove',e=>{ if(drag>=0) moveTo(e); });
+['pointerup','pointercancel'].forEach(ev=>cv.addEventListener(ev,()=>{ drag=-1; cv.style.cursor='grab'; }));
+
+$('modeSim').onclick=()=>setMode('sim'); $('modeLive').onclick=()=>setMode('live'); $('startLive').onclick=startLive;
+buildSources(); bindOutputs(); rebuild();
+new ResizeObserver(()=>sizeRoom()).observe(cv.parentElement);
+requestAnimationFrame(tick);
+})();
+</script>
+
+</body>
+</html>
