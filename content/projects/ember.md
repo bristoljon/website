@@ -2,7 +2,7 @@
 title: "Ember lantern"
 date: 2026-09-18
 excerpt: A rechargeable camping lantern where the dome is the only control. Twist it and the light sweeps from a dim deep red through candle amber to bright white; press it to switch on or off.
-status: Active
+status: Prototype
 tags:
   - "Hardware"
   - "ESP32"
@@ -21,6 +21,11 @@ images:
   - image: /img/projects/ember-main.png
     caption: "The main board, placed but not yet routed"
 links: []
+updates:
+  - date: 2026-09-18
+    type: new
+    title: A camping lantern with one control
+    body: Twist the dome to sweep from deep red through candle amber to bright white; press it to switch on or off.
 draft: true
 ---
 

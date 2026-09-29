@@ -7,6 +7,7 @@ import TagList from "../components/tag-list"
 import Comments, { useComments } from "../components/comments"
 import DetailToggles, { useDetailLevel } from "../components/detail-toggles"
 import { projectUpdates, updateDate } from "../utils/updates"
+import Stage from "../components/stage"
 import ShowMore from "../components/show-more"
 import ProjectImages from "../components/project-images"
 
@@ -21,7 +22,8 @@ const Project = ({ data, location }) => {
   const fm = project.frontmatter
   const detail = useDetailLevel()
   const updates = projectUpdates(project)
-  const latest = updates[0]
+  // The "New project" entry marks the start, so it isn't an update as such
+  const latest = updates.find(u => !u.isNew)
   const thread = useComments(project.fields.path)
 
   // Highlight the update a feed link pointed at. :target alone misses it,
@@ -64,7 +66,9 @@ const Project = ({ data, location }) => {
           )}
           <div className="stat tone-pink">
             <dt>Status</dt>
-            <dd>{fm.status || "Archived"}</dd>
+            <dd>
+              <Stage status={fm.status} />
+            </dd>
           </div>
           <div className="stat tone-mint">
             <dt>Comments</dt>
@@ -135,7 +139,10 @@ const Project = ({ data, location }) => {
                       <p className="update-date">
                         <time dateTime={u.isoDate}>{updateDate(u)}</time>
                       </p>
-                      <h3 className="update-title">{u.title}</h3>
+                      <h3 className="update-title">
+                        {u.isNew && <span className="chip update-kind">New project</span>}
+                        {u.title}
+                      </h3>
                       <div
                         className="prose update-body"
                         dangerouslySetInnerHTML={{ __html: u.html }}
@@ -199,6 +206,7 @@ export const query = graphql`
           url
         }
         updates {
+          type
           title
           html
           approxDate

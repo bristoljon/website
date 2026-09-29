@@ -3,7 +3,7 @@ title: TatNav
 date: 2026-09-20
 excerpt: Zero hassle free shit. Point your phone at something left out on the
   street and it goes on a map for anyone nearby. No login, no typing, no forms.
-status: Active
+status: MVP
 images:
   - image: /img/projects/tatnav-home.jpg
     caption: "The home page: post something, or see what's nearby"
@@ -22,6 +22,11 @@ tags:
 links:
   - label: Live app
     url: https://tatnav.net
+updates:
+  - date: 2026-09-20
+    type: new
+    title: Free stuff on the street, on a map
+    body: One photo of something left out on the street, an AI description to check, and it's a pin on the map for anyone nearby. No login, no typing.
 draft: false
 ---
 Plenty of perfectly good stuff gets left out on the street for anyone to take, and plenty of people would take it if they knew it was there. Listing sites want an account, a description and a conversation. TatNav wants one photo.

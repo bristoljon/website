@@ -2,7 +2,7 @@
 title: "bristoljon.uk"
 date: 2015-08-05
 excerpt: The site you're reading. Now a static build rather than PHP and MySQL.
-status: Archived
+status: Production
 tags:
   - "PHP"
   - "JavaScript"

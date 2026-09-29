@@ -4,7 +4,7 @@ date: 2026-06-21
 excerpt: Crowdsourced average speed cameras. Phones along a road read number
   plates on-device, and when two of them see the same car, Speedy works out how
   fast it went between them.
-status: Active
+status: MVP
 images:
   - image: /img/projects/speedy.jpg
     caption: The matches map and the live camera, flashing 41 mph
@@ -39,6 +39,10 @@ updates:
     title: iPhone and Android betas open
     body: Speedy is on TestFlight and Google Play internal testing. Links on the
       website.
+  - date: 2026-06-21
+    type: new
+    title: Average speed checks from two phones
+    body: Prop up a phone at each end of a stretch of road, read number plates on the phone, and when both see the same car, flash its average speed.
 draft: false
 ---
 

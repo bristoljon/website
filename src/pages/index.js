@@ -38,17 +38,19 @@ const IndexPage = ({ data }) => {
       }
     }),
     ...data.withUpdates.nodes.flatMap(node =>
-      projectUpdates(node).map(u => ({
-        key: `${node.fields.path}#${u.anchor}`,
-        kind: "update",
-        label: "Project update",
-        project: node.frontmatter.title,
-        isoDate: u.isoDate,
-        date: updateDate(u),
-        title: u.title,
-        excerpt: plainExcerpt(u.html),
-        path: `${node.fields.path}#${u.anchor}`,
-      }))
+      projectUpdates(node)
+        .filter(u => !u.isNew)
+        .map(u => ({
+          key: `${node.fields.path}#${u.anchor}`,
+          kind: "update",
+          label: "Project update",
+          project: node.frontmatter.title,
+          isoDate: u.isoDate,
+          date: updateDate(u),
+          title: u.title,
+          excerpt: plainExcerpt(u.html),
+          path: `${node.fields.path}#${u.anchor}`,
+        }))
     ),
   ]
     .sort(byNewest)
@@ -245,6 +247,7 @@ export const query = graphql`
         frontmatter {
           title
           updates {
+            type
             title
             html
             approxDate

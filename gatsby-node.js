@@ -103,8 +103,10 @@ exports.createSchemaCustomization = ({ actions }) => {
     # A dated note on a project. Shown in a timeline on the project page and
     # merged into the homepage's recent feed. approxDate marks a date that is
     # only known to the month (a few from 2015 lost their exact timestamp).
+    # type "new" marks when the project started (see src/utils/updates.js)
     type ProjectUpdate {
       date: Date @dateformat
+      type: String
       approxDate: Boolean
       title: String
       body: String

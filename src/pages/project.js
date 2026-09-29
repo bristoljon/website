@@ -22,7 +22,7 @@ const ProjectIndex = ({ data }) => (
         <ol className="post-list">
           {data.projects.nodes.map(node => {
             const fm = node.frontmatter
-            const latest = projectUpdates(node)[0]
+            const latest = projectUpdates(node).find(u => !u.isNew)
             return (
               <li className="card post-card tone-tang" key={node.fields.path}>
                 <span className="post-num" aria-hidden="true">
@@ -30,7 +30,7 @@ const ProjectIndex = ({ data }) => (
                 </span>
                 <div className="post-card-body">
                   <div className="feed-meta">
-                    <span className="chip">{fm.status || "Archived"}</span>
+                    {fm.status && <span className="chip">{fm.status}</span>}
                     <time dateTime={fm.isoDate}>{fm.date}</time>
                     {latest && (
                       <span className="meta-extra">
@@ -84,6 +84,7 @@ export const query = graphql`
           date(formatString: "MMMM YYYY")
           isoDate: date
           updates {
+            type
             title
             isoDate: date
             month: date(formatString: "MMMM YYYY")

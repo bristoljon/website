@@ -35,9 +35,13 @@ export const plainExcerpt = (html, max = 140) => {
   return `${text.slice(0, max).replace(/\s+\S*$/, "")}…`
 }
 
-/** Sorted updates for one project node, each with its anchor. */
+/**
+ * Sorted updates for one project node, each with its anchor. An update with
+ * `type: new` marks when the project started (isNew): it heads the project's
+ * timeline, but the homepage feed already lists the project itself as new.
+ */
 export const projectUpdates = node =>
   (node?.frontmatter?.updates || [])
     .filter(u => u && u.title)
-    .map(u => ({ ...u, anchor: updateAnchor(u) }))
+    .map(u => ({ ...u, anchor: updateAnchor(u), isNew: u.type === "new" }))
     .sort(byNewest)

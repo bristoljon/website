@@ -49,7 +49,7 @@ collections:
       - { name: title, label: Title, widget: string }
       - { name: date, label: Date, widget: datetime, picker_utc: true, date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD" }
       - { name: excerpt, label: Summary, widget: text, required: false }
-      - { name: status, label: Status, widget: select, options: ["Active", "Paused", "Archived", "Idea"], default: "Archived", required: false }
+      - { name: status, label: Status, widget: select, options: ["Back of envelope", "Proof of concept", "Prototype", "MVP", "Production"], default: "Back of envelope", required: false, hint: "How far the idea has got, as on the CV." }
       - { name: image, label: Header background, widget: image, required: false, hint: "Photo behind the title, darkened for the text. Leave empty for the default drafting-table photo." }
       - name: images
         label: Images
@@ -89,6 +89,7 @@ collections:
           - { name: title, label: Title, widget: string }
           - { name: body, label: Body, widget: markdown, minimal: true, buttons: [bold, italic, link, code, bulleted-list], editor_components: [] }
           - { name: approxDate, label: Date is approximate, widget: boolean, default: false, required: false, hint: "Shows as 'c. Month Year'." }
+          - { name: type, label: Kind, widget: select, options: [{ label: "Update", value: "update" }, { label: "New project", value: "new" }], default: "update", required: false, hint: "New project marks when it started. It heads the timeline but isn't repeated in the homepage feed, which lists the project itself." }
       - { name: draft, label: Draft, widget: boolean, default: true }
       - { name: body, label: Body, widget: markdown }
 

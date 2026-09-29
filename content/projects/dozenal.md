@@ -3,7 +3,7 @@ title: Dozenal Calculator
 date: 2015-07-30
 excerpt: A free dozenal (base 12) calculator and converter. Works in dozenal or
   decimal, with exact fractions and recurring digits shown.
-status: Active
+status: Production
 images:
   - image: /img/projects/dozenal.jpg
     caption: "Version 2 (2026): 1/5 with the recurring digits overlined"
