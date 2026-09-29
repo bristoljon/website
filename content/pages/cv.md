@@ -1,7 +1,7 @@
 ---
 title: CV
 name: Jon Wyatt
-headline: Full stack web and mobile app creator
+headline: Full stack product engineer
 location: Stroud
 email: jon@bristoljon.uk
 website: https://bristoljon.uk
@@ -10,11 +10,12 @@ github: https://github.com/bristoljon
 phone: ""
 address: ""
 profile: >-
-  Self-motivated, creative and experienced full stack web and mobile app
-  creator with a real passion for building high quality products. Experience
-  with projects at all stages of development across a wide range of
-  industries, team sizes, structures and agile methodologies. I love
-  delivering value quickly and exceeding expectations.
+  Self-motivated, creative product engineer with a real passion for building
+  high quality products end-to-end, from requirements and architecture
+  through to shipped, adopted software — full stack across web and mobile.
+  Experience across a wide range of industries, team sizes, structures and
+  agile methodologies. I love delivering value quickly and exceeding
+  expectations.
 skills:
   - JavaScript
   - TypeScript
