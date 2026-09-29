@@ -2653,6 +2653,13 @@ a.tag:hover {
     background: none;
   }
 
+  /* The timeline and heading squares are backgrounds, which browsers leave
+     out of prints unless told otherwise. Inherited, so this covers them. */
+  .cv-sheet {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
   .cv-print-head {
     display: block;
     margin-bottom: 6mm;
@@ -2662,6 +2669,7 @@ a.tag:hover {
 
   .cv-print-head h1 {
     margin: 0;
+    color: var(--tang);
     font-size: 24pt;
     font-weight: 700;
     line-height: 1;
@@ -2697,8 +2705,8 @@ a.tag:hover {
 
   .cv-block {
     display: grid;
-    grid-template-columns: 24mm 1fr;
-    gap: 5mm;
+    grid-template-columns: 20mm 1fr;
+    gap: 4mm;
   }
 
   .cv-block + .cv-block {
@@ -2804,5 +2812,9 @@ a.tag:hover {
 
   a {
     color: inherit;
+  }
+
+  .cv-sheet a {
+    color: var(--tang-text);
   }
 }
