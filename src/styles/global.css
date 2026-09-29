@@ -2447,7 +2447,8 @@ a.tag:hover {
   line-height: 1.3;
 }
 
-.cv-job h3 a {
+.cv-job h3 a,
+.cv-projects h3 a {
   text-decoration-color: var(--accent);
   text-decoration-thickness: 2px;
 }
@@ -2757,7 +2758,8 @@ a.tag:hover {
     font-size: 11.5pt;
   }
 
-  .cv-job h3 a {
+  .cv-job h3 a,
+  .cv-projects h3 a {
     text-decoration: none;
   }
 

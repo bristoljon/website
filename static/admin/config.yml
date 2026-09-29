@@ -178,6 +178,7 @@ collections:
             fields:
               - { name: name, label: Name, widget: string }
               - { name: status, label: Status, widget: string, required: false }
+              - { name: url, label: Link, widget: string, required: false, hint: "Full URL, so it also works in the PDF." }
               - { name: description, label: Description, widget: text }
           - { name: sideProjectsNote, label: Projects footnote, widget: string, required: false }
           - { name: body, label: Body, widget: hidden, required: false }

@@ -157,7 +157,7 @@ const CvPage = ({ data }) => {
                   {fm.sideProjects.map(p => (
                     <li key={p.name}>
                       <h3>
-                        {p.name}
+                        {p.url ? <a href={p.url}>{p.name}</a> : p.name}
                         {p.status && <span className="cv-status">{p.status}</span>}
                       </h3>
                       <p>{p.description}</p>
@@ -219,6 +219,7 @@ export const query = graphql`
         sideProjects {
           name
           status
+          url
           description
         }
         sideProjectsNote

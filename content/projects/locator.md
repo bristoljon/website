@@ -1,5 +1,5 @@
 ---
-title: Corner Mic Locator
+title: Audio Positioning System
 date: 2016-09-01
 excerpt: Pinpoints where sounds are in a room from the tiny differences in when
   they reach a microphone in each corner. Runs in the browser, with a simulated

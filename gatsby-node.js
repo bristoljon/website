@@ -92,6 +92,7 @@ exports.createSchemaCustomization = ({ actions }) => {
     type CvProject {
       name: String
       status: String
+      url: String
       description: String
     }
 

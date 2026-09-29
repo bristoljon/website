@@ -215,6 +215,28 @@ education:
     school: Bristol Cathedral School
     year: "2003"
 sideProjects:
+  - name: TatNav
+    status: MVP live at tatnav.net
+    url: https://tatnav.net
+    description: >-
+      Zero hassle free stuff. One photo of something left out on the street,
+      an AI (Gemini vision) description to check, and it's a pin on the map for
+      anyone nearby. No login, no typing. PWA on Netlify and Postgres.
+  - name: Sudoku Solver and Grader
+    status: live at sudoku.bristoljon.uk
+    url: https://sudoku.bristoljon.uk/
+    description: >-
+      Rates puzzles by solving them five ways, each simulating a human
+      approach, and measuring the effort. Scan puzzles in with the camera:
+      grid detection and a small neural network read the digits on-device.
+      Installable offline PWA.
+  - name: Dozenal Calculator
+    status: live at bristoljon.uk
+    url: https://bristoljon.uk/projects/dozenal/
+    description: >-
+      Base 12 calculator and converter built with React. Exact fraction
+      arithmetic means nothing is rounded and recurring digits are shown
+      properly. Installable as an app.
   - name: Colour Clock
     status: building prototype
     description: >-
@@ -222,13 +244,15 @@ sideProjects:
       LEDs that provides a few interesting educational use cases as well as
       just looking awesome on the wall.
   - name: Community Average Speed Check
-    status: proof of concept
+    status: MVP
+    url: https://bristoljon.uk/project/speedy/
     description: >-
       Mobile app that uses ANPR, timing and geolocation APIs to create a
       peer-to-peer average speed check network that can be used to improve
       road safety and empower residents.
   - name: Scriptic
     status: MVP was live at scriptic.io
+    url: https://bristoljon.uk/project/scriptic/
     description: >-
       A social platform for creating, playing and hosting SMS based clue
       trails. Built with React on a serverless architecture using FaunaDB,
@@ -240,12 +264,14 @@ sideProjects:
       predict x/y coordinates of a given device on a simple 2D map. 3D not been
       tested yet.
   - name: Audio Positioning System
-    status: back of envelope stage
+    status: proof of concept
+    url: https://bristoljon.uk/project/locator/
     description: >-
       Uses multiple microphones to predict in real time where a sound
       originated in space based on speed of sound and the time each microphone
-      detects a signal. Could provide a budget, room-scale hawkeye system e.g.
-      for table tennis.
+      detects a signal. Working in a simulated room in the browser, locating
+      two or three talkers at once; live microphones next. Could provide a
+      budget, room-scale hawkeye system e.g. for table tennis.
   - name: Colour Trail Toy
     status: back of envelope stage
     description: >-
