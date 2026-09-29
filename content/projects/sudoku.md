@@ -26,6 +26,26 @@ links:
     url: https://v1.sudoku.bristoljon.uk/
 draft: false
 updates:
+  - date: 2026-09-28
+    title: Complete overhaul, now it actually grades puzzles
+    body: >-
+      Ten years on, it finally does what I set out to make it do. Grading
+      works: it solves the puzzle five different ways, each copying a
+      different human approach (box by box, digit by digit, rows then columns,
+      an all-rounder and a pencil marker), and counts how much looking each
+      one needs. That gives a rating from Gentle up to Diabolical, plus how
+      much the puzzle favours one style over another.
+
+
+      You can also scan puzzles in with your camera. Take a photo of one from a
+      newspaper or a screenshot, and it finds the grid, straightens it and
+      reads the digits using a small neural net, all on your phone. Anything
+      it's unsure of gets flagged so you can check it before importing.
+
+
+      It's mobile friendly now too, works offline and can be installed like a
+      native app. [Try it here](https://sudoku.bristoljon.uk/). The original
+      2016 version is still up [here](https://v1.sudoku.bristoljon.uk/).
   - date: 2016-04-21
     title: "Babelified to ES5 - Now works on Safari and older browsers"
     body: "Added some tooling to transpile the source into ES5 so that it works on desktop and mobile safari. Although desktop solve methods are really slow, seems to be to do with the regenerator runtime. Also had to remove my use of proxies as it turns out there is no ES5 equivalent."
