@@ -221,6 +221,12 @@ sideProjects:
     description: Zero hassle free stuff. One photo of something left out on the
       street, an AI (Gemini vision) description to check, and it's a pin on the
       map for anyone nearby. No login, no typing. PWA on Netlify and Postgres.
+  - name: Community Average Speed Check
+    status: MVP
+    url: https://bristoljon.uk/project/speedy/
+    description: Mobile app that uses ANPR, timing and geolocation APIs to create a
+      peer-to-peer average speed check network that can be used to improve road
+      safety and empower residents.
   - name: Sudoku Solver and Grader
     status: live at sudoku.bristoljon.uk
     url: https://sudoku.bristoljon.uk/
@@ -238,23 +244,12 @@ sideProjects:
     description: A multi purpose wifi connected clock based on Arduino and
       addressable LEDs that provides a few interesting educational use cases as
       well as just looking awesome on the wall.
-  - name: Community Average Speed Check
-    status: MVP
-    url: https://bristoljon.uk/project/speedy/
-    description: Mobile app that uses ANPR, timing and geolocation APIs to create a
-      peer-to-peer average speed check network that can be used to improve road
-      safety and empower residents.
   - name: Scriptic
     status: MVP was live at scriptic.io
     url: https://bristoljon.uk/project/scriptic/
     description: A social platform for creating, playing and hosting SMS based clue
       trails. Built with React on a serverless architecture using FaunaDB,
       GraphQL, Netlify, Stripe and Twilio.
-  - name: WiFi Positioning System
-    status: simple prototype built
-    description: Uses neural network trained on wifi SSID and signal strength values
-      to predict x/y coordinates of a given device on a simple 2D map. 3D not
-      been tested yet.
   - name: Audio Positioning System
     status: proof of concept
     url: https://bristoljon.uk/project/locator/
