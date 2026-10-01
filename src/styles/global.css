@@ -2415,7 +2415,7 @@ a.tag:hover {
   content: "";
   position: absolute;
   left: -5px;
-  top: 0.45rem;
+  top: 0.5rem;
   width: 9px;
   height: 9px;
   background: var(--accent);
@@ -2740,7 +2740,7 @@ a.tag:hover {
 
   .cv-job::before {
     left: -1.6mm;
-    top: 1.6mm;
+    top: 1.3mm;
     width: 3mm;
     height: 3mm;
   }
