@@ -1,29 +1,32 @@
 ---
-title: "Sudoku Solver and Grader"
+title: Sudoku Solver and Grader
 date: 2016-03-24
 excerpt: A free sudoku solver and difficulty grader. Scan a puzzle with your
   camera, watch it solved step by step, and see how hard it really is.
 status: Production
-tags:
-  - "Sudoku"
-  - "PWA"
-  - "Computer vision"
-  - "Neural network"
-  - "JavaScript"
-  - "OOP"
-  - "Object Oriented"
-  - "ES6"
-  - "ECMA6"
-  - "Solve"
-  - "Puzzles"
-  - "Proxies"
-  - "Promises"
-  - "Generators"
 images:
   - image: /img/projects/sudoku-2026.png
-    caption: "Version 2 (2026), ready to scan or solve a puzzle"
+    caption: Version 2 (2026), ready to scan or solve a puzzle
   - image: /img/projects/sudoku.jpg
-    caption: "Version 1 (2016), with its search methods"
+    caption: Version 1 (2016), with its search methods
+  - image: /img/uploads/layer1_map.png
+    caption: Rendering of the small layer-1 neural network weights used to drive the
+      OCR for scanning
+tags:
+  - Sudoku
+  - PWA
+  - Computer vision
+  - Neural network
+  - JavaScript
+  - OOP
+  - Object Oriented
+  - ES6
+  - ECMA6
+  - Solve
+  - Puzzles
+  - Proxies
+  - Promises
+  - Generators
 links:
   - label: Live app
     url: https://sudoku.bristoljon.uk/
@@ -31,40 +34,45 @@ links:
     url: https://github.com/bristoljon/sudoku
   - label: Version 1 (2016)
     url: https://v1.sudoku.bristoljon.uk/
-draft: false
 updates:
   - date: 2026-09-28
     title: Complete overhaul, now it actually grades puzzles
     body: >-
-      Ten years on, it finally does what I set out to make it do. Grading
-      works: it solves the puzzle five different ways, each copying a
-      different human approach (box by box, digit by digit, rows then columns,
-      an all-rounder and a pencil marker), and counts how much looking each
-      one needs. That gives a rating from Gentle up to Diabolical, plus how
-      much the puzzle favours one style over another.
+      Ten years on, it finally does what I set out to make it do. Grading works:
+      it solves the puzzle five different ways, each copying a different human
+      approach (box by box, digit by digit, rows then columns, an all-rounder
+      and a pencil marker), and counts how much looking each one needs. That
+      gives a rating from Gentle up to Diabolical, plus how much the puzzle
+      favours one style over another.
 
 
-      You can also scan puzzles in with your camera. Take a photo of one from a
-      newspaper or a screenshot, and it finds the grid, straightens it and
-      reads the digits using a small neural net, all on your phone. Anything
-      it's unsure of gets flagged so you can check it before importing.
+      You can also scan puzzles in with your camera. Take a photo of one from a newspaper or a screenshot, and it finds the grid, straightens it and reads the digits using a small neural net, all on your phone. Anything it's unsure of gets flagged so you can check it before importing.
 
 
-      It's mobile friendly now too, works offline and can be installed like a
-      native app. [Try it here](https://sudoku.bristoljon.uk/). The original
-      2016 version is still up [here](https://v1.sudoku.bristoljon.uk/).
+      It's mobile friendly now too, works offline and can be installed like a native app. [Try it here](https://sudoku.bristoljon.uk/). The original 2016 version is still up [here](https://v1.sudoku.bristoljon.uk/).
   - date: 2016-04-21
-    title: "Babelified to ES5 - Now works on Safari and older browsers"
-    body: "Added some tooling to transpile the source into ES5 so that it works on desktop and mobile safari. Although desktop solve methods are really slow, seems to be to do with the regenerator runtime. Also had to remove my use of proxies as it turns out there is no ES5 equivalent."
+    title: Babelified to ES5 - Now works on Safari and older browsers
+    body: Added some tooling to transpile the source into ES5 so that it works on
+      desktop and mobile safari. Although desktop solve methods are really slow,
+      seems to be to do with the regenerator runtime. Also had to remove my use
+      of proxies as it turns out there is no ES5 equivalent.
   - date: 2016-04-07
-    title: "Solves Blank Grid"
-    body: "Refactored the tree search algorithm so that it now solves an empty grid. Previously it just simulated blanks that had 2 options now it runs recursively over all options of all blanks until it solves or determines that the puzzle is unsolvable. Pretty sweet."
+    title: Solves Blank Grid
+    body: Refactored the tree search algorithm so that it now solves an empty grid.
+      Previously it just simulated blanks that had 2 options now it runs
+      recursively over all options of all blanks until it solves or determines
+      that the puzzle is unsolvable. Pretty sweet.
   - date: 2016-03-29
-    title: "Added visual feedback"
-    body: "Major upgrade: Added visualisation with adjustable speed setting (using generator functions and setInterval). Also improved mobile experience although still buggy on chrome. Added screenshots to the project page."
+    title: Added visual feedback
+    body: "Major upgrade: Added visualisation with adjustable speed setting (using
+      generator functions and setInterval). Also improved mobile experience
+      although still buggy on chrome. Added screenshots to the project page."
   - date: 2016-03-15
-    title: "Sudoku Solver"
-    body: "Making the most of my time off by making a sudoku solver. Plan is to dumb it down and use it as a difficulty rater by comparing the effectiveness of different techniques. For now it just solves puzzles.."
+    title: Sudoku Solver
+    body: Making the most of my time off by making a sudoku solver. Plan is to dumb
+      it down and use it as a difficulty rater by comparing the effectiveness of
+      different techniques. For now it just solves puzzles..
+draft: false
 ---
 
 **[Open the Sudoku Solver](https://sudoku.bristoljon.uk/)**
